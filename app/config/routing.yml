@@ -1,2 +1,4 @@
-
+eugef_php_red_expert:
+    resource: "@EugefPhpRedExpertBundle/Resources/config/routing.yml"
+    prefix:   /
 
