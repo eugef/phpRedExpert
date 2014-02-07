@@ -14,12 +14,5 @@ class DefaultController extends Controller
     {
         return array('name' => 'tg');
     }
-    
-    /**
-     * @Template("EugefPhpRedExpertBundle:Default:navigation.html.twig")
-     */
-    public function navigationAction()
-    {
-        return array('items' => array(1,2,3,4));
-    }    
+  
 }

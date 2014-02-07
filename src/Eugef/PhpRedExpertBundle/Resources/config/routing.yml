@@ -1,3 +1,16 @@
 eugef_php_red_expert_homepage:
     pattern:  /
     defaults: { _controller: EugefPhpRedExpertBundle:Default:index }
+    
+eugef_php_red_expert_server_list:
+    pattern: /server/list
+    defaults: { _controller: EugefPhpRedExpertBundle:Server:List }
+    requirements:
+        _method: GET
+    
+eugef_php_red_expert_server_databases:
+    pattern:  /server/{serverId}/databases
+    defaults: { _controller: EugefPhpRedExpertBundle:Server:Databases }
+    requirements:
+        _method: GET
+        serverId: "\d+"
