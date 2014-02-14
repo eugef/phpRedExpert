@@ -13,10 +13,11 @@ class ServerController extends Controller
         $servers = array();
         foreach ($this->container->getParameter('redis_servers') as $id => $server) {
            $servers[$id] = array(
+               'id' => $id,
                'host' => $server['host'],
                'port' => $server['port'],
                'name' => $server['name'],
-               'database' => $server['database'],
+               'password' => $server['password'] ? true : false,
            );
         }
         

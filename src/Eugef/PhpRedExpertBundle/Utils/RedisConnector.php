@@ -9,6 +9,8 @@ namespace  Eugef\PhpRedExpertBundle\Utils;
  */
 class RedisConnector extends \Redis
 {
+    private $config = array();
+    
     public function __construct($config) {
         $this->connect($config['host'], $config['port']);
         
@@ -16,7 +18,8 @@ class RedisConnector extends \Redis
             $this->auth($config['password']);
         }    
         
-        $this->select($config['database']);
+        $this->config = $config;
+        //$this->select($config['database']);
     }
 
     public function changeDB($db) {
@@ -25,23 +28,33 @@ class RedisConnector extends \Redis
         return $this;
     }
     
+    private function getDBConfigValue($id, $name, $default = NULL) {
+        if (isset($this->config['databases'][$id][$name])) {
+            return $this->config['databases'][$id][$name];
+        }
+        else {
+            return $default;
+        }
+    }
+    
     public function getDbs()
     {
         $info = $this->info();
         
         $result = array();
         
-        array_walk($info, function($value, $key) use (&$result) {
+        foreach ($info as $key => $value) {
             if (preg_match('/^db([0-9]+)?$/', $key, $keyMatches)) {
                 preg_match('/^keys=([0-9]+),expires=([0-9]+)/', $value, $valueMatches);
                 $result[$keyMatches[1]] = array(
                     'id' => $keyMatches[1],
                     'keys' => $valueMatches[1],
                     'expires' => $valueMatches[2],
-                    'name' => '',
+                    'default' => $this->getDBConfigValue($keyMatches[1], 'default'),
+                    'name' => $this->getDBConfigValue($keyMatches[1], 'name'),
                 );
             }
-        });
+        }
 
         return $result;
     }

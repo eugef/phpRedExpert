@@ -1,6 +1,30 @@
 {% extends 'EugefPhpRedExpertBundle:Default:base.html.twig' %} 
 
 {% block content %}
-  Hello {{ name }}!
+<div>
+    <div class="breadcrumb">
+        <p ng-show="getCurrentServer().password"> password </p>
+        <p ng-hide="getCurrentServer().password"> no password </p>
+        <p> {[getCurrentServer().name]} / {[getCurrentDB().name]} {[getCurrentServer().password]}</p>
+    </div>
+    <div>Servers</div>
+    <ul>
+        <li ng-repeat="server in servers" >
+            <a href="{[server.url]}" ng-class="getCurrentServer().id == server.id ? 'active' : ''">{[server.name]}</a>
+        </li>
+    </ul>
+
+    <div>Databases</div>
+    <ul>
+        <li ng-repeat="db in dbs" >
+            <a href="{[db.url]}" ng-class="getCurrentDB().id == db.id ? 'active' : ''">{[db.name]}</a>
+        </li>
+    </ul>
+       
+    
+    <div ng-view></div>
+        
+
+</div>
 {% endblock %}
 
