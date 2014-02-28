@@ -20,7 +20,7 @@ class ServerController extends Controller
                'password' => $server['password'] ? true : false,
            );
         }
-        
+        // Todo: add commom metadata for lists: total count, page, current count
         return new JsonResponse($servers);
     }
     
@@ -32,9 +32,9 @@ class ServerController extends Controller
             return new JsonResponse($redis->getDbs());
         }
         else {
+            // TODO: throw an error
             return new JsonResponse(array('error'));
-        }
-        
+        }        
         
     }   
 

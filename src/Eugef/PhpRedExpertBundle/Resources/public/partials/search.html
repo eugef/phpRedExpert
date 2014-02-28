@@ -1,6 +1,35 @@
 <div>
+   
 <div>Search</div>
-    <div>
-        {[getCurrentDB().name]}, keys: {[getCurrentDB().keys]}
-    </div> 
+    <form name="searchForm" ng-submit="submitSearch()" novalidate class="css-form">
+      Key: <input name="pattern" type="text" ng-model="search.pattern" required placeholder="Key pattern" />
+      <button type="submit" ng-disabled="searchForm.$invalid">Search</button>
+      <p ng-show="searchForm.pattern.$invalid && !searchForm.pattern.$pristine" class="help-block">Search pattern is required.</p>
+    </form>
+
+    <div ng-show="search.result.count" class="ng-hide">
+        Result
+        <table>
+            <thead>
+                <th>Key</th>
+                <th>Type</th>
+                <th>TTL</th>
+                <th>Encoding</th>
+               <th>Size</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="key in search.result.keys">
+                    <td>{[key.name]}</td>
+                    <td>{[key.type]}</td>
+                    <td>{[key.ttl | sec2time]}</td>
+                    <td>{[key.encoding]}</td>
+                    <td>{[key.size]}</td>
+                </tr>
+            </tbody>    
+        </table> 
+    </div>
+
+    <div ng-show="!search.result.count && search.result.pattern" class="ng-hide"> 
+        No results
+    </div>    
 </div>

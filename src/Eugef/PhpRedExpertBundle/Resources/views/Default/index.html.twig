@@ -11,6 +11,7 @@
     <ul>
         <li ng-repeat="server in servers" >
             <a href="{[server.url]}" ng-class="getCurrentServer().id == server.id ? 'active' : ''">{[server.name]}</a>
+            <a href="{[server.url]}/info" ng-class="getCurrentServer().id == server.id ? 'active' : ''">info</a>
         </li>
     </ul>
 
