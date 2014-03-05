@@ -1,4 +1,6 @@
 .active {
     font-weight: bold;
 }
-
+.disabled, .disabled a {
+    color: red;
+}

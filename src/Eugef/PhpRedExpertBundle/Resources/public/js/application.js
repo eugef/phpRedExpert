@@ -4,6 +4,27 @@ var App = angular.module('myApp', ['ngRoute'])
         $interpolateProvider.startSymbol('{[').endSymbol(']}');
     }]);
 
+/*
+ * Allow change location without firing route
+ * @see https://github.com/angular/angular.js/issues/1699#issuecomment-36637748
+ */
+App.run(['$route', '$rootScope', '$location', 
+    function ($route, $rootScope, $location) {
+        var original = $location.path;
+        $location.path = function (path, reload) {
+            if (reload === false) {
+                var lastRoute = $route.current;
+                var un = $rootScope.$on('$locationChangeSuccess', function () {
+                    $route.current = lastRoute;
+                    un();
+                });
+            }
+
+            return original.apply($location, [path]);
+        };
+    }
+]);
+
 // Router
 
 App.config(['$routeProvider', '$locationProvider', 'config', 
@@ -26,7 +47,7 @@ App.config(['$routeProvider', '$locationProvider', 'config',
                 templateUrl: config.assetsUri + 'partials/info.html',
                 controller: 'InfoController'
             }).
-            when('/server/:serverId/db/:dbId/search/:pattern?', {
+            when('/server/:serverId/db/:dbId/search/:pattern?/:page?', {
                 templateUrl: config.assetsUri + 'partials/search.html',
                 controller: 'SearchController'
             }).        
@@ -83,8 +104,16 @@ App.factory('RedisService', ['$http', 'config',
                 return $http.get(config.apiUri + 'server/' + serverId + '/databases');
             },
             
-            keySearch: function(serverId, dbId, pattern) {
-                return $http.get(config.apiUri + 'server/' + serverId + '/db/' + dbId + '/search/' + pattern);
+            keySearch: function(serverId, dbId, pattern, page) {
+                return $http.get(
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/search', 
+                    {
+                        params : {
+                            pattern : pattern,
+                            page: page
+                        }
+                    }
+                );
             }
         };
         
@@ -243,20 +272,60 @@ App.controller('AppController', ['$scope', '$q', 'RedisService',
         $scope.isEmpty = function (obj) {
             return angular.isUndefined(obj) || (obj == null) || angular.equals({},obj); 
         };
+        
+        $scope.rangeSlice = function(size, start, end) {
+            if (size > 0) {
+                if (start < 0) {
+                    end -= start;
+                    start = 0;
+                }
+
+                if (end > size) {
+                    start -= end - size;
+                    end = size-1;
+                }
+
+                return $scope.range(start, end);
+            }  
+            else {
+               return []; 
+            }
+        }
+        
+        $scope.range = function(start, end)  {
+            var result = [];        
+
+            if (angular.isUndefined(end)) {
+                end = start;
+                start = 0;
+            }
+
+            for (var i = start; i <= end; i++) {
+                result.push(i);
+            }     
+
+            return result;
+        };
+        
 
     }
 ]);
 
-App.controller('SearchController', ['$scope', '$routeParams', '$location', 'RedisService', 
-    function ($scope, $routeParams, $location, RedisService) {
+App.controller('SearchController', ['$scope', '$routeParams', '$location', 'config', 'RedisService', 
+    function ($scope, $routeParams, $location, config, RedisService) {
         console.log('SearchController');
         console.log($routeParams);
         
         $scope.search = {
             pattern: '',
+            page: 0,        
+            sort: {
+                field: 'name',
+                reverse: false
+            },
             result: {
                 pattern: '',
-                keys: {},
+                keys: [],
                 count: 0,
                 total: 0
             }        
@@ -264,29 +333,28 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         
         $scope.submitSearch = function() {
 			if ($scope.searchForm.$valid) {
-                if ($scope.search.pattern == $scope.search.result.pattern) {
-                    // make direct search without url change
-                    $scope.keySearch($scope.search.pattern);
+                if ($scope.search.pattern !== $scope.search.result.pattern) {
+                    $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern), false);
                 }
-                else {
-                    $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + $scope.search.pattern);
-                }    
+                $scope.keySearch($scope.search.pattern);
 			}
             
         }
         
-        $scope.keySearch = function(pattern) {
+        $scope.keySearch = function(pattern, page) {
             console.log('keySearch');
             $scope.search.pattern = pattern;
-            return RedisService.keySearch($scope.current.serverId, $scope.current.dbId, pattern).then(
+            $scope.search.page = angular.isDefined(page) ? page : 0;
+
+            return RedisService.keySearch($scope.current.serverId, $scope.current.dbId, $scope.search.pattern, $scope.search.page).then(
                 function(res) {
                     $scope.search.result.pattern = pattern;
                     $scope.search.result.count = res.data.count;
                     $scope.search.result.total = res.data.total;
                     
-                    $scope.search.result.keys = {};
-                    angular.forEach(res.data.keys, function(key, index) {
-                        $scope.search.result.keys[index] = key;
+                    $scope.search.result.keys = [];
+                    angular.forEach(res.data.keys, function(key) {
+                        $scope.search.result.keys.push(key);
                     });
 
                     console.log('keySearch / done');
@@ -294,10 +362,44 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             );
         }
         
+        // change sorting order
+        $scope.sortBy = function(field) {
+            console.log('sortBy: ' + field);
+            if ($scope.search.sort.field == field) {
+                $scope.search.sort.reverse = !$scope.search.sort.reverse;
+            } 
+            else {
+                $scope.search.sort.field = field;
+                $scope.search.sort.reverse = false;
+            }
+        };
+        
+        $scope.prevPage = function() {
+            if ($scope.search.page > 0) {
+                $scope.setPage($scope.search.page - 1);
+            }
+        };
+
+        $scope.nextPage = function() {
+            if ($scope.search.page < $scope.getLastPage() ) {
+                return $scope.setPage($scope.search.page + 1);
+            } 
+        };
+
+        $scope.setPage = function(page) {
+            $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern) + '/' + encodeURIComponent(page), false);
+            $scope.keySearch($scope.search.pattern, page);
+        };
+        
+        $scope.getLastPage = function() {
+            return Math.ceil($scope.search.result.total / config.itemsPerPage);
+        };
+        
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
             if ($routeParams.pattern) {
                 console.log('search');
-                $scope.keySearch($routeParams.pattern);
+                console.log($routeParams);
+                $scope.keySearch($routeParams.pattern, parseInt($routeParams.page));
             }
         });        
     }

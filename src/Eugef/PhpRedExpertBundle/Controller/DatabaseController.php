@@ -8,14 +8,15 @@ use Eugef\PhpRedExpertBundle\Utils\RedisConnector;
 
 class DatabaseController extends Controller
 {
-    public function KeySearchAction($serverId, $dbId, $pattern)
+    public function KeySearchAction($serverId, $dbId)
     {
         $searchConfig = $this->container->getParameter('search');
         $servers = $this->container->getParameter('redis_servers');
         
         $page = abs($this->getRequest()->get('page'));
+        $pattern = trim($this->getRequest()->get('pattern'));
         
-        if (isset($servers[$serverId])) {
+        if ($pattern && isset($servers[$serverId])) {
             $redis = new RedisConnector($servers[$serverId]);
             // TODO: check if DB exists
             $redis->selectDB($dbId);

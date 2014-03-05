@@ -16,8 +16,8 @@ eugef_php_red_expert_server_databases:
         serverId: "\d+"
 
 eugef_php_red_expert_database_search:
-    pattern:  /server/{serverId}/db/{dbId}/search/{pattern}
-    defaults: { _controller: EugefPhpRedExpertBundle:Database:KeySearch}
+    pattern:  /server/{serverId}/db/{dbId}/search
+    defaults: {_controller: EugefPhpRedExpertBundle:Database:KeySearch}
     requirements:
         _method: GET
         serverId: "\d+"

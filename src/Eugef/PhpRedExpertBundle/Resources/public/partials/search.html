@@ -1,5 +1,4 @@
 <div>
-   
 <div>Search</div>
     <form name="searchForm" ng-submit="submitSearch()" novalidate class="css-form">
       Key: <input name="pattern" type="text" ng-model="search.pattern" required placeholder="Key pattern" />
@@ -8,17 +7,34 @@
     </form>
 
     <div ng-show="search.result.count" class="ng-hide">
-        Result
+        Result: total = {[search.result.total]}, on page: {[search.result.count]}
         <table>
             <thead>
-                <th>Key</th>
-                <th>Type</th>
-                <th>TTL</th>
-                <th>Encoding</th>
-               <th>Size</th>
+                <th><a ng-click="sortBy('name')">Key ^</a></th>
+                <th><a ng-click="sortBy('type')">Type ^</a></th>
+                <th><a ng-click="sortBy('ttl')">TTL ^</a></th>
+                <th><a ng-click="sortBy('encoding')">Encoding ^</a></th>
+                <th><a ng-click="sortBy('size')">Size ^</a></th>
             </thead>
+            <tfoot ng-show="search.result.total > search.result.count">
+                <td colspan="5">
+                    <div class="pagination pull-right">
+                        <ul>
+                            <li ng-class="{disabled: search.page == 0}">
+                                <a href ng-click="prevPage()">« Prev</a>
+                            </li>
+                            <li ng-repeat="n in rangeSlice(getLastPage(), search.page-5, search.page+5)" ng-class="{active: n == search.page}"> 
+                                <a href ng-click="setPage(n)">{[n + 1]}</a>
+                            </li>
+                            <li ng-class="{disabled: search.page == getLastPage()-1}">
+                                <a href ng-click="nextPage()">Next »</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tfoot>
             <tbody>
-                <tr ng-repeat="key in search.result.keys">
+                <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse">
                     <td>{[key.name]}</td>
                     <td>{[key.type]}</td>
                     <td>{[key.ttl | sec2time]}</td>
