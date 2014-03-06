@@ -1,11 +1,11 @@
 <?php
 
-namespace Eugef\PhpRedExpertBundle\Controller;
+namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Eugef\PhpRedExpertBundle\Utils\RedisConnector;
+use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 
 class ServerController extends Controller
 {

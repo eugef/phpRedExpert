@@ -1,6 +1,6 @@
 <?php
 
-namespace  Eugef\PhpRedExpertBundle\Utils;
+namespace  Eugef\PhpRedExpert\ApiBundle\Utils;
 
 /**
  * Description of RedisConnector

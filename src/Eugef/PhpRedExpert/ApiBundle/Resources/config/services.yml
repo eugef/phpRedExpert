@@ -1,0 +1,7 @@
+parameters:
+#    eugef_php_red_expert_api.example.class: Eugef\PhpRedExpert\ApiBundle\Example
+
+services:
+#    eugef_php_red_expert_api.example:
+#        class: %eugef_php_red_expert_api.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

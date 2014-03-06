@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/eugefphpredexpertangular/css/application.css') }}">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-route.js"></script>
+        <script>
+            var CONFIG = {
+                'apiUri' : 'api/',
+                'assetsUri' : '/phpredexpert/web/bundles/eugefphpredexpertangular/'
+            };
+        </script>
+        <script src="{{ asset('bundles/eugefphpredexpertangular/js/application.js') }}" ></script>
+
+    </head>
+    <body ng-app="myApp" ng-controller="AppController">
+        {% block content %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

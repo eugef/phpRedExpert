@@ -1,0 +1,3 @@
+eugef_php_red_expert_homepage:
+    pattern:  /
+    defaults: { _controller: EugefPhpRedExpertAngularBundle:Default:index }
