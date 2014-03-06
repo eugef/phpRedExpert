@@ -4,20 +4,20 @@ eugef_php_red_expert_homepage:
     
 eugef_php_red_expert_server_list:
     pattern: /server/list
-    defaults: { _controller: EugefPhpRedExpertBundle:Server:List }
+    defaults: { _controller: EugefPhpRedExpertBundle:Server:List, _format: json}
     requirements:
         _method: GET
     
 eugef_php_red_expert_server_databases:
     pattern:  /server/{serverId}/databases
-    defaults: { _controller: EugefPhpRedExpertBundle:Server:Databases }
+    defaults: { _controller: EugefPhpRedExpertBundle:Server:Databases, _format: json}
     requirements:
         _method: GET
         serverId: "\d+"
 
 eugef_php_red_expert_database_search:
     pattern:  /server/{serverId}/db/{dbId}/search
-    defaults: {_controller: EugefPhpRedExpertBundle:Database:KeySearch}
+    defaults: {_controller: EugefPhpRedExpertBundle:Database:KeySearch, _format: json}
     requirements:
         _method: GET
         serverId: "\d+"

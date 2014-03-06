@@ -311,8 +311,8 @@ App.controller('AppController', ['$scope', '$q', 'RedisService',
     }
 ]);
 
-App.controller('SearchController', ['$scope', '$routeParams', '$location', 'config', 'RedisService', 
-    function ($scope, $routeParams, $location, config, RedisService) {
+App.controller('SearchController', ['$scope', '$routeParams', '$location', 'RedisService', 
+    function ($scope, $routeParams, $location, RedisService) {
         console.log('SearchController');
         console.log($routeParams);
         
@@ -327,7 +327,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'conf
                 pattern: '',
                 keys: [],
                 count: 0,
-                total: 0
+                total: 0,
+                pageSize: 1
             }        
         };        
         
@@ -349,11 +350,12 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'conf
             return RedisService.keySearch($scope.current.serverId, $scope.current.dbId, $scope.search.pattern, $scope.search.page).then(
                 function(res) {
                     $scope.search.result.pattern = pattern;
-                    $scope.search.result.count = res.data.count;
-                    $scope.search.result.total = res.data.total;
+                    $scope.search.result.count = res.data.metadata.count;
+                    $scope.search.result.total = res.data.metadata.total;
+                    $scope.search.result.pageSize = res.data.metadata.page_size;
                     
                     $scope.search.result.keys = [];
-                    angular.forEach(res.data.keys, function(key) {
+                    angular.forEach(res.data.items, function(key) {
                         $scope.search.result.keys.push(key);
                     });
 
@@ -392,7 +394,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'conf
         };
         
         $scope.getLastPage = function() {
-            return Math.ceil($scope.search.result.total / config.itemsPerPage);
+            return Math.ceil($scope.search.result.total / $scope.search.result.pageSize);
         };
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {

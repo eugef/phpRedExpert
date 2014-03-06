@@ -33,7 +33,7 @@ class RedisConnector
     }
 
     public function selectDB($dbId) {
-        $this->db->select($dbId);
+        return $this->db->select($dbId);
     }
     
     public function getDbs()
@@ -112,7 +112,7 @@ class RedisConnector
         return $size;
     }
     
-    public function keySearch($pattern, $offset = 0, $length = NULL) {
+    public function keySearch($pattern, $offset = 0, $length = NULL, &$totalCount = NULL) {
         $result = array();
             
         $keys = $this->db->keys($pattern);
@@ -126,7 +126,7 @@ class RedisConnector
         sort($keys);
 
         for ($i = 0; $i < $keysCount; $i++) {
-            $result['keys'][] = array(
+            $result[] = array(
                 'name' => $keys[$i],
                 'type' => $this->getKeyType($keys[$i]),
                 'encoding' => $this->getKeyEncoding($keys[$i]),
@@ -134,9 +134,6 @@ class RedisConnector
                 'size' => $this->getKeySize($keys[$i]),
             );
         }
-        
-        $result['count'] = $keysCount;
-        $result['total'] = $totalCount;
         
         return $result;
     }

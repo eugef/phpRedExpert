@@ -3,6 +3,7 @@
 namespace Eugef\PhpRedExpertBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Eugef\PhpRedExpertBundle\Utils\RedisConnector;
 
@@ -16,19 +17,31 @@ class DatabaseController extends Controller
         $page = abs($this->getRequest()->get('page'));
         $pattern = trim($this->getRequest()->get('pattern'));
         
-        if ($pattern && isset($servers[$serverId])) {
-            $redis = new RedisConnector($servers[$serverId]);
-            // TODO: check if DB exists
-            $redis->selectDB($dbId);
-                        
-            return new JsonResponse(
-                $redis->keySearch($pattern, $page * $searchConfig['items_per_page'], $searchConfig['items_per_page'])
-            );
-        }
-        else {
-            // TODO: throw an error
-            return new JsonResponse(array('error'));
-        }        
+        if (!isset($servers[$serverId])) {
+            throw new HttpException(404, 'Server not found');
+        }    
+            
+        $redis = new RedisConnector($servers[$serverId]);
         
+        if (!$redis->selectDB($dbId)) {
+            throw new HttpException(404, 'Database not found');
+        }   
+        
+        if (!$pattern) {
+            throw new HttpException(400, 'Search pattern is not specified');
+        }
+        
+        $keys = $redis->keySearch($pattern, $page * $searchConfig['items_per_page'], $searchConfig['items_per_page'], $total);
+
+        return new JsonResponse(
+            array(
+                'items' => $keys,
+                'metadata' => array(
+                    'count' => sizeof($keys),
+                    'total' => $total,
+                    'page_size' => $searchConfig['items_per_page'],
+                ),
+            )            
+        );
     }  
 }
