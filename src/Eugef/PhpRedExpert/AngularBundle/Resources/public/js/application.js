@@ -325,7 +325,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                 if ($scope.search.pattern != $scope.search.result.pattern) {
                     $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern), false);
                 }
-                $scope.keySearch($scope.search.pattern);
+                $scope.keySearch($scope.search.pattern, 1);
 			}
             
         }
@@ -333,8 +333,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         $scope.keySearch = function(pattern, page) {
             console.log('keySearch: ' + page + '[' + $scope.search.page + ']');
             $scope.search.pattern = pattern;
-            page = angular.isDefined(page) ? page : 1;
-            
+                        
             return RedisService.keySearch($scope.current.serverId, $scope.current.dbId, pattern, page).then(
                 function(response) {
                     /*
@@ -380,7 +379,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             if ($routeParams.pattern) {
                 console.log('search');
                 console.log($routeParams);
-                $scope.keySearch($routeParams.pattern, $routeParams.page);
+                page = parseInt($routeParams.page, 10) > 0 ? parseInt($routeParams.page, 10) : 1;
+                $scope.keySearch($routeParams.pattern, page);
             }
         });        
     }
