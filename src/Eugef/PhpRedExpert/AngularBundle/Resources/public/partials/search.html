@@ -7,7 +7,7 @@
     </form>
 
     <div ng-show="search.result.count" class="ng-hide">
-        Result: total = {[search.result.total]}, on page: {[search.result.count]}
+        Result: total = {[search.result.total]}, on page: {[search.result.count]}, page {[search.page]} / {[search.pageCount]}
         <table>
             <thead>
                 <th><a ng-click="sortBy('name')">Key ^</a></th>
@@ -18,19 +18,7 @@
             </thead>
             <tfoot ng-show="search.result.total > search.result.count">
                 <td colspan="5">
-                    <div class="pagination pull-right">
-                        <ul>
-                            <li ng-class="{disabled: search.page == 0}">
-                                <a href ng-click="prevPage()">« Prev</a>
-                            </li>
-                            <li ng-repeat="n in rangeSlice(getLastPage(), search.page-5, search.page+5)" ng-class="{active: n == search.page}"> 
-                                <a href ng-click="setPage(n)">{[n + 1]}</a>
-                            </li>
-                            <li ng-class="{disabled: search.page == getLastPage()-1}">
-                                <a href ng-click="nextPage()">Next »</a>
-                            </li>
-                        </ul>
-                    </div>
+                    <pagination on-select-page="setPage(page)" total-items="search.result.total" page="search.page" items-per-page="search.result.pageSize" num-pages="search.pageCount" max-size="11" class="pagination-sm" boundary-links="true" rotate="true"></pagination>
                 </td>
             </tfoot>
             <tbody>

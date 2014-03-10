@@ -1,7 +1,20 @@
 parameters:
-    database_host:     127.0.0.1
-    database_port:     6379
-    database_password: ~
+    redis_servers:
+      -
+        host: 127.0.0.1
+        port: 6379
+        name: null
+        password: null
+        databases:
+          0:
+            name: cache
+      -
+        host: localhost
+        port: 6379
+        name: server2
+        password: null
+    search:
+      items_per_page: 100
 
     mailer_transport:  smtp
     mailer_host:       127.0.0.1

@@ -1,4 +1,4 @@
-var App = angular.module('myApp', ['ngRoute'])
+var App = angular.module('myApp', ['ngRoute', 'ui.bootstrap'])
     .constant('config', CONFIG)
     .config(['$interpolateProvider', function($interpolateProvider) {
         $interpolateProvider.startSymbol('{[').endSymbol(']}');
@@ -19,7 +19,7 @@ App.run(['$route', '$rootScope', '$location',
                     un();
                 });
             }
-
+            
             return original.apply($location, [path]);
         };
     }
@@ -110,7 +110,8 @@ App.factory('RedisService', ['$http', 'config',
                     {
                         params : {
                             pattern : pattern,
-                            page: page
+                            // backend pagination starts from 0, frontend from 1
+                            page: page > 0 ? page-1 : 0
                         }
                     }
                 );
@@ -123,8 +124,8 @@ App.factory('RedisService', ['$http', 'config',
 
 // Controllers
 
-App.controller('AppController', ['$scope', '$q', 'RedisService', 
-    function ($scope, $q, RedisService) {
+App.controller('AppController', ['$scope', '$q', '$location', 'RedisService', 
+    function ($scope, $q, $location, RedisService) {
     
         $scope.servers = {};
         $scope.dbs = {};
@@ -181,12 +182,12 @@ App.controller('AppController', ['$scope', '$q', 'RedisService',
             console.log('loadServers');
 
             return RedisService.getServers().then(
-                function(res) {
+                function(response) {
                     $scope.servers = {};
                     $scope.current.serverId = null;
                     $scope.default.serverId = null;
 
-                    angular.forEach(res.data, function(server) {
+                    angular.forEach(response.data, function(server) {
                         if ($scope.default.serverId == null) {
                             $scope.default.serverId = server.id;
                         }
@@ -215,20 +216,19 @@ App.controller('AppController', ['$scope', '$q', 'RedisService',
         $scope.loadDBs = function(serverId, newDbId) {
             console.log('loadDBs');
 
-            if ($scope.serverExists(serverId)) {
-                $scope.current.serverId = serverId;
-            }
-            else {
-                $scope.current.serverId = $scope.default.serverId;
+            // if error is thrown - defer object should be resolved
+            if (!$scope.serverExists(serverId)) {
+                serverId = $scope.default.serverId;
             }
 
-            return RedisService.getDBs($scope.current.serverId).then(
-                function(res) {
+            return RedisService.getDBs(serverId).then(
+                function(response) {
                     $scope.dbs = {};
+                    $scope.current.serverId = serverId;
                     $scope.current.dbId = null;
                     $scope.default.dbId = null;
 
-                    angular.forEach(res.data, function(db) {
+                    angular.forEach(response.data, function(db) {
                         if ($scope.default.dbId == null || db.default) {
                             $scope.default.dbId = db.id;
                         }
@@ -250,6 +250,9 @@ App.controller('AppController', ['$scope', '$q', 'RedisService',
                     }
 
                     console.log('loadDBs / done');
+                },
+                function(error) {
+                    alert(error.data.error.message);
                 }
             );
         };
@@ -258,7 +261,10 @@ App.controller('AppController', ['$scope', '$q', 'RedisService',
             console.log('changeDB ' + dbId);
             if ($scope.dbExists(dbId)) {
                 $scope.current.dbId = dbId;
-            }    
+            } 
+            else {
+                alert('Database doesn\'t exists');
+            }
         }
 
         $scope.serverExists = function(serverId) {
@@ -272,25 +278,6 @@ App.controller('AppController', ['$scope', '$q', 'RedisService',
         $scope.isEmpty = function (obj) {
             return angular.isUndefined(obj) || (obj == null) || angular.equals({},obj); 
         };
-        
-        $scope.rangeSlice = function(size, start, end) {
-            if (size > 0) {
-                if (start < 0) {
-                    end -= start;
-                    start = 0;
-                }
-
-                if (end > size) {
-                    start -= end - size;
-                    end = size-1;
-                }
-
-                return $scope.range(start, end);
-            }  
-            else {
-               return []; 
-            }
-        }
         
         $scope.range = function(start, end)  {
             var result = [];        
@@ -318,7 +305,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         
         $scope.search = {
             pattern: '',
-            page: 0,        
+            page: 1, 
+            pageCount: 0,
             sort: {
                 field: 'name',
                 reverse: false
@@ -334,7 +322,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         
         $scope.submitSearch = function() {
 			if ($scope.searchForm.$valid) {
-                if ($scope.search.pattern !== $scope.search.result.pattern) {
+                if ($scope.search.pattern != $scope.search.result.pattern) {
                     $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern), false);
                 }
                 $scope.keySearch($scope.search.pattern);
@@ -343,19 +331,24 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         }
         
         $scope.keySearch = function(pattern, page) {
-            console.log('keySearch');
+            console.log('keySearch: ' + page + '[' + $scope.search.page + ']');
             $scope.search.pattern = pattern;
-            $scope.search.page = angular.isDefined(page) ? page : 0;
-
-            return RedisService.keySearch($scope.current.serverId, $scope.current.dbId, $scope.search.pattern, $scope.search.page).then(
-                function(res) {
+            page = angular.isDefined(page) ? page : 1;
+            
+            return RedisService.keySearch($scope.current.serverId, $scope.current.dbId, pattern, page).then(
+                function(response) {
+                    /*
+                     * because pagination plugin watches total count and page,
+                     * these variables should be changed in one scope
+                     */
+                    $scope.search.page = page;
                     $scope.search.result.pattern = pattern;
-                    $scope.search.result.count = res.data.metadata.count;
-                    $scope.search.result.total = res.data.metadata.total;
-                    $scope.search.result.pageSize = res.data.metadata.page_size;
+                    $scope.search.result.count = response.data.metadata.count;
+                    $scope.search.result.total = response.data.metadata.total;
+                    $scope.search.result.pageSize = response.data.metadata.page_size;
                     
                     $scope.search.result.keys = [];
-                    angular.forEach(res.data.items, function(key) {
+                    angular.forEach(response.data.items, function(key) {
                         $scope.search.result.keys.push(key);
                     });
 
@@ -376,32 +369,18 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             }
         };
         
-        $scope.prevPage = function() {
-            if ($scope.search.page > 0) {
-                $scope.setPage($scope.search.page - 1);
-            }
-        };
-
-        $scope.nextPage = function() {
-            if ($scope.search.page < $scope.getLastPage() ) {
-                return $scope.setPage($scope.search.page + 1);
-            } 
-        };
-
         $scope.setPage = function(page) {
+            console.log('set page: ' + page + '[' + $scope.search.page + ']');
+            console.log($scope.search);
             $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern) + '/' + encodeURIComponent(page), false);
             $scope.keySearch($scope.search.pattern, page);
-        };
-        
-        $scope.getLastPage = function() {
-            return Math.ceil($scope.search.result.total / $scope.search.result.pageSize);
         };
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
             if ($routeParams.pattern) {
                 console.log('search');
                 console.log($routeParams);
-                $scope.keySearch($routeParams.pattern, parseInt($routeParams.page));
+                $scope.keySearch($routeParams.pattern, $routeParams.page);
             }
         });        
     }
