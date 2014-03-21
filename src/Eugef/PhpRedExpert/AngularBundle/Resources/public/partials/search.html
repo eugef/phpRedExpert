@@ -1,39 +1,87 @@
-<div>
-<div>Search</div>
-    <form name="searchForm" ng-submit="submitSearch()" novalidate class="css-form">
-      Key: <input name="pattern" type="text" ng-model="search.pattern" required placeholder="Key pattern" />
-      <button type="submit" ng-disabled="searchForm.$invalid">Search</button>
-      <p ng-show="searchForm.pattern.$invalid && !searchForm.pattern.$pristine" class="help-block">Search pattern is required.</p>
-    </form>
-
-    <div ng-show="search.result.count" class="ng-hide">
-        Result: total = {[search.result.total]}, on page: {[search.result.count]}, page {[search.page]} / {[search.pageCount]}
-        <table>
-            <thead>
-                <th><a ng-click="sortBy('name')">Key ^</a></th>
-                <th><a ng-click="sortBy('type')">Type ^</a></th>
-                <th><a ng-click="sortBy('ttl')">TTL ^</a></th>
-                <th><a ng-click="sortBy('encoding')">Encoding ^</a></th>
-                <th><a ng-click="sortBy('size')">Size ^</a></th>
-            </thead>
-            <tfoot ng-show="search.result.total > search.result.count">
-                <td colspan="5">
-                    <pagination on-select-page="setPage(page)" total-items="search.result.total" page="search.page" items-per-page="search.result.pageSize" num-pages="search.pageCount" max-size="11" class="pagination-sm" boundary-links="true" rotate="true"></pagination>
-                </td>
-            </tfoot>
-            <tbody>
-                <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse">
-                    <td>{[key.name]}</td>
-                    <td>{[key.type]}</td>
-                    <td>{[key.ttl | sec2time]}</td>
-                    <td>{[key.encoding]}</td>
-                    <td>{[key.size]}</td>
-                </tr>
-            </tbody>    
-        </table> 
+<div class="col-md-12">
+    <div class="box">
+        <div class="box-header"></div>
+        <div class="box-body">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group">
+                    <form name="searchForm" ng-submit="submitSearch()" novalidate class="form-inline">
+                        <div class="input-group" style="width:280px">
+                            <input name="pattern" type="text" ng-model="search.pattern" required placeholder="Key pattern" class="form-control pull-left" >
+                            <!--span ng-show="searchForm.pattern.$invalid && !searchForm.pattern.$pristine" class="glyphicon glyphicon-remove form-control-feedback"></span-->
+                            <span class="input-group-btn">
+                                <button type="submit" ng-disabled="searchForm.$invalid" class="btn btn-info">Search</button>
+                            </span>
+                        </div>
+                    </form>
+                 </div>
+                 <div class="btn-group">   
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-plus-circle"></i> Add <span class="fa fa-caret-down"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">String</a></li>
+                        <li><a href="#">Hash</a></li>
+                        <li><a href="#">List</a></li>
+                        <li><a href="#">Set</a></li>
+                        <li><a href="#">Sorted set</a></li>
+                    </ul>
+                 </div>    
+                 <div class="btn-group">   
+                    <button type="button" class="btn btn-default"><i class="fa fa-file-text-o"></i> Edit</button>
+                    <button type="button" class="btn btn-default"><i class="fa fa-edit"></i> Rename</button>
+                    <button type="button" class="btn btn-default"><i class="fa fa-clock-o"></i> Expire</button>
+                 </div>   
+                 <div class="btn-group">      
+                    <button type="button" class="btn btn-default"><i class="fa fa-arrows"></i> Move</button>
+                    <button type="button" class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
+                </div>
+            </div>  
+        </div>
+    </div>
+    <div class="box box-primary" ng-show="search.result.count" class="ng-hide">
+        <div class="box-body table-responsive no-padding">
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <th><input type="checkbox" /></th>    
+                    <th><a ng-click="sortBy('name')">Key ^</a></th>
+                    <th><a ng-click="sortBy('type')">Type ^</a></th>
+                    <th><a ng-click="sortBy('ttl')">TTL ^</a></th>
+                    <th><a ng-click="sortBy('encoding')">Encoding ^</a></th>
+                    <th><a ng-click="sortBy('size')">Size ^</a></th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse">
+                        <td><input type="checkbox" /></td>
+                        <td><a href>{[key.name]}</a></td>
+                        <td>{[key.type]}</td>
+                        <td>{[key.ttl | sec2time]}</td>
+                        <td>{[key.encoding]}</td>
+                        <td>{[key.size]}</td>
+                    </tr>
+                </tbody>    
+            </table>
+            <div class="pull-left pagination">
+                Total <span class="badge">{[search.result.total]}</span> | on page <span class="badge">{[search.result.count]}</span> | page <span class="badge">{[search.page]} / {[search.pageCount]}</span>
+            </div>    
+            <pagination on-select-page="setPage(page)" total-items="search.result.total" page="search.page" items-per-page="search.result.pageSize" num-pages="search.pageCount" max-size="11" class="pull-right" boundary-links="true" rotate="true"></pagination>
+        </div>
     </div>
 
-    <div ng-show="!search.result.count && search.result.pattern" class="ng-hide"> 
-        No results
-    </div>    
+    <div class="alert alert-warning alert-dismissable ng-hide" ng-show="!search.result.count && search.result.pattern" >
+        <i class="fa fa-warning"></i>
+        <b>No results</b> for specified search pattern.
+    </div>
+    
+    <div class="alert alert-info alert-dismissable ng-hide" ng-show="!search.result.count">
+        <i class="fa fa-info"></i>
+        <b>Supported search patterns:</b> 
+        <ul>
+            <li>h?llo matches hello, hallo and hxllo</li>
+            <li>h*llo matches hllo and heeeello</li>
+            <li>h[ae]llo matches hello and hallo, but not hillo</li>
+            <li>* matches the all keys</li>
+        </ul>    
+        Use \ to escape special characters if you want to match them verbatim.
+    </div>
+
 </div>

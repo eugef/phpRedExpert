@@ -1,8 +1,16 @@
+/* angular bootstrap fix */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
-.active {
+/*adminlte fixes*/
+.content {
+    padding-bottom: 0;
+}
+
+.skin-black .treeview-menu > li.active > a {
     font-weight: bold;
 }
-.disabled, .disabled a {
-    color: red;
+
+.navbar-nav > .messages-menu > .dropdown-menu > li .menu > li.active > a {
+  background: #f6f6f6;
+  text-decoration: none;
 }

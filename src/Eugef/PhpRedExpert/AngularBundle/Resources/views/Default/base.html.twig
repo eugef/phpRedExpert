@@ -1,26 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:ng="http://angularjs.org" lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <title>{% block title %}PHP RedExpert{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/eugefphpredexpertangular/css/application.css') }}">
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-route.js"></script>
-        <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+        {% stylesheets 
+            'bundles/eugefphpredexpertangular/vendor/bootstrap-css/index.css' 
+            'bundles/eugefphpredexpertangular/adminlte/css/*' 
+            'bundles/eugefphpredexpertangular/css/application.css'
+            filter='cssrewrite' 
+        %}
+            <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+        {% endstylesheets %}
         <script>
             var CONFIG = {
-                'apiUri' : 'app_dev.php/api/',
-                'assetsUri' : '/phpredexpert/web/bundles/eugefphpredexpertangular/'
+                apiUri : 'app_dev.php/api/',
+                assetsUri : '/phpredexpert/web/bundles/eugefphpredexpertangular/',
+                cache: true
             };
         </script>
-        <script src="{{ asset('bundles/eugefphpredexpertangular/js/application.js') }}" ></script>
-
     </head>
-    <body ng-app="myApp" ng-controller="AppController">
+    <body ng-app="myApp" ng-controller="AppController" class="skin-black">
         {% block content %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% javascripts 
+            'bundles/eugefphpredexpertangular/vendor/angular/angular.js'
+            'bundles/eugefphpredexpertangular/vendor/angular-route/angular-route.js'
+            'bundles/eugefphpredexpertangular/vendor/angular-cache/dist/angular-cache.js'
+            'bundles/eugefphpredexpertangular/vendor/angular-bootstrap/ui-bootstrap-tpls.js'
+            'bundles/eugefphpredexpertangular/js/*'
+            'bundles/eugefphpredexpertangular/js/*/*'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
     </body>
 </html>

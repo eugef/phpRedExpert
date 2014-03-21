@@ -9,6 +9,8 @@ namespace  Eugef\PhpRedExpert\ApiBundle\Utils;
  */
 class RedisConnector
 {
+    const PORT_DEFAULT = 6379;
+    
     private $config = array();
     private $db;
     
@@ -46,9 +48,9 @@ class RedisConnector
             if (preg_match('/^db([0-9]+)?$/', $key, $keyMatches)) {
                 preg_match('/^keys=([0-9]+),expires=([0-9]+)/', $value, $valueMatches);
                 $result[$keyMatches[1]] = array(
-                    'id' => $keyMatches[1],
-                    'keys' => $valueMatches[1],
-                    'expires' => $valueMatches[2],
+                    'id' => (int)$keyMatches[1],
+                    'keys' => (int)$valueMatches[1],
+                    'expires' => (int)$valueMatches[2],
                     'default' => $this->getDBConfigValue($keyMatches[1], 'default'),
                     'name' => $this->getDBConfigValue($keyMatches[1], 'name'),
                 );

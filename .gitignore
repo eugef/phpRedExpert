@@ -17,3 +17,6 @@ composer.phar
 
 # IDE
 nbproject/*
+
+# Bower
+*/public/vendor/*

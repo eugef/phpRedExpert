@@ -16,7 +16,7 @@ class ServerController extends Controller
            $servers[$id] = array(
                'id' => $id,
                'host' => $server['host'],
-               'port' => $server['port'],
+               'port' => empty($server['port']) ? RedisConnector::PORT_DEFAULT : $server['port'],
                'name' => empty($server['name']) ? '' : $server['name'],
                'password' => empty($server['password']) ? false : true,
            );
