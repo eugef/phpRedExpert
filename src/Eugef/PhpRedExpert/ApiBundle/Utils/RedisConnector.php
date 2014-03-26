@@ -139,4 +139,16 @@ class RedisConnector
         
         return $result;
     }
+    
+    public function getInfo() {
+        return $this->db->info();
+    }
+    
+    public function getClients() {
+        return $this->db->client('LIST');
+    }
+    
+    public function getConfig($pattern = '*') {
+        return $this->db->config('GET', $pattern);
+    }
 }

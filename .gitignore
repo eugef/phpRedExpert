@@ -19,4 +19,4 @@ composer.phar
 nbproject/*
 
 # Bower
-*/public/vendor/*
+src/Eugef/PhpRedExpert/AngularBundle/Resources/public/vendor/*

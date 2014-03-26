@@ -6,11 +6,49 @@
     padding-bottom: 0;
 }
 
-.skin-black .treeview-menu > li.active > a {
+.skin-black .sidebar-menu li.active > a {
     font-weight: bold;
 }
 
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li.active > a {
-  background: #f6f6f6;
-  text-decoration: none;
+    background: #f6f6f6;
+    text-decoration: none;
+}
+
+.navbar-nav > .messages-menu > .dropdown-menu > li .menu > li.active > a > h4 {
+    font-weight: bold;
+}
+
+.sidebar .sidebar-menu .treeview.active .treeview-menu {
+    display: block;
+}
+
+.sidebar .sidebar-menu .treeview .fa-angle-dynamic:before {
+    content: "\f105";
+}
+
+.sidebar .sidebar-menu .treeview.active .fa-angle-dynamic:before {
+    content: "\f107";
+}
+
+.sidebar .sidebar-menu .treeview-menu li{
+    margin-left: 10px;
+} 
+
+.sidebar .sidebar-menu .treeview.active.animate .treeview-menu {
+    animation-name: fadeAnimation;
+    animation-duration: .7s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+    -webkit-animation-name: fadeAnimation;
+    -webkit-animation-duration: .7s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-name: fadeAnimation;
+    -moz-animation-duration: .7s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: ease;
+    -moz-animation-fill-mode: forwards;
 }

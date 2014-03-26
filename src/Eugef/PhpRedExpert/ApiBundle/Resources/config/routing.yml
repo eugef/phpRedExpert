@@ -18,3 +18,25 @@ eugef_php_red_expert_database_search:
         _method: GET
         serverId: "\d+"
         dbId: "\d+"
+        
+eugef_php_red_expert_server_info:
+    pattern:  /server/{serverId}/info
+    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:Info, _format: json}
+    requirements:
+        _method: GET
+        serverId: "\d+"
+        
+eugef_php_red_expert_server_clients:
+    pattern:  /server/{serverId}/clients
+    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:Clients, _format: json}
+    requirements:
+        _method: GET
+        serverId: "\d+"
+        
+eugef_php_red_expert_server_config:
+    pattern:  /server/{serverId}/config
+    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:Config, _format: json}
+    requirements:
+        _method: GET
+        serverId: "\d+"
+        

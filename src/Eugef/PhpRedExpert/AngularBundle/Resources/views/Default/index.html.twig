@@ -162,7 +162,7 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="glyphicon glyphicon-user"></i>
+                        <i class="fa fa-user"></i>
                         <span>Jane Doe <i class="caret"></i></span>
                     </a>
                     <ul class="dropdown-menu">
@@ -220,33 +220,38 @@
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
-                <li >
-                    <a href="#!/">
+                <li ng-class="{active: $route.current.controller == 'DashboardController'}">
+                    <a href="#!/server/{[current.serverId]}">
                         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="treeview active">
+                <li menutree class="treeview" ng-class="{active: $route.current.controller == 'SearchController'}">
                     <a href="#">
                         <i class="fa fa-table"></i>
                         <span>Databases</span>
-                        <i class="fa fa-angle-down pull-right"></i>
+                        <i class="fa fa-angle-dynamic pull-right"></i>
                     </a>
-                    <ul class="treeview-menu" style="display: block;">
-                        <li ng-repeat="db in dbs" ng-class="current.dbId == db.id ? 'active' : ''">
+                    <ul class="treeview-menu">
+                        <li ng-repeat="db in dbs" ng-class="{active: $route.current.controller == 'SearchController' && current.dbId == db.id}">
                             <a href="{[db.url]}"><i class="fa fa-angle-double-right"></i> {[db.name]} <small class="badge pull-right bg-blue">{[db.keys]}</small></a>
                         </li>
                         <li>
-                            <a href="#!/"><i class="fa fa-plus-circle"></i> Add database</a>
+                            <a href="#!/server/{[current.serverId]}/db/create"><i class="fa fa-plus-circle"></i> Add database</a>
                         </li>
                     </ul>
                 </li>
-                <li >
-                    <a href="#!/">
+                <li ng-class="{active: $route.current.controller == 'SlowlogController'}">
+                    <a href="#!/server/{[current.serverId]}/slowlog">
                         <i class="fa fa-warning"></i> <span>Slow log</span>
                     </a>
                 </li>
-                <li >
-                    <a href="#!/">
+                <li ng-class="{active: $route.current.controller == 'ClientsController'}">
+                    <a href="#!/server/{[current.serverId]}/clients">
+                        <i class="fa fa-group"></i> <span>Clients</span>
+                    </a>
+                </li>
+                <li ng-class="{active: $route.current.controller == 'TerminalController'}">
+                    <a href="#!/server/{[current.serverId]}/terminal">
                         <i class="fa fa-terminal"></i> <span>Terminal</span>
                     </a>
                 </li>

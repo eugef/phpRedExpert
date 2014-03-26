@@ -32,20 +32,16 @@ App.config(['$routeProvider', '$locationProvider', 'config',
         $locationProvider.hashPrefix('!');
         $routeProvider.
             when('/', {
-                templateUrl: config.assetsUri + 'partials/search.html',
-                controller: 'SearchController'
+                templateUrl: config.assetsUri + 'partials/dashboard.html',
+                controller: 'DashboardController'
             }).
             when('/server/:serverId/', {
-                templateUrl: config.assetsUri + 'partials/search.html',
-                controller: 'SearchController'
+                templateUrl: config.assetsUri + 'partials/dashboard.html',
+                controller: 'DashboardController'
             }).
             when('/server/:serverId/db/:dbId/', {
                 templateUrl: config.assetsUri + 'partials/search.html',
                 controller: 'SearchController'
-            }).
-            when('/server/:serverId/info/', {
-                templateUrl: config.assetsUri + 'partials/info.html',
-                controller: 'InfoController'
             }).
             when('/server/:serverId/db/:dbId/search/:pattern?/:page?', {
                 templateUrl: config.assetsUri + 'partials/search.html',

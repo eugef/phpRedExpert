@@ -1,6 +1,8 @@
-App.controller('AppController', ['$scope', '$q', '$location', 'RedisService', 
-    function ($scope, $q, $location, RedisService) {
+App.controller('AppController', ['$scope', '$q', '$location', '$route', 'RedisService', 
+    function ($scope, $q, $location, $route, RedisService) {
     
+        $scope.$route = $route;
+        $scope.$location = $location;
         $scope.servers = [];
         $scope.dbs = [];
         $scope.current = {

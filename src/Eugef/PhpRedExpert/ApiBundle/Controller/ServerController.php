@@ -36,5 +36,42 @@ class ServerController extends Controller
         $redis = new RedisConnector($servers[$serverId]);
         return new JsonResponse($redis->getDbs());
     }   
+    
+    public function InfoAction($serverId) 
+    {
+        $servers = $this->container->getParameter('redis_servers');
+        
+        if (!isset($servers[$serverId])) {
+            throw new HttpException(404, 'Server not found');
+        }
+        
+        $redis = new RedisConnector($servers[$serverId]);
+        return new JsonResponse($redis->getInfo());
+    }
+    
+    public function ClientsAction($serverId) 
+    {
+        $servers = $this->container->getParameter('redis_servers');
+        
+        if (!isset($servers[$serverId])) {
+            throw new HttpException(404, 'Server not found');
+        }
+        
+        $redis = new RedisConnector($servers[$serverId]);
+        return new JsonResponse($redis->getClients());
+    }
+    
+    public function ConfigAction($serverId) 
+    {
+        $servers = $this->container->getParameter('redis_servers');
+        
+        if (!isset($servers[$serverId])) {
+            throw new HttpException(404, 'Server not found');
+        }
+        
+        $redis = new RedisConnector($servers[$serverId]);
+        return new JsonResponse($redis->getConfig());
+    }
+        
 
 }

@@ -43,6 +43,15 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                         cache: keySearchCache
                     }
                 );
+            },
+                    
+            getInfo: function(serverId) {
+                return $http.get(
+                    config.apiUri + 'server/' + serverId + '/info', 
+                    {
+                        cache: config.cache
+                    }
+                );
             }
         };
         
