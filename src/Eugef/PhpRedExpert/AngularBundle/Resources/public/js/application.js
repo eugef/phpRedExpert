@@ -46,7 +46,11 @@ App.config(['$routeProvider', '$locationProvider', 'config',
             when('/server/:serverId/db/:dbId/search/:pattern?/:page?', {
                 templateUrl: config.assetsUri + 'partials/search.html',
                 controller: 'SearchController'
-            }).        
+            }). 
+            when('/server/:serverId/clients', {
+                templateUrl: config.assetsUri + 'partials/clients.html',
+                controller: 'ClientsController'
+            }).
             otherwise({
                 redirectTo: '/'
             });

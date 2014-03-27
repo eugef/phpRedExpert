@@ -3,6 +3,12 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', 'RedisSe
     
         $scope.$route = $route;
         $scope.$location = $location;
+        
+        $scope.view = {
+            title: '',
+            subtitle: ''
+        };
+        
         $scope.servers = [];
         $scope.dbs = [];
         $scope.current = {

@@ -18,6 +18,11 @@ App.controller('DashboardController', ['$scope', '$routeParams', '$location', 'R
         }
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
+            $scope.$parent.view = {
+                title: 'Dashboard',
+                subtitle: $scope.getCurrentServer().name
+            };
+            
             console.log('dashboard');
             $scope.getInfo();
         });        

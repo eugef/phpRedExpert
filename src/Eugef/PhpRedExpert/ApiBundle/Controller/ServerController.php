@@ -58,7 +58,19 @@ class ServerController extends Controller
         }
         
         $redis = new RedisConnector($servers[$serverId]);
-        return new JsonResponse($redis->getClients());
+        
+        $clients = $redis->getClients();
+
+        return new JsonResponse(
+            array(
+                'items' => $clients,
+                'metadata' => array(
+                    'count' => sizeof($clients),
+                    'total' => sizeof($clients),
+                    'page_size' => sizeof($clients),
+                ),
+            )            
+        );
     }
     
     public function ConfigAction($serverId) 

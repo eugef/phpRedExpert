@@ -265,15 +265,9 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                {[getCurrentDB().name]}
-                <small>Search database</small>
+                {[view.title]}
+                <small>{[view.subtitle]}</small>
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active"> 
-                    {[getCurrentServer().name]} / {[getCurrentDB().name]}
-                </li>
-            </ol>
         </section>
 
         <!-- Main content -->

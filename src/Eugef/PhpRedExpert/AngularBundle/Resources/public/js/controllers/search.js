@@ -44,10 +44,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                     $scope.search.result.total = response.data.metadata.total;
                     $scope.search.result.pageSize = response.data.metadata.page_size;
                     
-                    $scope.search.result.keys = [];
-                    angular.forEach(response.data.items, function(key) {
-                        $scope.search.result.keys.push(key);
-                    });
+                    $scope.search.result.keys = response.data.items;
 
                     console.log('keySearch / done');
                 }
@@ -74,6 +71,11 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         };
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
+            $scope.$parent.view = {
+                title: 'Database',
+                subtitle: $scope.getCurrentDB().name
+            };
+            
             if ($routeParams.pattern) {
                 console.log('search');
                 console.log($routeParams);
