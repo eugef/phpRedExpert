@@ -41,7 +41,7 @@
         <div class="box-body table-responsive no-padding">
             <table class="table table-hover table-condensed">
                 <thead>
-                    <th><input type="checkbox" /></th>    
+                    <th><input checkbox-all="search.result.keys|selected"/></th>    
                     <th><a ng-click="sortBy('name')">Key ^</a></th>
                     <th><a ng-click="sortBy('type')">Type ^</a></th>
                     <th><a ng-click="sortBy('ttl')">TTL ^</a></th>
@@ -49,8 +49,8 @@
                     <th><a ng-click="sortBy('size')">Size ^</a></th>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse">
-                        <td><input type="checkbox" /></td>
+                    <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse" ng-class="{selected: key.selected}" ng-click="keySelectExclusive($event, $index)">
+                        <td><input type="checkbox" ng-model="key.selected"/></td>
                         <td><a href>{[key.name]}</a></td>
                         <td>{[key.type]}</td>
                         <td>{[key.ttl | sec2time]}</td>

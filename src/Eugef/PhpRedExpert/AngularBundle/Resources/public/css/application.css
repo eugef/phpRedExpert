@@ -6,6 +6,11 @@
     padding-bottom: 0;
 }
 
+/* Change the color of the striped tables */
+.table > tbody > tr.selected > td {
+  background-color: #ffc;
+}
+
 .skin-black .sidebar-menu li.active > a {
     font-weight: bold;
 }
@@ -51,4 +56,9 @@
     -moz-animation-iteration-count: 1;
     -moz-animation-timing-function: ease;
     -moz-animation-fill-mode: forwards;
+}
+
+input[type='checkbox'].greyed {
+    filter: alpha(opacity=30);
+	opacity: 0.5;
 }

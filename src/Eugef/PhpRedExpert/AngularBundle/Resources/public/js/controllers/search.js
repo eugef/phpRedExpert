@@ -13,6 +13,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             },
             result: {
                 pattern: '',
+                selected: [],
                 keys: [],
                 count: 0,
                 total: 0,
@@ -44,11 +45,34 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                     $scope.search.result.total = response.data.metadata.total;
                     $scope.search.result.pageSize = response.data.metadata.page_size;
                     
-                    $scope.search.result.keys = response.data.items;
+                    angular.forEach(response.data.items, function(value){
+                        $scope.search.result.keys.push(value);
+                        $scope.search.result.selected.push(false);
+                    });
 
                     console.log('keySearch / done');
                 }
             );
+        }
+        
+        $scope.keySelectExclusive = function(event, index) {
+            console.log('keySelect: ' + index);
+            if (!(event.target.tagName == 'INPUT' && event.target.type == 'checkbox')) {
+                for (i=0; i<$scope.search.result.keys.length; i++) {
+                    if (index == i) {
+                        $scope.search.result.keys[i].selected = true;
+                    }
+                    else {
+                        $scope.search.result.keys[i].selected = false;
+                    }
+                }
+            }
+        }
+        
+        $scope.keySelectAll = function(event) {
+            for (i=0; i<$scope.search.result.keys.length; i++) {
+                $scope.search.result.keys[i].selected = event.target.checked;
+            }
         }
         
         // change sorting order
