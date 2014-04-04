@@ -62,3 +62,23 @@ input[type='checkbox'].greyed {
     filter: alpha(opacity=30);
 	opacity: 0.5;
 }
+
+.table-condensed>thead>tr>th.checkbox-td,
+.table-condensed>tbody>tr>td.checkbox-td {
+    padding: 0;
+    width: 30px;
+}    
+
+.table-condensed>thead>tr>th.checkbox-td>label,
+.table-condensed>tbody>tr>td.checkbox-td>label {
+    margin: 0;
+    padding: 5px 9px;
+}
+
+.modal-footer {
+    margin-top: 0;
+}
+
+.word-break {
+    word-break: break-all;
+}

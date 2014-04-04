@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <h4>{[title]}</h4>
+</div>
+<div class="modal-body">
+    <p>{[message]}</p>
+    <ul ng-show="items.length" class="ng-hide row">
+        <li ng-repeat="item in items" class="col-md-6 word-break">{[item]}</li>
+    </ul>
+    <p ng-show="!undo" class="ng-hide">
+        <strong>You can't undo this action!</strong>
+    </p>
+<div class="modal-footer">
+    <button class="btn" ng-class="{'btn-primary': undo, 'btn-danger': !undo}" ng-click="ok()">{[action.ok]}</button>
+    <button class="btn btn-default" ng-click="cancel()">{[action.cancel]}</button>
+</div>

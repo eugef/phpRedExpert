@@ -1,5 +1,5 @@
-App.controller('AppController', ['$scope', '$q', '$location', '$route', 'RedisService', 
-    function ($scope, $q, $location, $route, RedisService) {
+App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal', 'config', 'RedisService', 
+    function ($scope, $q, $location, $route, $modal, config, RedisService) {
     
         $scope.$route = $route;
         $scope.$location = $location;
@@ -169,6 +169,18 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', 'RedisSe
         $scope.isEmpty = function (obj) {
             return angular.isUndefined(obj) || (obj == null) || angular.equals({},obj); 
         };
+        
+        $scope.showModalConfirm = function(data) {
+            return $modal.open({
+                templateUrl: config.assetsUri + 'views/modals/confirm.html',
+                controller: 'ModalConfirmController',
+                resolve: {
+                    data: function() {
+                        return data;
+                    }      
+                }    
+            });
+        }
 
     }
 ]);

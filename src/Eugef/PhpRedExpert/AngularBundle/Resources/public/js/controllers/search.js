@@ -15,7 +15,6 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                 pattern: '',
                 selected: [],
                 keys: [],
-                count: 0,
                 total: 0,
                 pageSize: 1
             }        
@@ -24,16 +23,16 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         $scope.submitSearch = function() {
 			if ($scope.searchForm.$valid) {
                 $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern), false);
-                $scope.keySearch($scope.search.pattern, 1);
+                $scope.searchKey($scope.search.pattern, 1);
 			}
             
         }
         
-        $scope.keySearch = function(pattern, page) {
-            console.log('keySearch: ' + page + '[' + $scope.search.page + ']');
+        $scope.searchKey = function(pattern, page) {
+            console.log('searchKey: ' + page + '[' + $scope.search.page + ']');
             $scope.search.pattern = pattern;
                         
-            return RedisService.keySearch($scope.current.serverId, $scope.current.dbId, pattern, page).then(
+            return RedisService.searchKeys($scope.current.serverId, $scope.current.dbId, pattern, page).then(
                 function(response) {
                     /*
                      * because pagination plugin watches total count and page,
@@ -41,7 +40,6 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                      */
                     $scope.search.page = page;
                     $scope.search.result.pattern = pattern;
-                    $scope.search.result.count = response.data.metadata.count;
                     $scope.search.result.total = response.data.metadata.total;
                     $scope.search.result.pageSize = response.data.metadata.page_size;
                     
@@ -50,22 +48,58 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                         $scope.search.result.keys.push(value);
                     });
 
-                    console.log('keySearch / done');
+                    console.log('searchKey / done');
                 }
             );
         }
         
-        $scope.keySelectExclusive = function(event, index) {
+        $scope.selectKeyExclusive = function(index) {
             console.log('keySelect: ' + index);
-            if (!(event.target.tagName == 'INPUT' && event.target.type == 'checkbox')) {
-                for (i=0; i<$scope.search.result.keys.length; i++) {
-                    if (index == i) {
-                        $scope.search.result.keys[i].selected = true;
-                    }
-                    else {
-                        $scope.search.result.keys[i].selected = false;
-                    }
+       
+            for (i=0; i<$scope.search.result.keys.length; i++) {
+                if (index == i) {
+                    // if multiple keys are selected - then select current key
+                    // if only one key was selected - then inverse current state
+                    // (i.e. allow to unselect current key) 
+                    $scope.search.result.keys[i].selected = $scope.search.result.selected.length == 1 ? !$scope.search.result.keys[i].selected : true;
                 }
+                else {
+                    $scope.search.result.keys[i].selected = false;
+                }
+            }
+        }
+        
+        $scope.deleteSelectedKeys = function() {
+            console.log('deleteSelectedKeys');
+            deleteKeys = $scope.search.result.selected;
+            if (deleteKeys) {
+
+                $scope.$parent.showModalConfirm({
+                    title: 'Delete key(s) forever?',
+                    message: (deleteKeys.length == 1 ? '1 key is' : deleteKeys.length + ' keys are') + ' about to be permanently deleted:',
+                    items: deleteKeys,
+                    undo: false,
+                    action: {
+                        ok: 'Delete'
+                    }
+                }).result.then(function() {
+                    RedisService.deleteKeys($scope.current.serverId, $scope.current.dbId, deleteKeys).then(
+                        function(response) {
+                            console.log(response);
+                            // remove deleted keys from scope
+                            for (i = $scope.search.result.keys.length - 1; i >= 0; i--) {
+                                if (deleteKeys.indexOf($scope.search.result.keys[i].name) >= 0) {
+                                    $scope.search.result.keys.splice(i, 1);
+                                }
+                            }
+                            // reduce amount of keys in search reault and whole db
+                            $scope.search.result.total -= response.data.result;
+                            $scope.$parent.getCurrentDB().keys -= response.data.result;
+
+                            console.log('deleteSelectedKeys / done');
+                        }
+                    );
+                });
             }
         }
         
@@ -85,8 +119,17 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             console.log('set page: ' + page + '[' + $scope.search.page + ']');
             console.log($scope.search);
             $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern) + '/' + encodeURIComponent(page), false);
-            $scope.keySearch($scope.search.pattern, page);
+            $scope.searchKey($scope.search.pattern, page);
         };
+        
+        $scope.$watch('search.result.keys', function(){
+            $scope.search.result.selected = [];
+            for (i=0; i<$scope.search.result.keys.length; i++) {
+                if ($scope.search.result.keys[i].selected) {
+                    $scope.search.result.selected.push($scope.search.result.keys[i].name);
+                }
+            }
+        }, true);
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
             $scope.$parent.view = {
@@ -98,7 +141,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                 console.log('search');
                 console.log($routeParams);
                 page = parseInt($routeParams.page, 10) > 0 ? parseInt($routeParams.page, 10) : 1;
-                $scope.keySearch($routeParams.pattern, page);
+                $scope.searchKey($routeParams.pattern, page);
             }
         });        
     }

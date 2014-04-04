@@ -26,22 +26,22 @@
                     </ul>
                  </div>    
                  <div class="btn-group">   
-                    <button type="button" class="btn btn-default"><i class="fa fa-file-text-o"></i> Edit</button>
-                    <button type="button" class="btn btn-default"><i class="fa fa-edit"></i> Rename</button>
-                    <button type="button" class="btn btn-default"><i class="fa fa-clock-o"></i> Expire</button>
+                    <button type="button" class="btn btn-default" ng-disabled="search.result.selected.length != 1"><i class="fa fa-file-text-o"></i> Edit</button>
+                    <button type="button" class="btn btn-default" ng-disabled="search.result.selected.length != 1"><i class="fa fa-edit"></i> Rename</button>
+                    <button type="button" class="btn btn-default" ng-disabled="search.result.selected.length != 1"><i class="fa fa-clock-o"></i> Expire</button>
                  </div>   
                  <div class="btn-group">      
-                    <button type="button" class="btn btn-default"><i class="fa fa-arrows"></i> Move</button>
-                    <button type="button" class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
+                    <button type="button" class="btn btn-default" ng-disabled="search.result.selected.length < 1"><i class="fa fa-arrows"></i> Move</button>
+                    <button type="button" ng-click="deleteSelectedKeys()" class="btn btn-danger" ng-disabled="search.result.selected.length < 1"><i class="fa fa-trash-o"></i> Delete</button>
                 </div>
             </div>  
         </div>
     </div>
-    <div class="box box-primary" ng-show="search.result.count" class="ng-hide">
+    <div class="box box-primary ng-hide" ng-show="search.result.keys.length">
         <div class="box-body table-responsive no-padding">
             <table class="table table-hover table-condensed">
                 <thead>
-                    <th><input checkbox-all="search.result.keys|selected"/></th>    
+                    <th class="checkbox-td"><label><input checkbox-all="search.result.keys|selected"/></label></th>    
                     <th><a ng-click="sortBy('name')">Key ^</a></th>
                     <th><a ng-click="sortBy('type')">Type ^</a></th>
                     <th><a ng-click="sortBy('ttl')">TTL ^</a></th>
@@ -49,29 +49,32 @@
                     <th><a ng-click="sortBy('size')">Size ^</a></th>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse" ng-class="{selected: key.selected}" ng-click="keySelectExclusive($event, $index)">
-                        <td><input type="checkbox" ng-model="key.selected"/></td>
-                        <td><a href>{[key.name]}</a></td>
-                        <td>{[key.type]}</td>
-                        <td>{[key.ttl | sec2time]}</td>
-                        <td>{[key.encoding]}</td>
-                        <td>{[key.size]}</td>
+                    <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse" ng-class="{selected: key.selected}">
+                        <td class="checkbox-td"><label><input type="checkbox" ng-model="key.selected" /></label></td>
+                        <td ng-click="selectKeyExclusive($index)"><a href>{[key.name]}</a></td>
+                        <td ng-click="selecKeyExclusive($index)">{[key.type]}</td>
+                        <td ng-click="selecKeyExclusive($index)">{[key.ttl | sec2time]}</td>
+                        <td ng-click="selecKeyExclusive($index)">{[key.encoding]}</td>
+                        <td ng-click="selecKeyExclusive($index)">{[key.size]}</td>
                     </tr>
                 </tbody>    
             </table>
             <div class="pull-left pagination">
-                Total <span class="badge">{[search.result.total]}</span> | on page <span class="badge">{[search.result.count]}</span> | page <span class="badge">{[search.page]} / {[search.pageCount]}</span>
+                Total <span class="badge">{[search.result.total]}</span> | 
+                selected <span class="badge">{[search.result.selected.length]}</span> |
+                on page <span class="badge">{[search.result.keys.length]}</span> | 
+                page <span class="badge">{[search.page]} / {[search.pageCount]}</span>
             </div>    
             <pagination on-select-page="setPage(page)" total-items="search.result.total" page="search.page" items-per-page="search.result.pageSize" num-pages="search.pageCount" max-size="11" class="pull-right ng-hide" ng-show="search.pageCount > 1" boundary-links="true" rotate="true"></pagination>
         </div>
     </div>
 
-    <div class="alert alert-warning alert-dismissable ng-hide" ng-show="!search.result.count && search.result.pattern" >
+    <div class="alert alert-warning alert-dismissable ng-hide" ng-show="!search.result.keys.length && search.result.pattern">
         <i class="fa fa-warning"></i>
         <b>No results</b> for specified search pattern.
     </div>
     
-    <div class="alert alert-info alert-dismissable ng-hide" ng-show="!search.result.count">
+    <div class="alert alert-info alert-dismissable ng-hide" ng-show="!search.result.keys.length">
         <i class="fa fa-info"></i>
         <b>Supported search patterns:</b> 
         <ul>

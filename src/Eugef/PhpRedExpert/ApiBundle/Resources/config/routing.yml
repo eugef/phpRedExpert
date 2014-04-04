@@ -10,14 +10,6 @@ eugef_php_red_expert_server_databases:
     requirements:
         _method: GET
         serverId: "\d+"
-
-eugef_php_red_expert_database_search:
-    pattern:  /server/{serverId}/db/{dbId}/search
-    defaults: {_controller: EugefPhpRedExpertApiBundle:Database:KeySearch, _format: json}
-    requirements:
-        _method: GET
-        serverId: "\d+"
-        dbId: "\d+"
         
 eugef_php_red_expert_server_info:
     pattern:  /server/{serverId}/info
@@ -39,4 +31,20 @@ eugef_php_red_expert_server_config:
     requirements:
         _method: GET
         serverId: "\d+"
+        
+eugef_php_red_expert_keys_search:
+    pattern:  /server/{serverId}/db/{dbId}/keys/search
+    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Search, _format: json}
+    requirements:
+        _method: GET
+        serverId: "\d+"
+        dbId: "\d+"
+        
+eugef_php_red_expert_keys_delete:
+    pattern:  /server/{serverId}/db/{dbId}/keys/delete
+    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Delete, _format: json}
+    requirements:
+        _method: POST
+        serverId: "\d+"
+        dbId: "\d+"
         

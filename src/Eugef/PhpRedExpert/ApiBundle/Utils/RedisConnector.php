@@ -114,7 +114,7 @@ class RedisConnector
         return $size;
     }
     
-    public function keySearch($pattern, $offset = 0, $length = NULL, &$totalCount = NULL) {
+    public function searchKeys($pattern, $offset = 0, $length = NULL, &$totalCount = NULL) {
         $result = array();
             
         $keys = $this->db->keys($pattern);
@@ -138,6 +138,10 @@ class RedisConnector
         }
         
         return $result;
+    }
+    
+    public function deleteKeys($keys) {
+        return $this->db->delete($keys);
     }
     
     public function getInfo() {

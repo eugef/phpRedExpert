@@ -11,8 +11,10 @@ App.directive('checkboxAll', function() {
                 });
             });
         });
+        
         scope.$watch(parts[0], function(newVal) {
             var hasTrue, hasFalse;
+            
             angular.forEach(newVal, function(v) {
                 if (v[parts[1]]) {
                     hasTrue = true;
@@ -20,14 +22,15 @@ App.directive('checkboxAll', function() {
                     hasFalse = true;
                 }
             });
+
             if (hasTrue && hasFalse) {
                 elem.attr('checked', false);
+                elem.prop('indeterminate', true);
                 elem.addClass('greyed');
-
             } else {
                 elem.attr('checked', hasTrue);
+                elem.prop('indeterminate', false);
                 elem.removeClass('greyed');
-
             }
         }, true);
     };
