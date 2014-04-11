@@ -23,7 +23,7 @@ class KeysController extends Controller
         $searchConfig = $this->container->getParameter('search');
         $servers = $this->container->getParameter('redis_servers');
         
-        if (!isset($servers[$serverId])) {
+        if (empty($servers[$serverId])) {
             throw new HttpException(404, 'Server not found');
         }    
             
@@ -57,7 +57,7 @@ class KeysController extends Controller
     public function deleteAction($serverId, $dbId) {
         $servers = $this->container->getParameter('redis_servers');
         
-        if (!isset($servers[$serverId])) {
+        if (empty($servers[$serverId])) {
             throw new HttpException(404, 'Server not found');
         }    
             
@@ -69,13 +69,43 @@ class KeysController extends Controller
 
         $data = json_decode($this->getRequest()->getContent());
         
-        if (!$data->keys) {
+        if (empty($data->keys)) {
             throw new HttpException(400, 'Keys are not specified');
         }
         
         return new JsonResponse(
             array(
                 'result' => $redis->deleteKeys($data->keys),
+            )            
+        );
+    }
+    
+    public function editAction($serverId, $dbId) {
+        $servers = $this->container->getParameter('redis_servers');
+        
+        if (empty($servers[$serverId])) {
+            throw new HttpException(404, 'Server not found');
+        }    
+            
+        $redis = new RedisConnector($servers[$serverId]);
+        
+        if (!$redis->selectDB($dbId)) {
+            throw new HttpException(404, 'Database not found');
+        }   
+
+        $data = json_decode($this->getRequest()->getContent());
+        
+        if (empty($data->key)) {
+            throw new HttpException(400, 'Key is not specified');
+        }
+        
+        if (empty($data->attributes)) {
+            throw new HttpException(400, 'Attributes are not specified');
+        }
+        
+        return new JsonResponse(
+            array(
+                'result' => $redis->editKeyAttributes($data->key, $data->attributes),
             )            
         );
     }

@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h4>Rename the key</h4>
+</div>
+<div class="modal-body">
+    <form name="renameKeyForm" novalidate>
+        <div class="form-group">
+            <pre>{[data.key]}</pre>
+        </div>
+        <div class="form-group" ng-class="{'has-error': renameKeyForm.$invalid}">
+            <label>New name for the key</label>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                <input type="text" class="form-control" placeholder="Name" ng-model="data.value" required />
+            </div>
+            <p class="help-block">Specify the name that does not yet exist.</p>
+        </div>
+    </form>    
+</div>    
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="renameKeyForm.$invalid" ng-click="ok()">Save</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+</div>

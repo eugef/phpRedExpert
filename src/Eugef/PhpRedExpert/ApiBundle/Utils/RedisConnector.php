@@ -81,7 +81,6 @@ class RedisConnector
     private function getKeyTTL($key)
     {
         return $this->db->ttl($key);
-
     }
 
     private function getKeyEncoding($key)
@@ -120,12 +119,13 @@ class RedisConnector
         $keys = $this->db->keys($pattern);
         $totalCount = $keysCount = count($keys);
         
+        // SORT_STRING slightly speed up sort
+        sort($keys, SORT_STRING);
+        
         if ($offset || ($length && $length < $keysCount)) {
             $keys = array_slice($keys, $offset, $length);
             $keysCount = count($keys);
-        }    
-        
-        sort($keys);
+        }        
 
         for ($i = 0; $i < $keysCount; $i++) {
             $result[] = array(
@@ -142,6 +142,25 @@ class RedisConnector
     
     public function deleteKeys($keys) {
         return $this->db->delete($keys);
+    }
+    
+    public function editKeyAttributes($key, $attributes) {
+        $result = array();
+        
+        if (isset($attributes->ttl)) {
+           if ($attributes->ttl > 0) {
+               $result['ttl'] = $this->db->expire($key, $attributes->ttl);
+           } 
+           else {
+               $result['ttl'] = $this->db->persist($key);
+           }           
+        }
+        
+        if (isset($attributes->name)) {
+            $result['name'] = $this->db->renamenx($key, trim($attributes->name));
+        }
+        
+        return $result;
     }
     
     public function getInfo() {

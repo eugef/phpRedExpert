@@ -62,8 +62,8 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 return $http.get(
                     config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/search', 
                     {
-                        params : {
-                            pattern : pattern,
+                        params: {
+                            pattern: pattern,
                             // backend pagination starts from 0, frontend from 1
                             page: page > 0 ? page-1 : 0
                         },
@@ -76,17 +76,30 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 return $http.post(
                     config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/delete', 
                     {
-                        keys : keys
+                        keys: keys
                     }
                 ).then(function(response) {
                     if (angular.isObject(keySearchCache)) {
-                        console.log('clear cache after delete');
                         keySearchCache.removeAll();
                     }
-                    
                     return response;
                 });
-            }                    
+            },    
+            
+            editKeyAttributes: function(serverId, dbId, key, attributes) {
+                return $http.post(
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/edit', 
+                    {
+                        key: key,
+                        attributes: attributes
+                    }
+                ).then(function(response) {
+                    if (angular.isObject(keySearchCache)) {
+                        keySearchCache.removeAll();
+                    }
+                    return response;
+                });
+            }    
             
         };
         

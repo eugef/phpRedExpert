@@ -48,3 +48,11 @@ eugef_php_red_expert_keys_delete:
         serverId: "\d+"
         dbId: "\d+"
         
+eugef_php_red_expert_keys_edit:
+    pattern:  /server/{serverId}/db/{dbId}/keys/edit
+    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Edit, _format: json}
+    requirements:
+        _method: POST
+        serverId: "\d+"
+        dbId: "\d+"
+        

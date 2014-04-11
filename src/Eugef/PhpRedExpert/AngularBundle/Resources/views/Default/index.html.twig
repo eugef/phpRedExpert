@@ -24,7 +24,7 @@
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu">
                                 <li ng-repeat="server in servers" ng-class="current.serverId == server.id ? 'active' : ''">
-                                    <a href="{[server.url]}">
+                                    <a href="#!/server/{[server.id]}">
                                         <div class="pull-left">
                                             <img src="{{ asset('bundles/eugefphpredexpertangular/images/redis.png') }}" class="img-circle" alt="Redis server"/>
                                         </div>
@@ -225,15 +225,15 @@
                         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                     </a>
                 </li>
-                <li menutree class="treeview" ng-class="{active: $route.current.controller == 'SearchController'}">
+                <li menutree class="treeview" ng-class="{active: ($route.current.controller == 'SearchController' || $route.current.controller == 'KeyController')}">
                     <a href="#">
                         <i class="fa fa-table"></i>
                         <span>Databases</span>
                         <i class="fa fa-angle-dynamic pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li ng-repeat="db in dbs" ng-class="{active: $route.current.controller == 'SearchController' && current.dbId == db.id}">
-                            <a href="{[db.url]}"><i class="fa fa-angle-double-right"></i> {[db.name]} <small class="badge pull-right bg-blue">{[db.keys]}</small></a>
+                        <li ng-repeat="db in dbs" ng-class="{active: ($route.current.controller == 'SearchController' || $route.current.controller == 'KeyController') && current.dbId == db.id}">
+                            <a href="#!/server/{[current.serverId]}/db/{[db.id]}"><i class="fa fa-angle-double-right"></i> {[db.name]} <small class="badge pull-right bg-blue">{[db.keys]}</small></a>
                         </li>
                         <li>
                             <a href="#!/server/{[current.serverId]}/db/create"><i class="fa fa-plus-circle"></i> Add database</a>

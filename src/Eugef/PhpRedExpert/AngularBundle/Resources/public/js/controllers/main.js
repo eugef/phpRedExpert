@@ -70,7 +70,6 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                             'password' : server.password,
                             'host' : server.host,
                             'port' : server.port,
-                            'url': '#!/server/' + server.id
                         });
                     });
 
@@ -110,7 +109,6 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                             'name' : db.name ? db.name : 'DB ' + db.id,
                             'keys' : db.keys,
                             'expires' : db.expires,
-                            'url' : '#!/server/' + $scope.current.serverId + '/db/' + db.id
                         });
                     });
 
@@ -166,20 +164,29 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
             return null;
         }
         
-        $scope.isEmpty = function (obj) {
-            return angular.isUndefined(obj) || (obj == null) || angular.equals({},obj); 
-        };
+        $scope.showModalConfirm = function(settings) {
+            return $scope.showModal('ModalConfirmController', 'confirm.html', settings);
+        }
         
-        $scope.showModalConfirm = function(data) {
+        $scope.showModalAlert = function(settings) {
+            return $scope.showModal('ModalAlertController', 'alert.html', settings, true);
+        }
+        
+        $scope.showModal = function(controller, template, settings, backdrop) {
             return $modal.open({
-                templateUrl: config.assetsUri + 'views/modals/confirm.html',
-                controller: 'ModalConfirmController',
+                templateUrl: config.assetsUri + 'views/modals/' + template,
+                controller: controller,
+                backdrop: angular.isDefined(backdrop) ? backdrop : 'static',
                 resolve: {
-                    data: function() {
-                        return data;
+                    settings: function() {
+                        return settings;
                     }      
                 }    
             });
+        }
+        
+        $scope.partialsUri = function(template) {
+            return config.assetsUri + 'views/partials/' + template;
         }
 
     }

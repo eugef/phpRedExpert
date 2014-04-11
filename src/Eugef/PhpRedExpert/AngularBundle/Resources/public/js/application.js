@@ -47,6 +47,10 @@ App.config(['$routeProvider', '$locationProvider', 'config',
                 templateUrl: config.assetsUri + 'views/controllers/search.html',
                 controller: 'SearchController'
             }). 
+            when('/server/:serverId/db/:dbId/key/:key', {
+                templateUrl: config.assetsUri + 'views/controllers/key.html',
+                controller: 'KeyController'
+            }).        
             when('/server/:serverId/clients', {
                 templateUrl: config.assetsUri + 'views/controllers/clients.html',
                 controller: 'ClientsController'

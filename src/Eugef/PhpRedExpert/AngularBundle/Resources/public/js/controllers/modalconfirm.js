@@ -1,16 +1,9 @@
-App.controller('ModalConfirmController', ['$scope', '$modalInstance', 'data',
-    function ($scope, $modalInstance, data) {
+App.controller('ModalConfirmController', ['$scope', '$modalInstance', 'settings',
+    function ($scope, $modalInstance, settings) {
         console.log('ModalConfirmController');
         
-        $scope.title = data.title;
-        $scope.message = data.message;
-        $scope.items = angular.isDefined(data.items) ? data.items : [];
-        $scope.undo = angular.isDefined(data.undo) ? data.undo : true;
-        
-        $scope.action = {
-            ok: angular.isDefined(data.action.ok) ? data.action.ok : 'Ok',
-            cancel: angular.isDefined(data.action.cancel) ? data.action.cancel : 'Cancel',
-        }
+        $scope.data = settings;
+        $scope.data.action = angular.isDefined(settings.action) ? settings.action : 'Ok'
         
         $scope.ok = function() {
             $modalInstance.close();

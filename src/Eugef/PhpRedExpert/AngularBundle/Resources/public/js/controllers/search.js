@@ -1,4 +1,4 @@
-App.controller('SearchController', ['$scope', '$routeParams', '$location', 'RedisService', 
+App.controller('SearchController', ['$scope', '$routeParams', '$location', 'RedisService',
     function ($scope, $routeParams, $location, RedisService) {
         console.log('SearchController');
         console.log($routeParams);
@@ -24,8 +24,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
 			if ($scope.searchForm.$valid) {
                 $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern), false);
                 $scope.searchKey($scope.search.pattern, 1);
-			}
-            
+			}            
         }
         
         $scope.searchKey = function(pattern, page) {
@@ -42,7 +41,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                     $scope.search.result.pattern = pattern;
                     $scope.search.result.total = response.data.metadata.total;
                     $scope.search.result.pageSize = response.data.metadata.page_size;
-                    
+                                        
                     $scope.search.result.keys = [];
                     angular.forEach(response.data.items, function(value){
                         $scope.search.result.keys.push(value);
@@ -53,11 +52,11 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             );
         }
         
-        $scope.selectKeyExclusive = function(index) {
-            console.log('keySelect: ' + index);
+        $scope.selectKeyExclusive = function(key) {
+            console.log('keySelect: ' + key);
        
-            for (i=0; i<$scope.search.result.keys.length; i++) {
-                if (index == i) {
+            for (var i=0; i<$scope.search.result.keys.length; i++) {
+                if ($scope.search.result.keys[i].name == key) {
                     // if multiple keys are selected - then select current key
                     // if only one key was selected - then inverse current state
                     // (i.e. allow to unselect current key) 
@@ -69,25 +68,22 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             }
         }
         
-        $scope.deleteSelectedKeys = function() {
+        $scope.deleteKeys = function() {
             console.log('deleteSelectedKeys');
-            deleteKeys = $scope.search.result.selected;
+            var deleteKeys = $scope.search.result.selected;
             if (deleteKeys) {
-
                 $scope.$parent.showModalConfirm({
                     title: 'Delete key(s) forever?',
                     message: (deleteKeys.length == 1 ? '1 key is' : deleteKeys.length + ' keys are') + ' about to be permanently deleted:',
                     items: deleteKeys,
-                    undo: false,
-                    action: {
-                        ok: 'Delete'
-                    }
+                    warning: 'You can\'t undo this action!',
+                    action: 'Delete'
                 }).result.then(function() {
                     RedisService.deleteKeys($scope.current.serverId, $scope.current.dbId, deleteKeys).then(
                         function(response) {
                             console.log(response);
                             // remove deleted keys from scope
-                            for (i = $scope.search.result.keys.length - 1; i >= 0; i--) {
+                            for (var i = $scope.search.result.keys.length - 1; i >= 0; i--) {
                                 if (deleteKeys.indexOf($scope.search.result.keys[i].name) >= 0) {
                                     $scope.search.result.keys.splice(i, 1);
                                 }
@@ -103,17 +99,96 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             }
         }
         
-        // change sorting order
-        $scope.sortBy = function(field) {
-            console.log('sortBy: ' + field);
-            if ($scope.search.sort.field == field) {
-                $scope.search.sort.reverse = !$scope.search.sort.reverse;
-            } 
-            else {
-                $scope.search.sort.field = field;
-                $scope.search.sort.reverse = false;
+        $scope.editKeyTtl = function() {
+            console.log('changeKeyTtl');
+            var key = $scope.search.result.selected[0];
+            var ttl = 0;
+            
+            if (key) {
+                for (var i = 0; i < $scope.search.result.keys.length; i++) {
+                    if ($scope.search.result.keys[i].name == key) {
+                        ttl = $scope.search.result.keys[i].ttl;
+                        break;
+                    }
+                }
+                
+                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyttl.html',                  
+                    {
+                        value: ttl < 0 ? 0 : ttl,
+                        key: key
+                    }
+                ).result.then(function(newTtl) {
+                    RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, key, {ttl: newTtl}).then(
+                        function(response) {
+                            // update key ttl in scope
+                            for (var i = $scope.search.result.keys.length - 1; i >= 0; i--) {
+                                if ($scope.search.result.keys[i].name == key) {
+                                    $scope.search.result.keys[i].ttl = newTtl;
+                                    break;
+                                }
+                            }
+
+                            console.log('changeKeyTtl / done');
+                        }
+                    );
+                });
             }
-        };
+        }  
+        
+        $scope.editKeyName = function() {
+            console.log('editKeyName');
+            var key = $scope.search.result.selected[0];
+            
+            if (key) {
+                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyname.html',                 
+                    {
+                        value: key,
+                        key: key
+                    }
+                ).result.then(function(newName) {
+                    if (newName != key) {
+                        RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, key, {name: newName}).then(
+                            function(response) {
+                                if (response.data.result.name) {
+                                    // update key name in scope
+                                    for (var i = $scope.search.result.keys.length - 1; i >= 0; i--) {
+                                        if ($scope.search.result.keys[i].name == key) {
+                                            $scope.search.result.keys[i].name = newName;
+                                            break;
+                                        }
+                                    }
+                                }
+                                else {
+                                    $scope.$parent.showModalAlert({
+                                        data: {
+                                            title: 'Rename error!',
+                                            message: 'Could not rename key "' + key + '" to "' + newName + '"'
+                                        }
+                                    });
+                                }
+
+                                console.log('editKeyName / done');
+                            }
+                        );
+                    }
+                });
+            }
+        }  
+        
+        $scope.moveKeys = function() {
+            $scope.$parent.showModalAlert({title: 'Error', message: 'This function is not implemented yet!'});
+        }
+        
+        $scope.getKeyUri = function(key) {
+            return encodeURI('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/' + encodeURIComponent(key));
+        }
+        
+        $scope.openKey = function() {
+            var key = $scope.search.result.selected[0];
+            if (key) {
+                $location.path($scope.getKeyUri(key));
+            }
+        }
         
         $scope.setPage = function(page) {
             console.log('set page: ' + page + '[' + $scope.search.page + ']');
@@ -124,7 +199,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         
         $scope.$watch('search.result.keys', function(){
             $scope.search.result.selected = [];
-            for (i=0; i<$scope.search.result.keys.length; i++) {
+            for (var i = 0; i < $scope.search.result.keys.length; i++) {
                 if ($scope.search.result.keys[i].selected) {
                     $scope.search.result.selected.push($scope.search.result.keys[i].name);
                 }
@@ -140,7 +215,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             if ($routeParams.pattern) {
                 console.log('search');
                 console.log($routeParams);
-                page = parseInt($routeParams.page, 10) > 0 ? parseInt($routeParams.page, 10) : 1;
+                var page = parseInt($routeParams.page, 10) > 0 ? parseInt($routeParams.page, 10) : 1;
                 $scope.searchKey($routeParams.pattern, page);
             }
         });        

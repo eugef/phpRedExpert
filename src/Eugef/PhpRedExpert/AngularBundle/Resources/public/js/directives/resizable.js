@@ -2,7 +2,7 @@ App.directive('resizable', ['$window',
     function($window) {
         return {
             restrict: 'A',
-            link : function($scope, elem, attrs) {
+            link: function($scope, elem, attrs) {
                 resizeElement = function(wrapperHeight) {
                     wrapperHeight = angular.isDefined(wrapperHeight) ? wrapperHeight : document.querySelector(attrs.resizableWrapper).clientHeight;
 

@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h4>Edit time to live of the key</h4>
+</div>
+<div class="modal-body">
+    <form name="editKeyTtlForm" novalidate>
+        <div class="form-group">
+            <pre>{[data.key]}</pre>
+        </div>
+        <div class="form-group" ng-class="{'has-error': editKeyTtlForm.$invalid}">
+            <label>Timeout in seconds</label>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                <input type="number" class="form-control" placeholder="Ttl" ng-model="data.value" min="0" max="99999999" required />
+                <span class="input-group-addon" style="min-width: 150px">{[data.value|sec2time]}</span>
+            </div>
+            <p class="help-block">Specify 0 to disable timeout.</p>
+        </div>
+    </form>    
+</div>    
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="editKeyTtlForm.$invalid" ng-click="ok()">Save</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+</div>
