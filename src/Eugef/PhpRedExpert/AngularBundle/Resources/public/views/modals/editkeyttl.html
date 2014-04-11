@@ -10,7 +10,7 @@
             <label>Timeout in seconds</label>
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-                <input type="number" class="form-control" placeholder="Ttl" ng-model="data.value" min="0" max="99999999" required />
+                <input type="number" class="form-control" placeholder="Ttl" ng-model="data.value" min="0" max="99999999" required auto-focus />
                 <span class="input-group-addon" style="min-width: 150px">{[data.value|sec2time]}</span>
             </div>
             <p class="help-block">Specify 0 to disable timeout.</p>
