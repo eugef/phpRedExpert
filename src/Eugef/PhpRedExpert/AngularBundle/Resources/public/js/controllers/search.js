@@ -160,10 +160,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                                 }
                                 else {
                                     $scope.$parent.showModalAlert({
-                                        data: {
-                                            title: 'Rename error!',
-                                            message: 'Could not rename key "' + key + '" to "' + newName + '"'
-                                        }
+                                        title: 'Rename error!',
+                                        message: 'Could not rename key "' + key + '" to "' + newName + '"'
                                     });
                                 }
 
@@ -179,14 +177,21 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             $scope.$parent.showModalAlert({title: 'Error', message: 'This function is not implemented yet!'});
         }
         
-        $scope.getKeyUri = function(key) {
-            return encodeURI('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/' + encodeURIComponent(key));
+        $scope.getKeyUri = function(key, skipEncode) {
+            skipEncode = angular.isDefined(skipEncode) ? skipEncode : false;
+            keyUri = 'server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + encodeURIComponent(key);
+            if (skipEncode) {
+                return keyUri;
+            }
+            else {
+                return encodeURI(keyUri)
+            }
         }
         
         $scope.openKey = function() {
             var key = $scope.search.result.selected[0];
             if (key) {
-                $location.path($scope.getKeyUri(key));
+                $location.path($scope.getKeyUri(key, true));
             }
         }
         

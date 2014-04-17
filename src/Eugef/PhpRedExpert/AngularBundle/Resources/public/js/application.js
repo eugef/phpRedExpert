@@ -35,11 +35,11 @@ App.config(['$routeProvider', '$locationProvider', 'config',
                 templateUrl: config.assetsUri + 'views/controllers/dashboard.html',
                 controller: 'DashboardController'
             }).
-            when('/server/:serverId/', {
+            when('/server/:serverId', {
                 templateUrl: config.assetsUri + 'views/controllers/dashboard.html',
                 controller: 'DashboardController'
             }).
-            when('/server/:serverId/db/:dbId/', {
+            when('/server/:serverId/db/:dbId', {
                 templateUrl: config.assetsUri + 'views/controllers/search.html',
                 controller: 'SearchController'
             }).
@@ -47,7 +47,11 @@ App.config(['$routeProvider', '$locationProvider', 'config',
                 templateUrl: config.assetsUri + 'views/controllers/search.html',
                 controller: 'SearchController'
             }). 
-            when('/server/:serverId/db/:dbId/key/:key', {
+            when('/server/:serverId/db/:dbId/key/view/:key', {
+                templateUrl: config.assetsUri + 'views/controllers/key.html',
+                controller: 'KeyController'
+            }).        
+            when('/server/:serverId/db/:dbId/key/add/:type', {
                 templateUrl: config.assetsUri + 'views/controllers/key.html',
                 controller: 'KeyController'
             }).        

@@ -11,17 +11,16 @@ class RedisConnector
 {
     const PORT_DEFAULT = 6379;
     
+    static $KEY_TYPES = array(
+        \Redis::REDIS_STRING => 'string',
+        \Redis::REDIS_SET    => 'set',
+        \Redis::REDIS_LIST   => 'list',
+        \Redis::REDIS_ZSET   => 'zset',
+        \Redis::REDIS_HASH   => 'hash',
+    );
+    
     private $config = array();
     private $db;
-    
-    private function getDBConfigValue($id, $name, $default = NULL) {
-        if (isset($this->config['databases'][$id][$name])) {
-            return $this->config['databases'][$id][$name];
-        }
-        else {
-            return $default;
-        }
-    }
     
     public function __construct($config) {
         $this->db = new \Redis();
@@ -33,12 +32,21 @@ class RedisConnector
         
         $this->config = $config;
     }
+    
+    private function getDBConfigValue($id, $name, $default = NULL) {
+        if (isset($this->config['databases'][$id][$name])) {
+            return $this->config['databases'][$id][$name];
+        }
+        else {
+            return $default;
+        }
+    }
 
     public function selectDB($dbId) {
         return $this->db->select($dbId);
     }
     
-    public function getDbs()
+    public function getServerDbs()
     {
         $info = $this->db->info();
         
@@ -62,20 +70,7 @@ class RedisConnector
     
     private function getKeyType($key)
     {
-        switch ($this->db->type($key)) {
-            case \Redis::REDIS_STRING:
-                return 'string';
-            case \Redis::REDIS_SET:
-                return 'set';
-            case \Redis::REDIS_LIST:
-                return 'list';
-            case \Redis::REDIS_ZSET:
-                return 'zset';
-            case \Redis::REDIS_HASH:
-                return 'hash';
-            default:
-                return '-';
-        }
+        return self::$KEY_TYPES[$this->db->type($key)];
     }
 
     private function getKeyTTL($key)
@@ -163,15 +158,94 @@ class RedisConnector
         return $result;
     }
     
-    public function getInfo() {
+    public function getKey($key) {
+        $value = FALSE;
+        $keyType = $this->db->type($key);
+        
+        switch ($keyType) {
+            case \Redis::REDIS_STRING:
+                $value = $this->db->get($key);
+                break;
+            case \Redis::REDIS_SET:
+                $value = $this->db->sMembers($key);
+                break;
+            case \Redis::REDIS_LIST:
+                // TODO: add pagination for list items here
+                $value = $this->db->lRange($key, 0, -1);
+                break;
+            case \Redis::REDIS_ZSET:
+                // TODO: add pagination for sorted sets items here
+                $value = $this->db->zRange($key, 0, -1, TRUE);
+                break;
+            case \Redis::REDIS_HASH:
+                $value = $this->db->hGetAll($key);
+                break;
+        }
+        
+        if ($value !== FALSE) {
+            return array(
+                'name' => $key,
+                'type' => self::$KEY_TYPES[$keyType],
+                'encoding' => $this->getKeyEncoding($key),
+                'ttl' => $this->getKeyTTL($key),
+                'size' => $this->getKeySize($key),
+                'value' => $value,
+            );
+        }
+        else {
+            return FALSE;
+        }
+    }
+    
+    public function editKey($key) {
+        switch ($key->type) {
+            case self::$KEY_TYPES[\Redis::REDIS_STRING]:
+                return $this->db->set($key->name, $key->value);
+                break;
+            case \Redis::REDIS_SET:
+                break;
+            case \Redis::REDIS_LIST:
+                break;
+            case \Redis::REDIS_ZSET:
+                break;
+            case \Redis::REDIS_HASH:
+                break;
+        }
+    }
+    
+    public function addKey($key) {
+        switch ($key->type) {
+            case self::$KEY_TYPES[\Redis::REDIS_STRING]:
+                if($this->db->setnx($key->name, $key->value)) {
+                    if ($key->ttl > 0) {
+                        $this->db->expire($key->name, $key->ttl);
+                    }
+                    return TRUE;
+                } 
+                else {
+                    return FALSE;
+                }
+                break;
+            case \Redis::REDIS_SET:
+                break;
+            case \Redis::REDIS_LIST:
+                break;
+            case \Redis::REDIS_ZSET:
+                break;
+            case \Redis::REDIS_HASH:
+                break;
+        }
+    }
+    
+    public function getServerInfo() {
         return $this->db->info();
     }
     
-    public function getClients() {
+    public function getServerClients() {
         return $this->db->client('LIST');
     }
     
-    public function getConfig($pattern = '*') {
+    public function getServerConfig($pattern = '*') {
         return $this->db->config('GET', $pattern);
     }
 }

@@ -39,6 +39,14 @@ eugef_php_red_expert_keys_search:
         _method: GET
         serverId: "\d+"
         dbId: "\d+"
+
+eugef_php_red_expert_keys_value:
+    pattern:  /server/{serverId}/db/{dbId}/keys/value
+    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Value, _format: json}
+    requirements:
+        _method: GET
+        serverId: "\d+"
+        dbId: "\d+"
         
 eugef_php_red_expert_keys_delete:
     pattern:  /server/{serverId}/db/{dbId}/keys/delete
@@ -48,9 +56,25 @@ eugef_php_red_expert_keys_delete:
         serverId: "\d+"
         dbId: "\d+"
         
+eugef_php_red_expert_keys_attrs:
+    pattern:  /server/{serverId}/db/{dbId}/keys/attrs
+    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Attributes, _format: json}
+    requirements:
+        _method: POST
+        serverId: "\d+"
+        dbId: "\d+"
+        
 eugef_php_red_expert_keys_edit:
     pattern:  /server/{serverId}/db/{dbId}/keys/edit
     defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Edit, _format: json}
+    requirements:
+        _method: POST
+        serverId: "\d+"
+        dbId: "\d+"
+        
+eugef_php_red_expert_keys_add:
+    pattern:  /server/{serverId}/db/{dbId}/keys/add
+    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Add, _format: json}
     requirements:
         _method: POST
         serverId: "\d+"

@@ -34,7 +34,7 @@ class ServerController extends Controller
         }    
             
         $redis = new RedisConnector($servers[$serverId]);
-        return new JsonResponse($redis->getDbs());
+        return new JsonResponse($redis->getServerDbs());
     }   
     
     public function InfoAction($serverId) 
@@ -46,7 +46,7 @@ class ServerController extends Controller
         }
         
         $redis = new RedisConnector($servers[$serverId]);
-        return new JsonResponse($redis->getInfo());
+        return new JsonResponse($redis->getServerInfo());
     }
     
     public function ClientsAction($serverId) 
@@ -59,7 +59,7 @@ class ServerController extends Controller
         
         $redis = new RedisConnector($servers[$serverId]);
         
-        $clients = $redis->getClients();
+        $clients = $redis->getServerClients();
 
         return new JsonResponse(
             array(
@@ -82,7 +82,7 @@ class ServerController extends Controller
         }
         
         $redis = new RedisConnector($servers[$serverId]);
-        return new JsonResponse($redis->getConfig());
+        return new JsonResponse($redis->getServerConfig());
     }
         
 

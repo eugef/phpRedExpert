@@ -27,7 +27,7 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 );
             },
 
-            getDBs: function(serverId) {
+            getServerDBs: function(serverId) {
                 return $http.get(
                     config.apiUri + 'server/' + serverId + '/databases',
                     {
@@ -36,7 +36,7 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 );
             },
             
-            getInfo: function(serverId) {
+            getServerInfo: function(serverId) {
                 return $http.get(
                     config.apiUri + 'server/' + serverId + '/info', 
                     {
@@ -45,7 +45,7 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 );
             },
             
-            getClients: function(serverId, nocache) {
+            getServerClients: function(serverId, nocache) {
                 return $http.get(
                     config.apiUri + 'server/' + serverId + '/clients', 
                     {
@@ -72,6 +72,18 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 );
             },
             
+            getKeyValue: function(serverId, dbId, key) {
+                return $http.get(
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/value', 
+                    {
+                        params: {
+                            key: key
+                        },
+                        cache: keySearchCache
+                    }
+                );
+            },
+            
             deleteKeys: function(serverId, dbId, keys) {
                 return $http.post(
                     config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/delete', 
@@ -86,11 +98,11 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 });
             },    
             
-            editKeyAttributes: function(serverId, dbId, key, attributes) {
+            editKeyAttributes: function(serverId, dbId, keyName, attributes) {
                 return $http.post(
-                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/edit', 
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/attrs', 
                     {
-                        key: key,
+                        key: keyName,
                         attributes: attributes
                     }
                 ).then(function(response) {
@@ -99,8 +111,36 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                     }
                     return response;
                 });
-            }    
+            },
             
+            editKey: function(serverId, dbId, key) {
+                return $http.post(
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/edit', 
+                    {
+                        key: key
+                    }
+                ).then(function(response) {
+                    if (angular.isObject(keySearchCache)) {
+                        keySearchCache.removeAll();
+                    }
+                    return response;
+                });
+            },
+            
+            addKey: function(serverId, dbId, key) {
+                return $http.post(
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/add', 
+                    {
+                        key: key
+                    }
+                ).then(function(response) {
+                    if (angular.isObject(keySearchCache)) {
+                        keySearchCache.removeAll();
+                    }
+                    return response;
+                });
+            }
+
         };
         
         return service;

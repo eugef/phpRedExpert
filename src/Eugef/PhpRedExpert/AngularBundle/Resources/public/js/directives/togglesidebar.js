@@ -2,7 +2,7 @@ App.directive('togglesidebar', ['$window',
     function($window) {
         return {
             restrict: 'A',
-            link : function($scope, elem, attrs) {
+            link : function(scope, elem, attrs) {
                 elem.bind('click', function(e) {
                     e.preventDefault();
 

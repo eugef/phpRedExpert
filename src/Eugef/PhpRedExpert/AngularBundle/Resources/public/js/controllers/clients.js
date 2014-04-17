@@ -5,12 +5,12 @@ App.controller('ClientsController', ['$scope', '$routeParams', '$location', 'Red
         
         $scope.clients = [];        
         
-        $scope.getClients = function(refresh) {
+        $scope.getServerClients = function(refresh) {
             refresh = angular.isDefined(refresh) ? refresh : false;
             
             console.log('getClients: ' + refresh);
                                     
-            return RedisService.getClients($scope.current.serverId, refresh).then(
+            return RedisService.getServerClients($scope.current.serverId, refresh).then(
                 function(response) {
                     $scope.clients = response.data.items;
                     console.log($scope.clients);
@@ -26,7 +26,7 @@ App.controller('ClientsController', ['$scope', '$routeParams', '$location', 'Red
             };
             
             console.log('clients');
-            $scope.getClients();
+            $scope.getServerClients();
         });        
     }
 ]);

@@ -1,10 +1,13 @@
 <div class="col-md-12">
-    
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs" ng-include="partialsUri('dbmenu.html')"></ul>
-        <div class="tab-content">
-            {[key.name]} 
-        </div>
+        <div class="tab-content" ng-if="key.type">
+            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{[alert.message]}</alert>
+            <div ng-include="partialsUri('key' + key.type + '.html')"></div>
+        </div>  
     </div>
-
+    <div class="alert alert-warning alert-dismissable ng-hide" ng-show="!key.type">
+        <i class="fa fa-warning"></i>
+        <b>Key not found</b>. But you can add it.
+    </div>
 </div>

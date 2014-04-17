@@ -80,7 +80,7 @@ class KeysController extends Controller
         );
     }
     
-    public function editAction($serverId, $dbId) {
+    public function attributesAction($serverId, $dbId) {
         $servers = $this->container->getParameter('redis_servers');
         
         if (empty($servers[$serverId])) {
@@ -106,6 +106,100 @@ class KeysController extends Controller
         return new JsonResponse(
             array(
                 'result' => $redis->editKeyAttributes($data->key, $data->attributes),
+            )            
+        );
+    }
+    
+    public function valueAction($serverId, $dbId) {
+        $servers = $this->container->getParameter('redis_servers');
+        
+        if (empty($servers[$serverId])) {
+            throw new HttpException(404, 'Server not found');
+        }    
+            
+        $redis = new RedisConnector($servers[$serverId]);
+        
+        if (!$redis->selectDB($dbId)) {
+            throw new HttpException(404, 'Database not found');
+        }   
+        
+        $key = trim($this->getRequest()->get('key', NULL));
+        
+        if (!$key) {
+            throw new HttpException(400, 'Key name is not specified');
+        }
+        
+        return new JsonResponse(
+            array(
+                'key' => $redis->getKey($key)
+            )            
+        );
+    }
+    
+    public function editAction($serverId, $dbId) {
+        $servers = $this->container->getParameter('redis_servers');
+        
+        if (empty($servers[$serverId])) {
+            throw new HttpException(404, 'Server not found');
+        }    
+            
+        $redis = new RedisConnector($servers[$serverId]);
+        
+        if (!$redis->selectDB($dbId)) {
+            throw new HttpException(404, 'Database not found');
+        }   
+
+        $data = json_decode($this->getRequest()->getContent());
+        
+        if (empty($data->key->name)) {
+            throw new HttpException(400, 'Key is not specified');
+        }
+        
+        if (empty($data->key->type)) {
+            throw new HttpException(400, 'Key type is not specified');
+        }
+        
+        if (!in_array($data->key->type, RedisConnector::$KEY_TYPES)) {
+            throw new HttpException(400, 'Key type is invalid');
+        }
+        
+        return new JsonResponse(
+            array(
+                'result' => $redis->editKey($data->key),
+            )            
+        );
+    }
+    
+    public function addAction($serverId, $dbId) {
+        $servers = $this->container->getParameter('redis_servers');
+        
+        if (empty($servers[$serverId])) {
+            throw new HttpException(404, 'Server not found');
+        }    
+            
+        $redis = new RedisConnector($servers[$serverId]);
+        
+        if (!$redis->selectDB($dbId)) {
+            throw new HttpException(404, 'Database not found');
+        }   
+
+        $data = json_decode($this->getRequest()->getContent());
+        
+        if (empty($data->key->name)) {
+            throw new HttpException(400, 'Key is not specified');
+        }
+        
+        if (empty($data->key->type)) {
+            throw new HttpException(400, 'Key type is not specified');
+        }
+        
+        if (!in_array($data->key->type, RedisConnector::$KEY_TYPES)) {
+            throw new HttpException(400, 'Key type is invalid');
+        }
+        
+        return new JsonResponse(
+            array(
+                'result' => $redis->addKey($data->key),
             )            
         );
     }

@@ -1,0 +1,34 @@
+<div class="row">
+    <div class="col-xs-6">
+        <form name="editKeyString" ng-submit="submitKey()" novalidate>
+            <div class="form-group">
+                <label>Key name</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                    <input type="text" class="form-control" placeholder="Name" ng-model="key.name" ng-readonly="!key.new" required />
+                    <span ng-if="!key.new" class="input-group-btn">
+                        <button class="btn btn-primary" type="button" ng-click="editKeyName()">Rename</button>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Key TTL</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                    <input type="number" class="form-control" placeholder="Ttl" ng-model="key.ttl" min="0" max="99999999" ng-readonly="!key.new" />
+                    <span class="input-group-addon" style="min-width: 150px">{[key.ttl|sec2time]}</span>
+                    <span ng-if="!key.new" class="input-group-btn">
+                        <button class="btn btn-primary" type="button" ng-click="editKeyTtl()">Expire</button>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Value</label>
+                <textarea rows="3" class="form-control" placeholder="Value" ng-model="key.value" auto-focus></textarea>
+            </div>
+            <div class="input-group-btn">
+                <button type="submit" ng-disabled="editKeyString.$invalid" class="btn btn-primary">Save</button>
+            </div>
+        </form>   
+    </div>
+</div>

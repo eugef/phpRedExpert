@@ -1,19 +1,24 @@
-<li class="active">
-    <a href>
+<li> 
+    <a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/search" active-link active-link-parent active-link-nested>
         <i class="fa fa-list-ul"></i> Browse
     </a>
 </li>
-<li class="dropdown">
+<li class="dropdown" active-link="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add" active-link-nested>
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         <i class="fa fa-plus-circle"></i> Add key <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-        <li><a href="#">String</a></li>
-        <li><a href="#">Hash</a></li>
-        <li><a href="#">List</a></li>
-        <li><a href="#">Set</a></li>
-        <li><a href="#">Sorted set</a></li>
+        <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/string">String</a></li>
+        <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/hash">Hash</a></li>
+        <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/list">List</a></li>
+        <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/set">Set</a></li>
+        <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/zset">Sorted set</a></li>
     </ul>
+</li>
+<li active-link="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/view" active-link-disabled active-link-nested>
+    <a href>
+        <i class="fa fa-key"></i> View key
+    </a>
 </li>
 <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">

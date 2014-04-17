@@ -8,7 +8,7 @@ App.controller('DashboardController', ['$scope', '$routeParams', '$location', 'R
         $scope.getInfo = function() {
             console.log('getInfo');
                         
-            return RedisService.getInfo($scope.current.serverId).then(
+            return RedisService.getServerInfo($scope.current.serverId).then(
                 function(response) {
                     $scope.board = response.data;
 

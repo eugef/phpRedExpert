@@ -2,6 +2,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
     function ($scope, $q, $location, $route, $modal, config, RedisService) {
     
         $scope.$route = $route;
+        console.log($route);
         $scope.$location = $location;
         
         $scope.view = {
@@ -92,7 +93,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                 serverId = $scope.default.serverId;
             }
 
-            return RedisService.getDBs(serverId).then(
+            return RedisService.getServerDBs(serverId).then(
                 function(response) {
                     $scope.dbs = [];
                     $scope.current.serverId = serverId;

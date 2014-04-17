@@ -23,8 +23,8 @@
                         <li>
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                                <li ng-repeat="server in servers" ng-class="current.serverId == server.id ? 'active' : ''">
-                                    <a href="#!/server/{[server.id]}">
+                                <li ng-repeat="server in servers">
+                                    <a href="#!/server/{[server.id]}" active-link active-link-parent active-link-nested>
                                         <div class="pull-left">
                                             <img src="{{ asset('bundles/eugefphpredexpertangular/images/redis.png') }}" class="img-circle" alt="Redis server"/>
                                         </div>
@@ -220,38 +220,42 @@
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
-                <li ng-class="{active: $route.current.controller == 'DashboardController'}">
-                    <a href="#!/server/{[current.serverId]}">
+                <li>
+                    <a href="#!/server/{[current.serverId]}" active-link active-link-parent>
                         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                     </a>
                 </li>
-                <li menutree class="treeview" ng-class="{active: ($route.current.controller == 'SearchController' || $route.current.controller == 'KeyController')}">
+                <li menutree class="treeview" active-link="#!/server/{[current.serverId]}/db" active-link-nested>
                     <a href="#">
                         <i class="fa fa-table"></i>
                         <span>Databases</span>
                         <i class="fa fa-angle-dynamic pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li ng-repeat="db in dbs" ng-class="{active: ($route.current.controller == 'SearchController' || $route.current.controller == 'KeyController') && current.dbId == db.id}">
-                            <a href="#!/server/{[current.serverId]}/db/{[db.id]}"><i class="fa fa-angle-double-right"></i> {[db.name]} <small class="badge pull-right bg-blue">{[db.keys]}</small></a>
+                        <li ng-repeat="db in dbs">
+                            <a href="#!/server/{[current.serverId]}/db/{[db.id]}/search" active-link="#!/server/{[current.serverId]}/db/{[db.id]}" active-link-parent active-link-nested>
+                                <i class="fa fa-angle-double-right"></i> {[db.name]} <small class="badge pull-right bg-blue">{[db.keys]}</small>
+                            </a>
                         </li>
                         <li>
-                            <a href="#!/server/{[current.serverId]}/db/create"><i class="fa fa-plus-circle"></i> Add database</a>
+                            <a href="#!/server/{[current.serverId]}/db/create" active-link active-link-parent>
+                                <i class="fa fa-plus-circle"></i> Add database
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li ng-class="{active: $route.current.controller == 'SlowlogController'}">
-                    <a href="#!/server/{[current.serverId]}/slowlog">
+                <li>
+                    <a href="#!/server/{[current.serverId]}/slowlog" active-link active-link-parent>
                         <i class="fa fa-warning"></i> <span>Slow log</span>
                     </a>
                 </li>
-                <li ng-class="{active: $route.current.controller == 'ClientsController'}">
-                    <a href="#!/server/{[current.serverId]}/clients">
+                <li>
+                    <a href="#!/server/{[current.serverId]}/clients" active-link active-link-parent>
                         <i class="fa fa-group"></i> <span>Clients</span>
                     </a>
                 </li>
-                <li ng-class="{active: $route.current.controller == 'TerminalController'}">
-                    <a href="#!/server/{[current.serverId]}/terminal">
+                <li>
+                    <a href="#!/server/{[current.serverId]}/terminal" active-link active-link-parent>
                         <i class="fa fa-terminal"></i> <span>Terminal</span>
                     </a>
                 </li>
