@@ -52,10 +52,10 @@
                 </tbody>    
             </table>
             <div class="pull-left pagination">
-                Total <span class="badge">{[search.result.total]}</span> | 
-                selected <span class="badge">{[search.result.selected.length]}</span> |
-                on page <span class="badge">{[search.result.keys.length]}</span> | 
-                page <span class="badge">{[search.page]} / {[search.pageCount]}</span>
+                Total <span class="label label-default">{[search.result.total]}</span> | 
+                selected <span class="label label-default">{[search.result.selected.length]}</span> |
+                on page <span class="label label-default">{[search.result.keys.length]}</span> | 
+                page <span class="label label-default">{[search.page]} / {[search.pageCount]}</span>
             </div>    
             <pagination on-select-page="setPage(page)" total-items="search.result.total" page="search.page" items-per-page="search.result.pageSize" num-pages="search.pageCount" max-size="5" class="pull-right ng-hide" ng-show="search.pageCount > 1" boundary-links="true" rotate="true"></pagination>
         </div>

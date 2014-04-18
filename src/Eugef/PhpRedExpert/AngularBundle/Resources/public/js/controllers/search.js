@@ -88,7 +88,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                                     $scope.search.result.keys.splice(i, 1);
                                 }
                             }
-                            // reduce amount of keys in search reault and whole db
+                            // reduce amount of keys in search result and whole db
                             $scope.search.result.total -= response.data.result;
                             $scope.$parent.getCurrentDB().keys -= response.data.result;
 

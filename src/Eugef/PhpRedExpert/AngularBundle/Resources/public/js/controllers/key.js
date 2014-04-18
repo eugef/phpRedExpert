@@ -32,10 +32,15 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                 console.log('submitKey: add');
                 return RedisService.addKey($scope.current.serverId, $scope.current.dbId, $scope.key).then(
                     function(response) {
-                        $scope.key.new = false;
+                        $scope.key = response.data.key;
+                        $scope.key.ttl = $scope.key.ttl < 0 ? 0 : $scope.key.ttl;
                         $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + encodeURIComponent($scope.key.name), false);
                         $scope.alerts.push({type: 'success', message: 'Key is succesfully created'});
                         console.log('// submitKey / add');
+                    },
+                    function(response) {
+                        $scope.alerts.push({type: 'danger', message: 'Key is not created'});
+                        console.log('// submitKey / add /error');
                     }
                 );
             }
@@ -43,8 +48,14 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                 console.log('submitKey: edit');
                 return RedisService.editKey($scope.current.serverId, $scope.current.dbId, $scope.key).then(
                     function(response) {
+                        $scope.key = response.data.key;
+                        $scope.key.ttl = $scope.key.ttl < 0 ? 0 : $scope.key.ttl;
                         $scope.alerts.push({type: 'success', message: 'Key is succesfully updated'});
                         console.log('// submitKey / edit');
+                    },
+                    function(response) {
+                        $scope.alerts.push({type: 'danger', message: 'Key is not updated'});
+                        console.log('// submitKey / edit /error');
                     }
                 );
             }
@@ -98,8 +109,35 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                     );
                 }
             });
-            
         } 
+        
+        $scope.deleteKey = function() {
+            console.log('deleteKey');
+            var deleteKeys = [$scope.key.name];
+            if (deleteKeys) {
+                $scope.$parent.showModalConfirm({
+                    title: 'Delete key forever?',
+                    message: '1 key is about to be permanently deleted:',
+                    items: deleteKeys,
+                    warning: 'You can\'t undo this action!',
+                    action: 'Delete'
+                }).result.then(function() {
+                    RedisService.deleteKeys($scope.current.serverId, $scope.current.dbId, deleteKeys).then(
+                        function(response) {
+                            //remove key from scope
+                            $scope.key = {};
+                            
+                            // reduce amount of keys in search result and whole db
+                            $scope.$parent.getCurrentDB().keys -= response.data.result;
+                            
+                            $scope.alerts.push({type: 'success', message: 'Key is succesfully deleted'});
+                            
+                            console.log('deleteKey / done');
+                        }
+                    );
+                });
+            }
+        }
         
         $scope.closeAlert = function(index) {
             $scope.alerts.splice(index, 1);
@@ -126,4 +164,3 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
         });        
     }
 ]);
-

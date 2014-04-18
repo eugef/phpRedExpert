@@ -72,38 +72,38 @@ class RedisConnector
         return $result;
     }
 
-    private function getKeyType($key)
+    private function getKeyType($keyName)
     {
-        return self::$KEY_TYPES[$this->db->type($key)];
+        return self::$KEY_TYPES[$this->db->type($keyName)];
     }
 
-    private function getKeyTTL($key)
+    private function getKeyTTL($keyName)
     {
-        return $this->db->ttl($key);
+        return $this->db->ttl($keyName);
     }
 
-    private function getKeyEncoding($key)
+    private function getKeyEncoding($keyName)
     {
-        return $this->db->object('encoding', $key);
+        return $this->db->object('encoding', $keyName);
     }
 
-    private function getKeySize($key)
+    private function getKeySize($keyName)
     {
-        switch ($this->db->type($key)) {
+        switch ($this->db->type($keyName)) {
             case \Redis::REDIS_LIST:
-                $size = $this->db->lSize($key);
+                $size = $this->db->lSize($keyName);
                 break;
             case \Redis::REDIS_SET:
-                $size = $this->db->sCard($key);
+                $size = $this->db->sCard($keyName);
                 break;
             case \Redis::REDIS_HASH:
-                $size = $this->db->hLen($key);
+                $size = $this->db->hLen($keyName);
                 break;
             case \Redis::REDIS_ZSET:
-                $size = $this->db->zCard($key);
+                $size = $this->db->zCard($keyName);
                 break;
             case \Redis::REDIS_STRING:
-                $size = $this->db->strlen($key);
+                $size = $this->db->strlen($keyName);
                 break;
             default:
                 $size = -1;
@@ -140,64 +140,64 @@ class RedisConnector
         return $result;
     }
 
-    public function deleteKeys($keys)
+    public function deleteKeys($keyNames)
     {
-        return $this->db->delete($keys);
+        return $this->db->delete($keyNames);
     }
 
-    public function editKeyAttributes($key, $attributes)
+    public function editKeyAttributes($keyName, $attributes)
     {
         $result = array();
 
         if (isset($attributes->ttl)) {
             if ($attributes->ttl > 0) {
-                $result['ttl'] = $this->db->expire($key, $attributes->ttl);
+                $result['ttl'] = $this->db->expire($keyName, $attributes->ttl);
             } 
             else {
-                $result['ttl'] = $this->db->persist($key);
+                $result['ttl'] = $this->db->persist($keyName);
             }
         }
 
         if (isset($attributes->name)) {
-            $result['name'] = $this->db->renamenx($key, trim($attributes->name));
+            $result['name'] = $this->db->renamenx($keyName, trim($attributes->name));
         }
 
         return $result;
     }
 
-    public function getKey($key)
+    public function getKey($keyName)
     {
-        $value = FALSE;
-        $keyType = $this->db->type($key);
+        $keyValue = FALSE;
+        $keyType = $this->db->type($keyName);
 
         switch ($keyType) {
             case \Redis::REDIS_STRING:
-                $value = $this->db->get($key);
+                $keyValue = $this->db->get($keyName);
                 break;
             case \Redis::REDIS_SET:
-                $value = $this->db->sMembers($key);
+                $keyValue = $this->db->sMembers($keyName);
                 break;
             case \Redis::REDIS_LIST:
                 // TODO: add pagination for list items here
-                $value = $this->db->lRange($key, 0, -1);
+                $keyValue = $this->db->lRange($keyName, 0, -1);
                 break;
             case \Redis::REDIS_ZSET:
                 // TODO: add pagination for sorted sets items here
-                $value = $this->db->zRange($key, 0, -1, TRUE);
+                $keyValue = $this->db->zRange($keyName, 0, -1, TRUE);
                 break;
             case \Redis::REDIS_HASH:
-                $value = $this->db->hGetAll($key);
+                $keyValue = $this->db->hGetAll($keyName);
                 break;
         }
 
-        if ($value !== FALSE) {
+        if ($keyValue !== FALSE) {
             return array(
-                'name' => $key,
+                'name' => $keyName,
                 'type' => self::$KEY_TYPES[$keyType],
-                'encoding' => $this->getKeyEncoding($key),
-                'ttl' => $this->getKeyTTL($key),
-                'size' => $this->getKeySize($key),
-                'value' => $value,
+                'encoding' => $this->getKeyEncoding($keyName),
+                'ttl' => $this->getKeyTTL($keyName),
+                'size' => $this->getKeySize($keyName),
+                'value' => $keyValue,
             );
         } 
         else {
@@ -207,9 +207,10 @@ class RedisConnector
 
     public function editKey($key)
     {
+        $result = FALSE;
         switch ($key->type) {
             case self::$KEY_TYPES[\Redis::REDIS_STRING]:
-                return $this->db->set($key->name, $key->value);
+                $result = $this->db->set($key->name, $key->value);
                 break;
             case \Redis::REDIS_SET:
                 break;
@@ -220,21 +221,26 @@ class RedisConnector
             case \Redis::REDIS_HASH:
                 break;
         }
+        
+        if ($result) {
+            return $this->getKey($key->name);
+        }
+        else {
+            return FALSE;
+        }
     }
 
     public function addKey($key)
     {
+        $result = FALSE;
         switch ($key->type) {
             case self::$KEY_TYPES[\Redis::REDIS_STRING]:
-                if ($this->db->setnx($key->name, $key->value)) {
+                if ($this->db->setnx($key->name, isset($key->value) ? $key->value : '')) {
                     if ($key->ttl > 0) {
                         $this->db->expire($key->name, $key->ttl);
                     }
-                    return TRUE;
+                    $result = TRUE;
                 } 
-                else {
-                    return FALSE;
-                }
                 break;
             case \Redis::REDIS_SET:
                 break;
@@ -244,6 +250,13 @@ class RedisConnector
                 break;
             case \Redis::REDIS_HASH:
                 break;
+        }
+        
+        if ($result) {
+            return $this->getKey($key->name);
+        }
+        else {
+            return FALSE;
         }
     }
 

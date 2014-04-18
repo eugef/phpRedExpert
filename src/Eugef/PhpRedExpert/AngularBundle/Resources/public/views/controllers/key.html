@@ -3,7 +3,47 @@
         <ul class="nav nav-tabs" ng-include="partialsUri('dbmenu.html')"></ul>
         <div class="tab-content" ng-if="key.type">
             <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{[alert.message]}</alert>
-            <div ng-include="partialsUri('key' + key.type + '.html')"></div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form name="editKeyString" ng-submit="submitKey()" novalidate>
+                        <div class="form-group">
+                            <label>Key name</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                <input type="text" class="form-control" placeholder="Name" ng-model="key.name" ng-readonly="!key.new" required />
+                                <span ng-if="!key.new" class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" ng-click="editKeyName()">Rename</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Key TTL</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                <input type="number" class="form-control" placeholder="Ttl" ng-model="key.ttl" min="0" max="99999999" ng-readonly="!key.new" />
+                                <span class="input-group-addon" style="min-width: 150px">{[key.ttl|sec2time]}</span>
+                                <span ng-if="!key.new" class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" ng-click="editKeyTtl()">Expire</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div ng-include="partialsUri('key' + key.type + '.html')"></div>
+                        <div class="form-group">
+                            <button type="submit" ng-disabled="editKeyString.$invalid" class="btn btn-primary">Save</button>
+                            <button type="button" ng-click="deleteKey()" class="btn btn-default pull-right" ng-show="!key.new"><span class="text-danger"><i class="fa fa-trash-o"></i> Delete</span></button>
+                        </div>
+                    </form>   
+                </div>
+                <div class="col-xs-6 ng-hide" ng-show="!key.new">
+                    <blockquote>
+                        <ul class="list-unstyled">
+                            <li>Type: <span class="label label-default">{[key.type]}</span></li>
+                            <li>Encoding: <span class="label label-default">{[key.encoding]}</span></li>
+                            <li>Size: <span class="label label-default">{[key.size]}</span></li>
+                        </ul>
+                    </blockquote>
+                </div>    
+            </div>
         </div>  
     </div>
     <div class="alert alert-warning alert-dismissable ng-hide" ng-show="!key.type">

@@ -117,9 +117,15 @@ class KeysController extends AbstractRedisController
             throw new HttpException(400, 'Key type is invalid');
         }
         
+        $result = $this->redis->editKey($data->key);
+        
+        if (!$result) {
+            throw new HttpException(400, 'Key is not updated');
+        }
+        
         return new JsonResponse(
             array(
-                'result' => $this->redis->editKey($data->key),
+                'key' => $result,
             )            
         );
     }
@@ -142,9 +148,15 @@ class KeysController extends AbstractRedisController
             throw new HttpException(400, 'Key type is invalid');
         }
         
+        $result = $this->redis->addKey($data->key);
+        
+        if (!$result) {
+            throw new HttpException(400, 'Key is not added');
+        }
+        
         return new JsonResponse(
             array(
-                'result' => $this->redis->addKey($data->key),
+                'key' => $result,
             )            
         );
     }
