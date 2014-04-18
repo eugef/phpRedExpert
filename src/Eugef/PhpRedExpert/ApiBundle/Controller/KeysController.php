@@ -2,12 +2,12 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Eugef\PhpRedExpert\ApiBundle\Controller\AbstractRedisController;
+use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 
-class KeysController extends Controller
+class KeysController extends AbstractRedisController
 {
     /**
      * Search for keys match specified pattern
@@ -20,19 +20,9 @@ class KeysController extends Controller
      */
     public function searchAction($serverId, $dbId)
     {
+        $this->initialize($serverId, $dbId);
+        
         $searchConfig = $this->container->getParameter('search');
-        $servers = $this->container->getParameter('redis_servers');
-        
-        if (empty($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }    
-            
-        $redis = new RedisConnector($servers[$serverId]);
-        
-        if (!$redis->selectDB($dbId)) {
-            throw new HttpException(404, 'Database not found');
-        }   
-        
         $page = abs($this->getRequest()->get('page', 0));
         $pattern = trim($this->getRequest()->get('pattern', NULL));
         
@@ -40,7 +30,7 @@ class KeysController extends Controller
             throw new HttpException(400, 'Search pattern is not specified');
         }
         
-        $keys = $redis->searchKeys($pattern, $page * $searchConfig['items_per_page'], $searchConfig['items_per_page'], $total);
+        $keys = $this->redis->searchKeys($pattern, $page * $searchConfig['items_per_page'], $searchConfig['items_per_page'], $total);
 
         return new JsonResponse(
             array(
@@ -54,18 +44,9 @@ class KeysController extends Controller
         );
     }  
     
-    public function deleteAction($serverId, $dbId) {
-        $servers = $this->container->getParameter('redis_servers');
-        
-        if (empty($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }    
-            
-        $redis = new RedisConnector($servers[$serverId]);
-        
-        if (!$redis->selectDB($dbId)) {
-            throw new HttpException(404, 'Database not found');
-        }   
+    public function deleteAction($serverId, $dbId) 
+    {
+        $this->initialize($serverId, $dbId);
 
         $data = json_decode($this->getRequest()->getContent());
         
@@ -75,23 +56,14 @@ class KeysController extends Controller
         
         return new JsonResponse(
             array(
-                'result' => $redis->deleteKeys($data->keys),
+                'result' => $this->redis->deleteKeys($data->keys),
             )            
         );
     }
     
-    public function attributesAction($serverId, $dbId) {
-        $servers = $this->container->getParameter('redis_servers');
-        
-        if (empty($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }    
-            
-        $redis = new RedisConnector($servers[$serverId]);
-        
-        if (!$redis->selectDB($dbId)) {
-            throw new HttpException(404, 'Database not found');
-        }   
+    public function attributesAction($serverId, $dbId) 
+    {
+        $this->initialize($serverId, $dbId);
 
         $data = json_decode($this->getRequest()->getContent());
         
@@ -105,23 +77,14 @@ class KeysController extends Controller
         
         return new JsonResponse(
             array(
-                'result' => $redis->editKeyAttributes($data->key, $data->attributes),
+                'result' => $this->redis->editKeyAttributes($data->key, $data->attributes),
             )            
         );
     }
     
-    public function valueAction($serverId, $dbId) {
-        $servers = $this->container->getParameter('redis_servers');
-        
-        if (empty($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }    
-            
-        $redis = new RedisConnector($servers[$serverId]);
-        
-        if (!$redis->selectDB($dbId)) {
-            throw new HttpException(404, 'Database not found');
-        }   
+    public function valueAction($serverId, $dbId) 
+    {
+        $this->initialize($serverId, $dbId);
         
         $key = trim($this->getRequest()->get('key', NULL));
         
@@ -131,23 +94,14 @@ class KeysController extends Controller
         
         return new JsonResponse(
             array(
-                'key' => $redis->getKey($key)
+                'key' => $this->redis->getKey($key)
             )            
         );
     }
     
-    public function editAction($serverId, $dbId) {
-        $servers = $this->container->getParameter('redis_servers');
-        
-        if (empty($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }    
-            
-        $redis = new RedisConnector($servers[$serverId]);
-        
-        if (!$redis->selectDB($dbId)) {
-            throw new HttpException(404, 'Database not found');
-        }   
+    public function editAction($serverId, $dbId) 
+    {
+        $this->initialize($serverId, $dbId);
 
         $data = json_decode($this->getRequest()->getContent());
         
@@ -165,23 +119,14 @@ class KeysController extends Controller
         
         return new JsonResponse(
             array(
-                'result' => $redis->editKey($data->key),
+                'result' => $this->redis->editKey($data->key),
             )            
         );
     }
     
-    public function addAction($serverId, $dbId) {
-        $servers = $this->container->getParameter('redis_servers');
-        
-        if (empty($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }    
-            
-        $redis = new RedisConnector($servers[$serverId]);
-        
-        if (!$redis->selectDB($dbId)) {
-            throw new HttpException(404, 'Database not found');
-        }   
+    public function addAction($serverId, $dbId) 
+    {
+        $this->initialize($serverId, $dbId);
 
         $data = json_decode($this->getRequest()->getContent());
         
@@ -199,7 +144,7 @@ class KeysController extends Controller
         
         return new JsonResponse(
             array(
-                'result' => $redis->addKey($data->key),
+                'result' => $this->redis->addKey($data->key),
             )            
         );
     }

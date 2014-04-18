@@ -2,12 +2,12 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Eugef\PhpRedExpert\ApiBundle\Controller\AbstractRedisController;
+use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 
-class ServerController extends Controller
+class ServerController extends AbstractRedisController
 {
     public function ListAction()
     {
@@ -27,39 +27,23 @@ class ServerController extends Controller
     
     public function DatabasesAction($serverId)
     {
-        $servers = $this->container->getParameter('redis_servers');
+        $this->initialize($serverId);
         
-        if (!isset($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }    
-            
-        $redis = new RedisConnector($servers[$serverId]);
-        return new JsonResponse($redis->getServerDbs());
+        return new JsonResponse($this->redis->getServerDbs());
     }   
     
     public function InfoAction($serverId) 
     {
-        $servers = $this->container->getParameter('redis_servers');
+        $this->initialize($serverId);
         
-        if (!isset($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }
-        
-        $redis = new RedisConnector($servers[$serverId]);
-        return new JsonResponse($redis->getServerInfo());
+        return new JsonResponse($this->redis->getServerInfo());
     }
     
     public function ClientsAction($serverId) 
     {
-        $servers = $this->container->getParameter('redis_servers');
+        $this->initialize($serverId);
         
-        if (!isset($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }
-        
-        $redis = new RedisConnector($servers[$serverId]);
-        
-        $clients = $redis->getServerClients();
+        $clients = $this->redis->getServerClients();
 
         return new JsonResponse(
             array(
@@ -75,15 +59,9 @@ class ServerController extends Controller
     
     public function ConfigAction($serverId) 
     {
-        $servers = $this->container->getParameter('redis_servers');
+        $this->initialize($serverId);
         
-        if (!isset($servers[$serverId])) {
-            throw new HttpException(404, 'Server not found');
-        }
-        
-        $redis = new RedisConnector($servers[$serverId]);
-        return new JsonResponse($redis->getServerConfig());
-    }
-        
+        return new JsonResponse($this->redis->getServerConfig());
+    }        
 
 }
