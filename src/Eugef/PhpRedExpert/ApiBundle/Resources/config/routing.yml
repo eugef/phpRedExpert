@@ -40,9 +40,9 @@ eugef_php_red_expert_keys_search:
         serverId: "\d+"
         dbId: "\d+"
 
-eugef_php_red_expert_keys_value:
-    pattern:  /server/{serverId}/db/{dbId}/keys/value
-    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Value, _format: json}
+eugef_php_red_expert_keys_view:
+    pattern:  /server/{serverId}/db/{dbId}/keys/view
+    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:View, _format: json}
     requirements:
         _method: GET
         serverId: "\d+"

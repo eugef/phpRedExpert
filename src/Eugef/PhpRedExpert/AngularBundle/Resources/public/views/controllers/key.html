@@ -1,19 +1,33 @@
 <div class="col-md-12">
+    
     <div class="nav-tabs-custom">
         <ul class="nav nav-tabs" ng-include="partialsUri('dbmenu.html')"></ul>
         <div class="tab-content" ng-if="key.type">
-            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{[alert.message]}</alert>
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group">   
+                    <button type="button" ng-click="editKeyName()" class="btn btn-default" ng-disabled="key.new"><i class="fa fa-edit"></i> Rename</button>
+                    <button type="button" ng-click="editKeyTtl()" class="btn btn-default" ng-disabled="key.new"><i class="fa fa-clock-o"></i> Expire</button>
+                 </div>   
+                 <div class="btn-group">      
+                    <button type="button" ng-click="moveKey()" class="btn btn-default" ng-disabled="key.new"><i class="fa fa-arrows"></i> Move</button>
+                    <button type="button" ng-click="deleteKey()" class="btn btn-default" ng-disabled="key.new"><span class="text-danger"><i class="fa fa-trash-o"></i> Delete</span></button>
+                </div>
+            </div>  
+        </div>
+    </div>
+    
+    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{[alert.message]}</alert>
+    
+    <div class="box box-primary" ng-if="key.type">
+        <div class="box-body">
             <div class="row">
                 <div class="col-xs-6">
-                    <form name="editKeyString" ng-submit="submitKey()" novalidate>
+                    <form name="keyForm" ng-submit="submitKey()" novalidate>
                         <div class="form-group">
                             <label>Key name</label>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-key"></i></span>
                                 <input type="text" class="form-control" placeholder="Name" ng-model="key.name" ng-readonly="!key.new" required />
-                                <span ng-if="!key.new" class="input-group-btn">
-                                    <button class="btn btn-primary" type="button" ng-click="editKeyName()">Rename</button>
-                                </span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -22,16 +36,9 @@
                                 <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
                                 <input type="number" class="form-control" placeholder="Ttl" ng-model="key.ttl" min="0" max="99999999" ng-readonly="!key.new" />
                                 <span class="input-group-addon" style="min-width: 150px">{[key.ttl|sec2time]}</span>
-                                <span ng-if="!key.new" class="input-group-btn">
-                                    <button class="btn btn-primary" type="button" ng-click="editKeyTtl()">Expire</button>
-                                </span>
                             </div>
                         </div>
                         <div ng-include="partialsUri('key' + key.type + '.html')"></div>
-                        <div class="form-group">
-                            <button type="submit" ng-disabled="editKeyString.$invalid" class="btn btn-primary">Save</button>
-                            <button type="button" ng-click="deleteKey()" class="btn btn-default pull-right" ng-show="!key.new"><span class="text-danger"><i class="fa fa-trash-o"></i> Delete</span></button>
-                        </div>
                     </form>   
                 </div>
                 <div class="col-xs-6 ng-hide" ng-show="!key.new">
@@ -46,8 +53,9 @@
             </div>
         </div>  
     </div>
+    
     <div class="alert alert-warning alert-dismissable ng-hide" ng-show="!key.type">
         <i class="fa fa-warning"></i>
-        <b>Key not found</b>. But you can add it.
+        <b>Key "{[key.name]}" not found</b>. But you can add it.
     </div>
 </div>

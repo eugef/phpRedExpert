@@ -1,4 +1,23 @@
 <div class="form-group">
-    <label>Value</label>
-    <textarea rows="3" class="form-control" placeholder="Value" ng-model="key.value" auto-focus></textarea>
+    <table class="table table-hover table-condensed -table-bordered">
+        <thead>
+            <tr>
+                <th>Hash key</th>
+                <th>Value</th>
+                <th></th>
+            </tr>    
+            <tr>
+                <th><input type="text" class="form-control" placeholder="Hash key" ng-model="key.hash.name" required/></th>
+                <th><input type="text" class="form-control" placeholder="Value" ng-model="key.hash.value" /></th>
+                <th><button type="button" ng-click="newHashKey()" class="btn btn-default" ng-disabled="keyForm.$invalid"><i class="fa fa-plus"></i> Add</button></th>
+            </tr>    
+        </thead>
+        <tbody>
+            <tr ng-repeat="(hash, value) in key.value">
+                <td>{[hash]}</td>
+                <td>{[value]}</td>
+                <td><span class="text-danger"><i class="fa fa-trash-o"></i></span></td>
+            </tr>
+        </tbody>    
+    </table>
 </div>            

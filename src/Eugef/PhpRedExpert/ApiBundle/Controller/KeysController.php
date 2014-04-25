@@ -82,7 +82,7 @@ class KeysController extends AbstractRedisController
         );
     }
     
-    public function valueAction($serverId, $dbId) 
+    public function viewAction($serverId, $dbId) 
     {
         $this->initialize($serverId, $dbId);
         
@@ -92,9 +92,15 @@ class KeysController extends AbstractRedisController
             throw new HttpException(400, 'Key name is not specified');
         }
         
+        $result = $this->redis->getKey($key);
+        
+        if (!$result) {
+            throw new HttpException(404, 'Key is not found');
+        }
+        
         return new JsonResponse(
             array(
-                'key' => $this->redis->getKey($key)
+                'key' => $result,
             )            
         );
     }
@@ -120,7 +126,7 @@ class KeysController extends AbstractRedisController
         $result = $this->redis->editKey($data->key);
         
         if (!$result) {
-            throw new HttpException(400, 'Key is not updated');
+            throw new HttpException(404, 'Key is not updated');
         }
         
         return new JsonResponse(
@@ -151,7 +157,7 @@ class KeysController extends AbstractRedisController
         $result = $this->redis->addKey($data->key);
         
         if (!$result) {
-            throw new HttpException(400, 'Key is not added');
+            throw new HttpException(404, 'Key is not added');
         }
         
         return new JsonResponse(

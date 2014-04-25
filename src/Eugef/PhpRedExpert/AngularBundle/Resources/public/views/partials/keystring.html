@@ -1,4 +1,7 @@
 <div class="form-group">
     <label>Value</label>
     <textarea rows="3" class="form-control" placeholder="Value" ng-model="key.value" auto-focus></textarea>
-</div>            
+</div>   
+<div class="form-group">
+    <button type="submit" ng-disabled="keyForm.$invalid" class="btn btn-primary pull-right">Save</button>
+</div>

@@ -249,6 +249,12 @@ class RedisConnector
             case \Redis::REDIS_ZSET:
                 break;
             case \Redis::REDIS_HASH:
+                if (!$this->db->hsetnx($key->name, isset($key->value) ? $key->value : '')) {
+                    if ($key->ttl > 0) {
+                        $this->db->expire($key->name, $key->ttl);
+                    }
+                    $result = TRUE;
+                } 
                 break;
         }
         

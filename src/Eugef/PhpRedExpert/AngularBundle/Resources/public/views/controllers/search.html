@@ -33,12 +33,14 @@
         <div class="box-body table-responsive no-padding">
             <table class="table table-hover table-condensed table-data">
                 <thead>
-                    <th class="checkbox-td"><label><input checkbox-all="search.result.keys|selected"/></label></th>    
-                    <th sort-order="search.sort" sort-order-by="name">Key</th>
-                    <th class="fixed-td-md" sort-order="search.sort" sort-order-by="type">Type</th>
-                    <th class="fixed-td-mdb" sort-order="search.sort" sort-order-by="ttl">TTL</th>
-                    <th class="fixed-td-md" sort-order="search.sort" sort-order-by="encoding">Encoding</th>
-                    <th class="fixed-td-sm" sort-order="search.sort" sort-order-by="size">Size</th>
+                    <tr>
+                        <th class="checkbox-td"><label><input checkbox-all="search.result.keys|selected"/></label></th>    
+                        <th sort-order="search.sort" sort-order-by="name">Key</th>
+                        <th class="fixed-td-md" sort-order="search.sort" sort-order-by="type">Type</th>
+                        <th class="fixed-td-mdb" sort-order="search.sort" sort-order-by="ttl">TTL</th>
+                        <th class="fixed-td-md" sort-order="search.sort" sort-order-by="encoding">Encoding</th>
+                        <th class="fixed-td-sm" sort-order="search.sort" sort-order-by="size">Size</th>
+                    </tr>    
                 </thead>
                 <tbody>
                     <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse" ng-class="{selected: key.selected}">

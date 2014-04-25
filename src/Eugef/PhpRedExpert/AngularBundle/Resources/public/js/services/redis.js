@@ -72,9 +72,9 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 );
             },
             
-            getKeyValue: function(serverId, dbId, key) {
+            viewKey: function(serverId, dbId, key) {
                 return $http.get(
-                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/value', 
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/view', 
                     {
                         params: {
                             key: key

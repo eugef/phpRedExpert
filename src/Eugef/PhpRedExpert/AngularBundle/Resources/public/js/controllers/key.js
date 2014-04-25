@@ -13,11 +13,23 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                 type: keyType,
                 ttl: 0
             }
+            
+            switch (keyType) {
+                case 'string':
+                    $scope.key.value = '';
+                    break;
+                case 'hash':
+                    $scope.key.value = {};
+                    break;
+            }
         }
 
         $scope.editKey = function(keyName) {
             console.log('editKey');
-            return RedisService.getKeyValue($scope.current.serverId, $scope.current.dbId, keyName).then(
+            $scope.key = {
+                name: keyName
+            };
+            return RedisService.viewKey($scope.current.serverId, $scope.current.dbId, keyName).then(
                 function(response) {
                     $scope.key = response.data.key;
                     $scope.key.ttl = $scope.key.ttl < 0 ? 0 : $scope.key.ttl; 
@@ -95,7 +107,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                             if (response.data.result.name) {
                                 $scope.key.name = newName;
                                 // update key name in url
-                                $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/' + encodeURIComponent($scope.key.name), false);
+                                $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + encodeURIComponent($scope.key.name), false);
                             }
                             else {
                                 $scope.$parent.showModalAlert({
@@ -136,6 +148,13 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                         }
                     );
                 });
+            }
+        }
+        
+        $scope.newHashKey = function() {
+            if ($scope.key.hash.name) {
+                $scope.key.value[$scope.key.hash.name] = $scope.key.hash.value;
+                $scope.key.hash = {};
             }
         }
         
