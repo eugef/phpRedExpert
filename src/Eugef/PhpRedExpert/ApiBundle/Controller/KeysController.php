@@ -125,13 +125,13 @@ class KeysController extends AbstractRedisController
         
         $result = $this->redis->editKey($data->key);
         
-        if (!$result) {
+        if ($result === FALSE) {
             throw new HttpException(404, 'Key is not updated');
         }
         
         return new JsonResponse(
             array(
-                'key' => $result,
+                'key' => $this->redis->getKey($data->key->name),
             )            
         );
     }
@@ -156,13 +156,13 @@ class KeysController extends AbstractRedisController
         
         $result = $this->redis->addKey($data->key);
         
-        if (!$result) {
+        if ($result === FALSE) {
             throw new HttpException(404, 'Key is not added');
         }
         
         return new JsonResponse(
             array(
-                'key' => $result,
+                'key' => $this->redis->getKey($data->key->name),
             )            
         );
     }

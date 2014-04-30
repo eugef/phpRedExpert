@@ -210,7 +210,7 @@ class RedisConnector
         $result = FALSE;
         switch ($key->type) {
             case self::$KEY_TYPES[\Redis::REDIS_STRING]:
-                $result = $this->db->set($key->name, $key->value);
+                $result = $this->db->set($key->name, $key->value->value);
                 break;
             case \Redis::REDIS_SET:
                 break;
@@ -218,16 +218,18 @@ class RedisConnector
                 break;
             case \Redis::REDIS_ZSET:
                 break;
-            case \Redis::REDIS_HASH:
+            case self::$KEY_TYPES[\Redis::REDIS_HASH]:
+                if (!empty($key->value->delete)) {
+                    $result = $this->db->hdel($key->name, $key->value->name);
+                }
+                else {
+                    $result = $this->db->hset($key->name, $key->value->name, isset($key->value->value) ? $key->value->value : '');
+                }
+                
                 break;
         }
         
-        if ($result) {
-            return $this->getKey($key->name);
-        }
-        else {
-            return FALSE;
-        }
+        return $result;
     }
 
     public function addKey($key)
@@ -235,7 +237,7 @@ class RedisConnector
         $result = FALSE;
         switch ($key->type) {
             case self::$KEY_TYPES[\Redis::REDIS_STRING]:
-                if ($this->db->setnx($key->name, isset($key->value) ? $key->value : '')) {
+                if ($this->db->setnx($key->name, isset($key->value->value) ? $key->value->value : '')) {
                     if ($key->ttl > 0) {
                         $this->db->expire($key->name, $key->ttl);
                     }
@@ -248,8 +250,8 @@ class RedisConnector
                 break;
             case \Redis::REDIS_ZSET:
                 break;
-            case \Redis::REDIS_HASH:
-                if (!$this->db->hsetnx($key->name, isset($key->value) ? $key->value : '')) {
+            case self::$KEY_TYPES[\Redis::REDIS_HASH]:
+                if ($this->db->hsetnx($key->name, $key->value->name, isset($key->value->value) ? $key->value->value : '')) {
                     if ($key->ttl > 0) {
                         $this->db->expire($key->name, $key->ttl);
                     }
@@ -258,12 +260,7 @@ class RedisConnector
                 break;
         }
         
-        if ($result) {
-            return $this->getKey($key->name);
-        }
-        else {
-            return FALSE;
-        }
+        return $result;
     }
 
     public function getServerInfo()
