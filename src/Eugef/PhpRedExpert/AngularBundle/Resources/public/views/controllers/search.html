@@ -59,7 +59,7 @@
                 on page <span class="label label-default">{[search.result.keys.length]}</span> | 
                 page <span class="label label-default">{[search.page]} / {[search.pageCount]}</span>
             </div>    
-            <pagination on-select-page="setPage(page)" total-items="search.result.total" page="search.page" items-per-page="search.result.pageSize" num-pages="search.pageCount" max-size="5" class="pull-right ng-hide" ng-show="search.pageCount > 1" boundary-links="true" rotate="true"></pagination>
+            <pagination ng-model="search.page" ng-change="setPage()" total-items="search.result.total" items-per-page="search.result.pageSize" num-pages="search.pageCount" max-size="5" class="pull-right ng-hide" ng-show="search.pageCount > 1" boundary-links="true" rotate="true"></pagination>
         </div>
     </div>
 
