@@ -179,7 +179,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         
         $scope.getKeyUri = function(key, skipEncode) {
             skipEncode = angular.isDefined(skipEncode) ? skipEncode : false;
-            keyUri = 'server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + encodeURIComponent(key);
+            var keyUri = 'server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + encodeURIComponent(key);
             if (skipEncode) {
                 return keyUri;
             }
@@ -195,11 +195,11 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             }
         }
         
-        $scope.setPage = function(page) {
-            console.log('set page: ' + page + '[' + $scope.search.page + ']');
+        $scope.setPage = function() {
+            console.log('set page: [' + $scope.search.page + ']');
             console.log($scope.search);
-            $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern) + '/' + encodeURIComponent(page), false);
-            $scope.searchKey($scope.search.pattern, page);
+            $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern) + '/' + encodeURIComponent($scope.search.page), false);
+            $scope.searchKey($scope.search.pattern, $scope.search.page);
         };
         
         $scope.$watch('search.result.keys', function(){
