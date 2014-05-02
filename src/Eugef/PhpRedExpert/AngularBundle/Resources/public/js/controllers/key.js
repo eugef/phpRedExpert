@@ -25,6 +25,11 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                         value: ''
                     };
                     break;
+                case 'list':
+                    $scope.keyValue = {
+                        value: ''
+                    };
+                    break;    
             }
         }
 
@@ -118,7 +123,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
             }
         }
         
-        $scope.deleteKeyHash = function(hash) {
+        $scope.deleteHashField = function(hash) {
             var execute = function() {
                 return RedisService.editKey($scope.current.serverId, $scope.current.dbId, key).then(
                     function(response) {
@@ -140,16 +145,16 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                             $scope.alerts.push({type: 'success', message: 'Key is succesfully deleted'});
                         }
                         
-                        console.log('// deleteKeyHash');
+                        console.log('// deleteHashField');
                     },
                     function(response) {
                         $scope.alerts.push({type: 'danger', message: 'Key hash is not deleted'});
-                        console.log('// deleteKeyHash / error');
+                        console.log('// deleteHashField / error');
                     }
                 );
             }
             
-            console.log('deleteKeyHash: ');
+            console.log('deleteHashField: ');
             key = {
                 name: $scope.key.name,
                 type: $scope.key.type,

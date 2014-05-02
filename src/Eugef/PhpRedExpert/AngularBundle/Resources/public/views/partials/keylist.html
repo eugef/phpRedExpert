@@ -1,0 +1,30 @@
+<div class="form-group">
+    <table class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>Value</th>
+                <th></th>
+            </tr>    
+            <tr>
+                <th class="fixed-td-sm">
+                    <select>
+                        <option value="preprend">Prepend</option>
+                        <option value="preprend">Append</option>
+                        <option value="preprend">After pivot</option>
+                        <option value="preprend">Before pivot</option>
+                    </select>
+                </th>
+                <th><textarea class="form-control" placeholder="Value" ng-model="keyValue.value" rows="2" required ></textarea></th>
+                <th class="fixed-td-sm"><button type="submit" class="btn btn-primary" ng-disabled="keyForm.$invalid"><i class="fa fa-plus"></i> Add</button></th>
+            </tr>    
+        </thead>
+        <tbody>
+            <tr ng-repeat="(index, value) in key.value track by index">
+                <td>{[index]}</td>
+                <td>{[value]}</td>
+                <td><a href ng-click="deleteListValue(value)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
+            </tr>
+        </tbody>    
+    </table>
+</div>            

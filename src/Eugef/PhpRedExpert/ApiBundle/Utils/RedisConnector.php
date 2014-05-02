@@ -14,10 +14,10 @@ class RedisConnector
 
     static $KEY_TYPES = array(
         \Redis::REDIS_STRING => 'string',
-        \Redis::REDIS_SET    => 'set',
-        \Redis::REDIS_LIST   => 'list',
-        \Redis::REDIS_ZSET   => 'zset',
         \Redis::REDIS_HASH   => 'hash',
+        \Redis::REDIS_LIST   => 'list',
+        \Redis::REDIS_SET    => 'set',
+        \Redis::REDIS_ZSET   => 'zset',
     );
     
     private $config = array();
@@ -33,6 +33,10 @@ class RedisConnector
         }
 
         $this->config = $config;
+    }
+    
+    public static function validKey($keyName) {
+        return (isset($keyName) && strlen($keyName));
     }
 
     private function getDBConfigValue($id, $name, $default = NULL)
@@ -212,20 +216,21 @@ class RedisConnector
             case self::$KEY_TYPES[\Redis::REDIS_STRING]:
                 $result = $this->db->set($key->name, $key->value->value);
                 break;
-            case \Redis::REDIS_SET:
+            case self::$KEY_TYPES[\Redis::REDIS_HASH]:
+                if (self::validKey($key->value->name)) {
+                    if (!empty($key->value->delete)) {
+                        $result = $this->db->hdel($key->name, $key->value->name);
+                    }
+                    else {
+                        $result = $this->db->hset($key->name, $key->value->name, isset($key->value->value) ? $key->value->value : '');
+                    }
+                }
                 break;
             case \Redis::REDIS_LIST:
                 break;
-            case \Redis::REDIS_ZSET:
+            case \Redis::REDIS_SET:
                 break;
-            case self::$KEY_TYPES[\Redis::REDIS_HASH]:
-                if (!empty($key->value->delete)) {
-                    $result = $this->db->hdel($key->name, $key->value->name);
-                }
-                else {
-                    $result = $this->db->hset($key->name, $key->value->name, isset($key->value->value) ? $key->value->value : '');
-                }
-                
+            case \Redis::REDIS_ZSET:
                 break;
         }
         
@@ -244,19 +249,21 @@ class RedisConnector
                     $result = TRUE;
                 } 
                 break;
-            case \Redis::REDIS_SET:
-                break;
+            case self::$KEY_TYPES[\Redis::REDIS_HASH]:
+                if (self::validKey($key->value->name)) {
+                    if ($this->db->hsetnx($key->name, $key->value->name, isset($key->value->value) ? $key->value->value : '')) {
+                        if ($key->ttl > 0) {
+                            $this->db->expire($key->name, $key->ttl);
+                        }
+                        $result = TRUE;
+                    }
+                }
+                break;    
             case \Redis::REDIS_LIST:
                 break;
-            case \Redis::REDIS_ZSET:
+            case \Redis::REDIS_SET:
                 break;
-            case self::$KEY_TYPES[\Redis::REDIS_HASH]:
-                if ($this->db->hsetnx($key->name, $key->value->name, isset($key->value->value) ? $key->value->value : '')) {
-                    if ($key->ttl > 0) {
-                        $this->db->expire($key->name, $key->ttl);
-                    }
-                    $result = TRUE;
-                } 
+            case \Redis::REDIS_ZSET:
                 break;
         }
         

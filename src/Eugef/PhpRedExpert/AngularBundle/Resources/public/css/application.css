@@ -84,6 +84,11 @@ input[type='checkbox'].greyed {
     width: 150px;
 }
 
+.table-condensed>thead>tr>th.fixed-td-lg,
+.table-condensed>tbody>tr>td.fixed-td-lg {
+    width: 250px;
+}
+
 .table-condensed>thead>tr>th.checkbox-td>label,
 .table-condensed>tbody>tr>td.checkbox-td>label {
     margin: 0;
@@ -119,4 +124,13 @@ input[type='checkbox'].greyed {
 
 .table-data>thead>tr>th:active {
     outline: none;
+}
+
+.table>thead>tr.inline-edit>th {
+    vertical-align: top;
+} 
+
+pre.scrollable {
+    max-height: 200px;
+    overflow-y: auto;
 }

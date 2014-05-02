@@ -2,21 +2,21 @@
     <table class="table table-hover table-condensed">
         <thead>
             <tr>
-                <th>Hash key</th>
+                <th>Field</th>
                 <th>Value</th>
                 <th></th>
             </tr>    
-            <tr>
-                <th><input type="text" class="form-control" placeholder="Hash key" ng-model="keyValue.name" required/></th>
-                <th><input type="text" class="form-control" placeholder="Value" ng-model="keyValue.value" /></th>
-                <th class="fixed-td-sm"><button type="submit" class="btn btn-default" ng-disabled="keyForm.$invalid"><i class="fa fa-plus"></i> Add</button></th>
+            <tr class="inline-edit">
+                <th class="fixed-td-lg"><input type="text" class="form-control" placeholder="Hash key" ng-model="keyValue.name" required/></th>
+                <th><textarea class="form-control" placeholder="Value" ng-model="keyValue.value" rows="2"></textarea></th>
+                <th class="fixed-td-sm"><button type="submit" class="btn btn-primary" ng-disabled="keyForm.$invalid"><i class="fa fa-plus"></i> Add</button></th>
             </tr>    
         </thead>
         <tbody>
-            <tr ng-repeat="(hash, value) in key.value">
-                <td>{[hash]}</td>
-                <td>{[value]}</td>
-                <td><a href ng-click="deleteKeyHash(hash)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
+            <tr ng-repeat="(field, value) in key.value">
+                <td>{[field]}</td>
+                <td><pre class="no-margin scrollable">{[value]}</pre></td>
+                <td><a href ng-click="deleteHashField(field)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
             </tr>
         </tbody>    
     </table>
