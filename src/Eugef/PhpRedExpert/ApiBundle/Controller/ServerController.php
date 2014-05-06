@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ServerController extends AbstractRedisController
 {
-    public function ListAction()
+    public function listAction()
     {
         $servers = array();
         foreach ($this->container->getParameter('redis_servers') as $id => $server) {
@@ -25,21 +25,21 @@ class ServerController extends AbstractRedisController
         return new JsonResponse($servers);
     }
     
-    public function DatabasesAction($serverId)
+    public function databasesAction($serverId)
     {
         $this->initialize($serverId);
         
         return new JsonResponse($this->redis->getServerDbs());
     }   
     
-    public function InfoAction($serverId) 
+    public function infoAction($serverId) 
     {
         $this->initialize($serverId);
         
         return new JsonResponse($this->redis->getServerInfo());
     }
     
-    public function ClientsAction($serverId) 
+    public function clientsAction($serverId) 
     {
         $this->initialize($serverId);
         
@@ -57,7 +57,7 @@ class ServerController extends AbstractRedisController
         );
     }
     
-    public function ConfigAction($serverId) 
+    public function configAction($serverId) 
     {
         $this->initialize($serverId);
         
