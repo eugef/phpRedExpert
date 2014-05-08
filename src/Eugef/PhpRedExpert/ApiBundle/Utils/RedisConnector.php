@@ -230,6 +230,8 @@ class RedisConnector
                 
             case self::$KEY_TYPES[\Redis::REDIS_LIST]:
                 if (!empty($key->value->delete)) {
+                    // workaround to delete list item by index:
+                    // http://redis.io/commands/lrem#comment-1375293995
                     $deleteValue = uniqid('phpredexpert-delete-', TRUE);
                     $result = $this->db->multi()->lset($key->name, (int)$key->value->index, $deleteValue)->lrem($key->name, $deleteValue)->exec();
                     // save result of last operation in a transaction
