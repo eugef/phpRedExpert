@@ -157,7 +157,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
         }
         
         $scope.find = function(array, key, value) {
-            for (i = 0; i < array.length; i++) {
+            for (var i = 0; i < array.length; i++) {
                 if (array[i][key] == value) {
                     return array[i];
                 }

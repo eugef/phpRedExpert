@@ -6,24 +6,27 @@
                 <th>Value</th>
                 <th></th>
             </tr>    
-            <tr>
-                <th class="fixed-td-sm">
-                    <select>
-                        <option value="preprend">Prepend</option>
-                        <option value="preprend">Append</option>
-                        <option value="preprend">After pivot</option>
-                        <option value="preprend">Before pivot</option>
+            <tr class="inline-edit">
+                <th class="fixed-td-lg">
+                    <select class="form-control" ng-model="keyValue.action" style="margin-bottom:4px;" required>
+                        <option value="append">Append</option>
+                        <option value="prepend">Prepend</option>
+                        <option value="after" ng-disabled="key.new">After pivot ...</option>
+                        <option value="before" ng-disabled="key.new">Before pivot ...</option>
+                        <option value="set" ng-disabled="key.new">Set at index ...</option>
                     </select>
+                    <input type="text" class="form-control ng-hide" placeholder="Pivot value" ng-model="keyValue.pivot" typeahead="value for value in key.value | filter:$viewValue | unique:$viewValue | limitTo:10" ng-show="['after' ,'before'].indexOf(keyValue.action) != -1" ng-required="['after' ,'before'].indexOf(keyValue.action) != -1">
+                    <select class="form-control ng-hide" ng-model="keyValue.index" ng-options="value for value in [] | range:0:key.value.length" ng-show="['set'].indexOf(keyValue.action) != -1" ng-required="['set'].indexOf(keyValue.action) != -1"></select>
                 </th>
-                <th><textarea class="form-control" placeholder="Value" ng-model="keyValue.value" rows="2" required ></textarea></th>
-                <th class="fixed-td-sm"><button type="submit" class="btn btn-primary" ng-disabled="keyForm.$invalid"><i class="fa fa-plus"></i> Add</button></th>
+                <th><textarea class="form-control" placeholder="Value" ng-model="keyValue.value" rows="3" required ></textarea></th>
+                <th class="fixed-td-smb"><button type="submit" class="btn btn-primary" ng-disabled="keyForm.$invalid"><i class="fa fa-plus"></i> Add</button></th>
             </tr>    
         </thead>
         <tbody>
             <tr ng-repeat="(index, value) in key.value track by index">
-                <td>{[index]}</td>
-                <td>{[value]}</td>
-                <td><a href ng-click="deleteListValue(value)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
+                <td><a href ng-click="initEditListItem(index)">{[index]}</a></td>
+                <td><pre class="no-margin scrollable">{[value]}</pre></td>
+                <td><a href ng-click="deleteListItem(index)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
             </tr>
         </tbody>    
     </table>

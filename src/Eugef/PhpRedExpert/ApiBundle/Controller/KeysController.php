@@ -88,7 +88,7 @@ class KeysController extends AbstractRedisController
         
         $key = trim($this->getRequest()->get('key', NULL));
         
-        if (!RedisConnector::validKey($key)) {
+        if (!RedisConnector::hasValue($key)) {
             throw new HttpException(400, 'Key name is not specified');
         }
         
@@ -111,7 +111,7 @@ class KeysController extends AbstractRedisController
 
         $data = json_decode($this->getRequest()->getContent());
 
-        if (!RedisConnector::validKey($data->key->name)) {
+        if (!RedisConnector::hasValue($data->key->name)) {
             throw new HttpException(400, 'Key is not specified');
         }
         
@@ -142,7 +142,7 @@ class KeysController extends AbstractRedisController
 
         $data = json_decode($this->getRequest()->getContent());
         
-        if (!RedisConnector::validKey($data->key->name)) {
+        if (!RedisConnector::hasValue($data->key->name)) {
             throw new HttpException(400, 'Key is not specified');
         }
         

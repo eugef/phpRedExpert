@@ -1,4 +1,4 @@
-var App = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'jmdobry.angular-cache'])
+var App = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'jmdobry.angular-cache', 'ui.unique'])
     .constant('config', CONFIG)
     .config(['$interpolateProvider', function($interpolateProvider) {
         $interpolateProvider.startSymbol('{[').endSymbol(']}');

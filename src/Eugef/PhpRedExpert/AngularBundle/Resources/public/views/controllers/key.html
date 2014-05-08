@@ -21,7 +21,7 @@
     <div class="box box-primary" ng-if="key.type">
         <div class="box-body">
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-md-8">
                     <form name="keyForm" ng-submit="submitKey()" novalidate>
                         <div class="form-group">
                             <label>Key name</label>
@@ -41,7 +41,7 @@
                         <div ng-include="partialsUri('key' + key.type + '.html')"></div>
                     </form>   
                 </div>
-                <div class="col-xs-6 ng-hide" ng-show="!key.new">
+                <div class="col-md-4 ng-hide" ng-show="!key.new">
                     <blockquote>
                         <ul class="list-unstyled">
                             <li>Type: <span class="label label-default">{[key.type]}</span></li>

@@ -15,22 +15,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                 ttl: 0
             }
             
-            switch (keyType) {
-                case 'string':
-                    $scope.keyValue.value = '';
-                    break;
-                case 'hash':
-                    $scope.keyValue = {
-                        name: '',
-                        value: ''
-                    };
-                    break;
-                case 'list':
-                    $scope.keyValue = {
-                        value: ''
-                    };
-                    break;    
-            }
+            $scope.keyValue = $scope.defaultKeyValue(keyType);
         }
 
         $scope.initEditKey = function(keyName) {
@@ -40,14 +25,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                     $scope.key = response.data.key;
                     $scope.key.ttl = $scope.key.ttl < 0 ? 0 : $scope.key.ttl; 
                     
-                    switch ($scope.key.type) {
-                        case 'string':
-                            $scope.keyValue.value = $scope.key.value;
-                            break;
-                        case 'hash':
-                            $scope.keyValue = {};
-                            break;
-                    }
+                    $scope.keyValue = $scope.defaultKeyValue($scope.key.type, $scope.key.value);
+
                     console.log($scope.key)
                     console.log('// initEditKey');
                 },
@@ -60,8 +39,29 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
             );    
         }
         
+        $scope.defaultKeyValue = function(keyType, value) {
+            switch (keyType) {
+                case 'string':
+                    return {
+                        value: angular.isDefined(value) ? value : ''
+                    };
+                case 'hash':
+                    return {
+                        field: '',
+                        value: ''
+                    };
+                case 'list':
+                    return {
+                        value: '',
+                        action: 'append',
+                        pivot: '',
+                        index: 0
+                    };
+            }
+        }
+                
         $scope.submitKey = function() {
-            key = {
+            var key = {
                 name: $scope.key.name,
                 type: $scope.key.type,
                 ttl: $scope.key.ttl,
@@ -77,14 +77,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                         $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + encodeURIComponent($scope.key.name), false);
                         //$scope.alerts.push({type: 'success', message: 'Key is succesfully created'});
                         
-                        switch ($scope.key.type) {
-                            case 'string':
-                                $scope.keyValue.value = $scope.key.value;
-                                break;
-                            case 'hash':
-                                $scope.keyValue = {};
-                                break;
-                        }
+                        $scope.keyValue = $scope.defaultKeyValue($scope.key.type, $scope.key.value);
                         
                         // increase amount of keys in whole db
                         $scope.$parent.getCurrentDB().keys++;
@@ -104,14 +97,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                         $scope.key = response.data.key;
                         $scope.key.ttl = $scope.key.ttl < 0 ? 0 : $scope.key.ttl;
                         //$scope.alerts.push({type: 'success', message: 'Key is succesfully updated'});
-                        switch ($scope.key.type) {
-                            case 'string':
-                                $scope.keyValue.value = $scope.key.value;
-                                break;
-                            case 'hash':
-                                $scope.keyValue = {};
-                                break;
-                        }
+                        
+                        $scope.keyValue = $scope.defaultKeyValue($scope.key.type, $scope.key.value);
                         
                         console.log('// submitKey / edit');
                     },
@@ -123,7 +110,45 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
             }
         }
         
-        $scope.deleteHashField = function(hash) {
+        $scope.initEditHashField = function(field) {
+            $scope.keyValue = {
+                field: field,
+                value: $scope.key.value[field]
+            };
+        }
+        
+        $scope.initEditListItem = function(index) {
+            $scope.keyValue = {
+                action: 'set',
+                value: $scope.key.value[index],
+                index: index,
+                pivot: ''
+            };
+        }
+        
+        $scope.deleteHashField = function(field) {
+            $scope.deleteKeyItem({
+                name: $scope.key.name,
+                type: $scope.key.type,
+                value: {
+                    field: field,
+                    delete: true
+                }  
+            });
+        }
+        
+        $scope.deleteListItem = function(index) {
+            $scope.deleteKeyItem({
+                name: $scope.key.name,
+                type: $scope.key.type,
+                value: {
+                    index: index,
+                    delete: true
+                } 
+            });
+        }
+        
+        $scope.deleteKeyItem = function(key) {
             var execute = function() {
                 return RedisService.editKey($scope.current.serverId, $scope.current.dbId, key).then(
                     function(response) {
@@ -144,32 +169,19 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                             
                             $scope.alerts.push({type: 'success', message: 'Key is succesfully deleted'});
                         }
-                        
-                        console.log('// deleteHashField');
                     },
                     function(response) {
-                        $scope.alerts.push({type: 'danger', message: 'Key hash is not deleted'});
-                        console.log('// deleteHashField / error');
+                        $scope.alerts.push({type: 'danger', message: 'Key item is not deleted'});
                     }
                 );
             }
-            
-            console.log('deleteHashField: ');
-            key = {
-                name: $scope.key.name,
-                type: $scope.key.type,
-                value: {
-                    name: hash,
-                    delete: true
-                }    
-            };
             if ($scope.key.size > 1) {
                 execute();
             }
             else {
                 $scope.$parent.showModalConfirm({
                     title: 'Delete key forever?',
-                    message: 'Key is about to be permanently deleted because no hash fields are left:',
+                    message: 'Key is about to be permanently deleted because no items are left:',
                     items: [key.name],
                     warning: 'You can\'t undo this action!',
                     action: 'Delete'
