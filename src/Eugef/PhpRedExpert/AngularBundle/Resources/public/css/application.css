@@ -136,3 +136,13 @@ pre.scrollable {
     max-height: 200px;
     overflow-y: auto;
 }
+
+.nav-tabs>li.active.dropdown>a {
+    cursor: pointer;
+    color: #3c8dbc;
+} 
+.nav-tabs>li.active.dropdown>a:hover, 
+.nav-tabs>li.active.dropdown>a:focus {
+    cursor: pointer;
+    color: #72afd2;
+}
