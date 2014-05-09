@@ -7,9 +7,17 @@
                 <th></th>
             </tr>    
             <tr class="inline-edit">
-                <th class="fixed-td-lg"><input type="text" class="form-control" placeholder="Score" ng-model="keyValue.score" required/></th>
-                <th><textarea class="form-control" placeholder="Value" ng-model="keyValue.value" rows="3" required></textarea></th>
-                <th class="fixed-td-smb"><button type="submit" class="btn btn-primary" ng-disabled="keyForm.$invalid"><i class="fa fa-plus"></i> Add</button></th>
+                <th class="fixed-td-lg">
+                    <div class="form-group no-margin" ng-class="{'has-error': keyForm.score.$invalid}">
+                        <input type="text" name="score" class="form-control" placeholder="Score" ng-model="keyValue.score" ng-pattern="/^-?[0-9]\d*(\.\d+)?$/" required/>
+                    </div>
+                </th>
+                <th>
+                    <textarea class="form-control" placeholder="Value" ng-model="keyValue.value" rows="3" required></textarea>
+                </th>
+                <th class="fixed-td-smb">
+                    <button type="submit" class="btn btn-primary" ng-disabled="keyForm.$invalid"><i class="fa fa-plus"></i> Add</button>
+                </th>
             </tr>    
         </thead>
         <tbody>

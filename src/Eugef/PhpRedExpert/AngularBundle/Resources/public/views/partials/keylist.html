@@ -8,15 +8,21 @@
             </tr>    
             <tr class="inline-edit">
                 <th class="fixed-td-lg">
-                    <select class="form-control" ng-model="keyValue.action" style="margin-bottom:4px;" required>
-                        <option value="append">Append</option>
-                        <option value="prepend">Prepend</option>
-                        <option value="after" ng-disabled="key.new">After pivot ...</option>
-                        <option value="before" ng-disabled="key.new">Before pivot ...</option>
-                        <option value="set" ng-disabled="key.new">Set at index ...</option>
-                    </select>
-                    <input type="text" class="form-control ng-hide" placeholder="Pivot value" ng-model="keyValue.pivot" typeahead="value for value in key.value | filter:$viewValue | unique:$viewValue | limitTo:10" ng-show="['after' ,'before'].indexOf(keyValue.action) != -1" ng-required="['after' ,'before'].indexOf(keyValue.action) != -1">
-                    <select class="form-control ng-hide" ng-model="keyValue.index" ng-options="value for value in [] | range:0:key.value.length" ng-show="['set'].indexOf(keyValue.action) != -1" ng-required="['set'].indexOf(keyValue.action) != -1"></select>
+                    <div class="form-group no-margin">
+                        <select class="form-control" ng-model="keyValue.action" style="margin-bottom:4px;" required>
+                            <option value="append">Append</option>
+                            <option value="prepend">Prepend</option>
+                            <option value="after" ng-disabled="key.new">After pivot ...</option>
+                            <option value="before" ng-disabled="key.new">Before pivot ...</option>
+                            <option value="set" ng-disabled="key.new">Set at index ...</option>
+                        </select>
+                    </div>    
+                    <div class="form-group no-margin ng-hide" ng-show="['after' ,'before'].indexOf(keyValue.action) != -1" ng-class="{'has-error': keyForm.pivot.$invalid}">
+                        <input type="text" name="pivot" class="form-control" placeholder="Pivot value" ng-model="keyValue.pivot" typeahead="value for value in key.value | filter:$viewValue | unique:$viewValue | limitTo:10" typeahead-editable="false" ng-required="['after' ,'before'].indexOf(keyValue.action) != -1">
+                    </div>
+                    <div class="form-group no-margin ng-hide" ng-show="['set'].indexOf(keyValue.action) != -1">
+                        <select class="form-control" ng-model="keyValue.index" ng-options="value for value in [] | range:0:key.value.length" ng-required="['set'].indexOf(keyValue.action) != -1"></select>
+                    </div>    
                 </th>
                 <th><textarea class="form-control" placeholder="Value" ng-model="keyValue.value" rows="3" required ></textarea></th>
                 <th class="fixed-td-smb"><button type="submit" class="btn btn-primary" ng-disabled="keyForm.$invalid"><i class="fa fa-plus"></i> Add</button></th>
