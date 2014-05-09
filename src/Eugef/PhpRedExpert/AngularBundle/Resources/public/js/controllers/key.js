@@ -27,7 +27,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                     
                     $scope.keyValue = $scope.defaultKeyValue($scope.key.type, $scope.key.value);
 
-                    console.log($scope.key)
+                    console.log($scope.key);
+                    console.log($scope.keyValue);
                     console.log('// initEditKey');
                 },
                 function(response) {
@@ -57,6 +58,10 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                         pivot: '',
                         index: 0
                     };
+                case 'set':
+                    return {
+                        value: ''
+                    };    
             }
         }
                 
@@ -143,6 +148,17 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                 type: $scope.key.type,
                 value: {
                     index: index,
+                    delete: true
+                } 
+            });
+        }
+        
+        $scope.deleteSetMember = function(value) {
+            $scope.deleteKeyItem({
+                name: $scope.key.name,
+                type: $scope.key.type,
+                value: {
+                    value: value,
                     delete: true
                 } 
             });

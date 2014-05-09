@@ -261,6 +261,12 @@ class RedisConnector
                 break;
             
             case self::$KEY_TYPES[\Redis::REDIS_SET]:
+                if (!empty($key->value->delete)) {
+                    $result = $this->db->srem($key->name, $key->value->value);
+                }
+                else {
+                    $result = $this->db->sadd($key->name, isset($key->value->value) ? $key->value->value : '');
+                }
                 break;
             
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
@@ -298,6 +304,7 @@ class RedisConnector
                 break;
             
             case self::$KEY_TYPES[\Redis::REDIS_SET]:
+                $result = $this->db->sadd($key->name, isset($key->value->value) ? $key->value->value : '');
                 break;
             
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:

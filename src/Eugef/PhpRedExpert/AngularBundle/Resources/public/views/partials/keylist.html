@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>Index</th>
-                <th>Value</th>
+                <th>Item</th>
                 <th></th>
             </tr>    
             <tr class="inline-edit">
@@ -23,9 +23,9 @@
             </tr>    
         </thead>
         <tbody>
-            <tr ng-repeat="(index, value) in key.value track by index">
+            <tr ng-repeat="(index, item) in key.value track by index">
                 <td><a href ng-click="initEditListItem(index)">{[index]}</a></td>
-                <td><pre class="no-margin scrollable">{[value]}</pre></td>
+                <td><pre class="no-margin scrollable">{[item]}</pre></td>
                 <td><a href ng-click="deleteListItem(index)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
             </tr>
         </tbody>    
