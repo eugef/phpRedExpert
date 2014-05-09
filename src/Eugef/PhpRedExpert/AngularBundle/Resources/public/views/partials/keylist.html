@@ -26,7 +26,7 @@
             <tr ng-repeat="(index, item) in key.value track by index">
                 <td><a href ng-click="initEditListItem(index)">{[index]}</a></td>
                 <td><pre class="no-margin scrollable">{[item]}</pre></td>
-                <td><a href ng-click="deleteListItem(index)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
+                <td><a href ng-click="deleteKeyValue(index)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
             </tr>
         </tbody>    
     </table>

@@ -166,4 +166,38 @@ class KeysController extends AbstractRedisController
             )            
         );
     }
+    
+    public function deleteValuesAction($serverId, $dbId) {
+        $this->initialize($serverId, $dbId);
+        
+        $data = json_decode($this->getRequest()->getContent());
+        
+        if (!RedisConnector::hasValue($data->key->name)) {
+            throw new HttpException(400, 'Key is not specified');
+        }
+        
+        if (empty($data->key->type)) {
+            throw new HttpException(400, 'Key type is not specified');
+        }
+        
+        if (empty($data->key->values)) {
+            throw new HttpException(400, 'Key values are not specified');
+        }
+        
+        if (!is_array($data->key->values)) {
+            $data->key->values = array($data->key->values);
+        }
+        
+        $result = $this->redis->deleteKeyValues($data->key);
+        
+        if ($result === FALSE) {
+            throw new HttpException(404, 'Key values are not deleted');
+        }
+        
+        return new JsonResponse(
+            array(
+                'key' => $this->redis->getKey($data->key->name),
+            )           
+        );
+    }
 }

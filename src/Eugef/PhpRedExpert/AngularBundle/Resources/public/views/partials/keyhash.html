@@ -16,7 +16,7 @@
             <tr ng-repeat="(field, value) in key.value">
                 <td><a href ng-click="initEditHashField(field)">{[field]}</a></td>
                 <td><pre class="no-margin scrollable">{[value]}</pre></td>
-                <td><a href ng-click="deleteHashField(field)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
+                <td><a href ng-click="deleteKeyValue(field)" class="text-danger"><i class="fa fa-trash-o"></i> Delete</a></td>
             </tr>
         </tbody>    
     </table>

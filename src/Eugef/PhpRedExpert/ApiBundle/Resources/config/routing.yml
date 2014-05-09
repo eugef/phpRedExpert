@@ -79,4 +79,12 @@ eugef_php_red_expert_keys_add:
         _method: POST
         serverId: "\d+"
         dbId: "\d+"
+
+eugef_php_red_expert_keys_delete_value:
+    pattern:  /server/{serverId}/db/{dbId}/keys/delete-values
+    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:DeleteValues, _format: json}
+    requirements:
+        _method: POST
+        serverId: "\d+"
+        dbId: "\d+"
         

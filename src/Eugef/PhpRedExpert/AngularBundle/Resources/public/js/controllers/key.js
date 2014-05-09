@@ -136,42 +136,9 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
             };
         }
         
-        $scope.deleteHashField = function(field) {
-            $scope.deleteKeyItem({
-                name: $scope.key.name,
-                type: $scope.key.type,
-                value: {
-                    field: field,
-                    delete: true
-                }  
-            });
-        }
-        
-        $scope.deleteListItem = function(index) {
-            $scope.deleteKeyItem({
-                name: $scope.key.name,
-                type: $scope.key.type,
-                value: {
-                    index: index,
-                    delete: true
-                } 
-            });
-        }
-        
-        $scope.deleteSetMember = function(value) {
-            $scope.deleteKeyItem({
-                name: $scope.key.name,
-                type: $scope.key.type,
-                value: {
-                    value: value,
-                    delete: true
-                } 
-            });
-        }
-        
-        $scope.deleteKeyItem = function(key) {
+        $scope.deleteKeyValue = function(value) {
             var execute = function() {
-                return RedisService.editKey($scope.current.serverId, $scope.current.dbId, key).then(
+                return RedisService.deleteKeyValues($scope.current.serverId, $scope.current.dbId, key).then(
                     function(response) {
                         if (response.data.key) {
                             //update key
@@ -196,13 +163,20 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                     }
                 );
             }
+            
+            var key = {
+                name: $scope.key.name,
+                type: $scope.key.type,
+                values: [value]
+            };
+            
             if ($scope.key.size > 1) {
                 execute();
             }
             else {
                 $scope.$parent.showModalConfirm({
                     title: 'Delete key forever?',
-                    message: 'Key is about to be permanently deleted because no items are left:',
+                    message: 'Key is about to be permanently deleted because no values are left:',
                     items: [key.name],
                     warning: 'You can\'t undo this action!',
                     action: 'Delete'

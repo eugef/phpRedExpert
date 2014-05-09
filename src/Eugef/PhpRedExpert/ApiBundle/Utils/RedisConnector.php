@@ -219,65 +219,40 @@ class RedisConnector
             
             case self::$KEY_TYPES[\Redis::REDIS_HASH]:
                 if (self::hasValue($key->value->field)) {
-                    if (!empty($key->value->delete)) {
-                        $result = $this->db->hdel($key->name, $key->value->field);
-                    }
-                    else {
-                        $result = $this->db->hset($key->name, $key->value->field, isset($key->value->value) ? $key->value->value : '');
-                    }
+                    $result = $this->db->hset($key->name, $key->value->field, isset($key->value->value) ? $key->value->value : '');
                 }
                 break;
                 
             case self::$KEY_TYPES[\Redis::REDIS_LIST]:
-                if (!empty($key->value->delete)) {
-                    // workaround to delete list item by index:
-                    // http://redis.io/commands/lrem#comment-1375293995
-                    $deleteValue = uniqid('phpredexpert-delete-', TRUE);
-                    $result = $this->db->multi()->lset($key->name, (int)$key->value->index, $deleteValue)->lrem($key->name, $deleteValue)->exec();
-                    // save result of last operation in a transaction
-                    $result = end($result);
-                }
-                else {
-                    if (self::hasValue($key->value->value)) {    
-                        switch ($key->value->action) {
-                            case 'prepend':
-                                $result = $this->db->lpush($key->name, $key->value->value);
-                                break;
-                            case 'before':
-                                $result = $this->db->linsert($key->name, \Redis::BEFORE, $key->value->pivot, $key->value->value);
-                                break;
-                            case 'after':
-                                $result = $this->db->linsert($key->name, \Redis::AFTER, $key->value->pivot, $key->value->value);
-                                break;
-                            case 'set':
-                                $result = $this->db->lset($key->name, (int)$key->value->index, $key->value->value);
-                                break;
-                            case 'append':
-                            default:
-                                $result = $this->db->rpush($key->name, $key->value->value);
-                        }
+                if (self::hasValue($key->value->value)) {    
+                    switch ($key->value->action) {
+                        case 'prepend':
+                            $result = $this->db->lpush($key->name, $key->value->value);
+                            break;
+                        case 'before':
+                            $result = $this->db->linsert($key->name, \Redis::BEFORE, $key->value->pivot, $key->value->value);
+                            break;
+                        case 'after':
+                            $result = $this->db->linsert($key->name, \Redis::AFTER, $key->value->pivot, $key->value->value);
+                            break;
+                        case 'set':
+                            $result = $this->db->lset($key->name, (int)$key->value->index, $key->value->value);
+                            break;
+                        case 'append':
+                        default:
+                            $result = $this->db->rpush($key->name, $key->value->value);
                     }
                 }
                 break;
             
             case self::$KEY_TYPES[\Redis::REDIS_SET]:
-                if (!empty($key->value->delete)) {
-                    $result = $this->db->srem($key->name, $key->value->value);
-                }
-                else {
-                    $result = $this->db->sadd($key->name, isset($key->value->value) ? $key->value->value : '');
-                }
+                $result = $this->db->sadd($key->name, isset($key->value->value) ? $key->value->value : '');
                 break;
             
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
-                if (!empty($key->value->delete)) {
-                    $result = $this->db->zrem($key->name, $key->value->value);
+                if (self::hasValue($key->value->score)) {
+                    $result = $this->db->zadd($key->name, $key->value->score, isset($key->value->value) ? $key->value->value : '');
                 }
-                else {
-                    if (self::hasValue($key->value->score)) {
-                        $result = $this->db->zadd($key->name, $key->value->score, isset($key->value->value) ? $key->value->value : '');
-                    }
-                }    
                 break;
         }
         
@@ -327,6 +302,43 @@ class RedisConnector
             if ($key->ttl > 0) {
                 $this->db->expire($key->name, $key->ttl);
             }
+        }
+        
+        return $result;
+    }
+    
+    public function deleteKeyValues($key) {
+        $result = FALSE;
+                
+        switch ($key->type) {
+            case self::$KEY_TYPES[\Redis::REDIS_HASH]:
+                foreach ($key->values as $keyValue) {                
+                    $result = $this->db->hdel($key->name, $keyValue);
+                }    
+                break;
+                
+            case self::$KEY_TYPES[\Redis::REDIS_LIST]:
+                // workaround to delete list item by index:
+                foreach ($key->values as $keyValue) {
+                    // http://redis.io/commands/lrem#comment-1375293995
+                    $deleteValue = uniqid('phpredexpert-delete-', TRUE);
+                    $result = $this->db->multi()->lset($key->name, $keyValue, $deleteValue)->lrem($key->name, $deleteValue)->exec();
+                }    
+                // save result of last operation in a transaction
+                $result = end($result);
+                break;
+            
+            case self::$KEY_TYPES[\Redis::REDIS_SET]:
+                foreach ($key->values as $keyValue) {  
+                    $result = $this->db->srem($key->name, $keyValue);
+                }    
+                break;
+            
+            case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
+                foreach ($key->values as $keyValue) {  
+                    $result = $this->db->zrem($key->name, $keyValue);
+                }    
+                break;
         }
         
         return $result;

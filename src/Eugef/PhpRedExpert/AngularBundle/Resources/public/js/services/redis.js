@@ -139,6 +139,20 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                     }
                     return response;
                 });
+            },
+            
+            deleteKeyValues: function(serverId, dbId, key) {
+                return $http.post(
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/delete-values', 
+                    {
+                        key: key
+                    }
+                ).then(function(response) {
+                    if (angular.isObject(keySearchCache)) {
+                        keySearchCache.removeAll();
+                    }
+                    return response;
+                });
             }
 
         };
