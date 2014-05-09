@@ -270,6 +270,14 @@ class RedisConnector
                 break;
             
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
+                if (!empty($key->value->delete)) {
+                    $result = $this->db->zrem($key->name, $key->value->value);
+                }
+                else {
+                    if (self::hasValue($key->value->score)) {
+                        $result = $this->db->zadd($key->name, $key->value->score, isset($key->value->value) ? $key->value->value : '');
+                    }
+                }    
                 break;
         }
         
@@ -308,6 +316,9 @@ class RedisConnector
                 break;
             
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
+                if (self::hasValue($key->value->score)) {
+                    $result = $this->db->zadd($key->name, $key->value->score, isset($key->value->value) ? $key->value->value : '');
+                }    
                 break;
         }
         

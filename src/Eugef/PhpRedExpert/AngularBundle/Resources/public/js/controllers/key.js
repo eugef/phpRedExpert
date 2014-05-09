@@ -61,7 +61,12 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                 case 'set':
                     return {
                         value: ''
-                    };    
+                    };
+                case 'zset':
+                    return {
+                        score: 0,
+                        value: ''
+                    };
             }
         }
                 
