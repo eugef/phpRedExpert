@@ -31,7 +31,7 @@ App.controller('ClientsController', ['$scope', '$routeParams', '$location', 'Red
             );
         }
         
-        $scope.killClients = function() {
+        $scope.killServerClients = function() {
             var killClients = $scope.clients.result.selected;
             if (killClients) {
                 $scope.$parent.showModalConfirm({
