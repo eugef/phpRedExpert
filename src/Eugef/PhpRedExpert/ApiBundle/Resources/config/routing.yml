@@ -18,11 +18,18 @@ eugef_php_red_expert_server_info:
         _method: GET
         serverId: "\d+"
         
-eugef_php_red_expert_server_clients:
+eugef_php_red_expert_server_clients_list:
     pattern:  /server/{serverId}/clients
-    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:Clients, _format: json}
+    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:ClientsList, _format: json}
     requirements:
         _method: GET
+        serverId: "\d+"
+        
+eugef_php_red_expert_server_clients_kill:
+    pattern:  /server/{serverId}/clients/kill
+    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:ClientsKill, _format: json}
+    requirements:
+        _method: POST
         serverId: "\d+"
         
 eugef_php_red_expert_server_config:

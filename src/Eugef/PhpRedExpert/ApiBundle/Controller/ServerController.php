@@ -4,6 +4,7 @@ namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
 use Eugef\PhpRedExpert\ApiBundle\Controller\AbstractRedisController;
 use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ServerController extends AbstractRedisController
@@ -38,20 +39,38 @@ class ServerController extends AbstractRedisController
         return new JsonResponse($this->redis->getServerInfo());
     }
     
-    public function clientsAction($serverId) 
+    public function clientsListAction($serverId) 
     {
         $this->initialize($serverId);
         
         $clients = $this->redis->getServerClients();
+        $clientsCount = count($clients);
 
         return new JsonResponse(
             array(
                 'items' => $clients,
                 'metadata' => array(
-                    'count' => sizeof($clients),
-                    'total' => sizeof($clients),
-                    'page_size' => sizeof($clients),
+                    'count' => $clientsCount,
+                    'total' => $clientsCount,
+                    'page_size' => $clientsCount,
                 ),
+            )            
+        );
+    }
+    
+    public function clientsKillAction($serverId) 
+    {
+        $this->initialize($serverId);
+        
+        $data = json_decode($this->getRequest()->getContent());
+        
+        if (empty($data->clients)) {
+            throw new HttpException(400, 'Clients are not specified');
+        }
+        
+        return new JsonResponse(
+            array(
+                'result' => $this->redis->killServerClients($data->clients),
             )            
         );
     }

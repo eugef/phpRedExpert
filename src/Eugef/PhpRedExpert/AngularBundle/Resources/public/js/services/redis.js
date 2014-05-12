@@ -54,6 +54,15 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 );
             },
             
+            killServerClients: function(serverId, clients) {
+                return $http.post(
+                    config.apiUri + 'server/' + serverId + '/clients/kill', 
+                    {
+                        clients: clients
+                    }
+                );
+            },
+            
             /**
              * keys API calls
              */

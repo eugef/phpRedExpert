@@ -36,7 +36,7 @@ class KeysController extends AbstractRedisController
             array(
                 'items' => $keys,
                 'metadata' => array(
-                    'count' => sizeof($keys),
+                    'count' => count($keys),
                     'total' => $total,
                     'page_size' => $searchConfig['items_per_page'],
                 ),

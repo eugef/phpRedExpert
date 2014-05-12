@@ -351,7 +351,31 @@ class RedisConnector
 
     public function getServerClients()
     {
-        return $this->db->client('LIST');
+        $clients = $this->db->client('LIST');
+        for ($i=0; $i<count($clients); $i++) {
+            $clients[$i]['fd'] = (int) $clients[$i]['fd'];
+            $clients[$i]['age'] = (int) $clients[$i]['age'];
+            $clients[$i]['idle'] = (int) $clients[$i]['idle'];
+            $clients[$i]['db'] = (int) $clients[$i]['db'];
+            $clients[$i]['sub'] = (int) $clients[$i]['sub'];
+            $clients[$i]['psub'] = (int) $clients[$i]['psub'];
+            $clients[$i]['qbuf'] = (int) $clients[$i]['qbuf'];
+            $clients[$i]['qbuf-free'] = (int) $clients[$i]['qbuf-free'];
+            $clients[$i]['obl'] = (int) $clients[$i]['obl'];
+            $clients[$i]['oll'] = (int) $clients[$i]['oll'];
+            $clients[$i]['multi'] = (int) $clients[$i]['multi'];
+            $clients[$i]['omem'] = (int) $clients[$i]['omem'];
+        }
+        return $clients;
+        
+    }
+    
+    public function killServerClients($clients)
+    {
+        foreach ($clients as $client) {
+            $this->db->client('KILL', $client);
+        }
+        return TRUE;
     }
 
     public function getServerConfig($pattern = '*')
