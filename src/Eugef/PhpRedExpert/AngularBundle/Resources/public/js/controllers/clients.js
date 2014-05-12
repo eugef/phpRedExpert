@@ -1,5 +1,5 @@
-App.controller('ClientsController', ['$scope', '$routeParams', '$location', 'RedisService', 
-    function ($scope, $routeParams, $location, RedisService) {
+App.controller('ClientsController', ['$scope', '$routeParams', 'RedisService', 
+    function ($scope, $routeParams, RedisService) {
         console.log('ClientsController');
         console.log($routeParams);
         
