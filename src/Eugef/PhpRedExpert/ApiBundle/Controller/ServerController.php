@@ -29,7 +29,12 @@ class ServerController extends AbstractRedisController
     {
         $this->initialize($serverId);
         
-        return new JsonResponse($this->redis->getServerDbs());
+        return new JsonResponse(
+            array(
+                'items' => $this->redis->getServerDbs(),
+                'metadata' => $this->redis->getServerConfig('databases'),
+            )
+        );
     }   
     
     public function infoAction($serverId) 

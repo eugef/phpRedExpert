@@ -100,7 +100,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                     $scope.current.dbId = null;
                     $scope.default.dbId = null;
 
-                    angular.forEach(response.data, function(db) {
+                    angular.forEach(response.data.items, function(db) {
                         if ($scope.default.dbId == null || db.default) {
                             $scope.default.dbId = db.id;
                         }
@@ -112,6 +112,8 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                             'expires' : db.expires,
                         });
                     });
+                    
+                    $scope.getServer(serverId).databases = response.data.metadata.databases;
 
                     if ($scope.dbExists(newDbId)) {
                         $scope.current.dbId = newDbId; 
@@ -146,14 +148,20 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
             return $scope.find($scope.dbs, 'id', dbId) !== null;
         }
         
+        $scope.getDB = function(dbId) {
+            return $scope.find($scope.dbs, 'id', dbId);
+        }
+        
         $scope.getCurrentDB = function() {
-            //console.log('getCurrentDB');
-            return $scope.find($scope.dbs, 'id', $scope.current.dbId);
+            return $scope.getDB($scope.current.dbId);
         }
 
+        $scope.getServer = function(serverId) {
+            return $scope.find($scope.servers, 'id', serverId);
+        }
+        
         $scope.getCurrentServer = function() {
-            //console.log('getCurrentServer');
-            return $scope.find($scope.servers, 'id', $scope.current.serverId);
+            return $scope.getServer($scope.current.serverId);
         }
         
         $scope.find = function(array, key, value) {

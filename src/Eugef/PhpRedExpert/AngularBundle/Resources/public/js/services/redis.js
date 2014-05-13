@@ -45,11 +45,20 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                 );
             },
             
-            getServerClients: function(serverId, nocache) {
+            getServerInfo: function(serverId) {
                 return $http.get(
-                    config.apiUri + 'server/' + serverId + '/clients', 
+                    config.apiUri + 'server/' + serverId + '/info', 
                     {
-                        cache: nocache ? false : config.cache
+                        cache: config.cache
+                    }
+                );
+            },
+            
+            getServerConfig: function(serverId) {
+                return $http.get(
+                    config.apiUri + 'server/' + serverId + '/config', 
+                    {
+                        cache: config.cache
                     }
                 );
             },
