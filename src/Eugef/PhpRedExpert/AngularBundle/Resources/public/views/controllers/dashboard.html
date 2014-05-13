@@ -1,18 +1,48 @@
 <div class="col-md-12">
-    <div class="box box-primary">
-        <div class="box-body table-responsive no-padding">
-            <table class="table table-hover table-condensed">
-                <thead>
-                    <th>Key</th>
-                    <th>Value</th>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="(key, value) in board">
-                        <td>{[key]}</td>
-                        <td>{[value]}</td>
-                    </tr>
-                </tbody>    
-            </table>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <i class="fa fa-info"></i>
+                    <h3 class="box-title">Server info</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover table-condensed">
+                        <thead>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="(key, value) in board.info">
+                                <td>{[key]}</td>
+                                <td>{[value]}</td>
+                            </tr>
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
+        </div>    
+        <div class="col-lg-6">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <i class="fa fa-wrench"></i>
+                    <h3 class="box-title">Server config</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover table-condensed">
+                        <thead>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="(key, value) in board.config">
+                                <td>{[key]}</td>
+                                <td>{[value]}</td>
+                            </tr>
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

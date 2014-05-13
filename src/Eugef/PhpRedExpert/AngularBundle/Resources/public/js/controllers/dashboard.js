@@ -10,9 +10,21 @@ App.controller('DashboardController', ['$scope', '$routeParams', '$location', 'R
                         
             return RedisService.getServerInfo($scope.current.serverId).then(
                 function(response) {
-                    $scope.board = response.data;
+                    $scope.board.info = response.data;
 
                     console.log('getInfo / done');
+                }
+            );
+        }
+        
+        $scope.getConfig = function() {
+            console.log('getConfig');
+                        
+            return RedisService.getServerConfig($scope.current.serverId).then(
+                function(response) {
+                    $scope.board.config = response.data;
+
+                    console.log('getConfig / done');
                 }
             );
         }
@@ -25,6 +37,7 @@ App.controller('DashboardController', ['$scope', '$routeParams', '$location', 'R
             
             console.log('dashboard');
             $scope.getInfo();
+            $scope.getConfig();
         });        
     }
 ]);
