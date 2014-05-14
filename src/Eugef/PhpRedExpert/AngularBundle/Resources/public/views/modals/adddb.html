@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h4>Add new database</h4>
+</div>
+<div class="modal-body">
+    <p>Databases are not created until keys are added.</p> 
+    <p>First, specify the database you want to create. Then you will be able to add keys to the database.</p>
+    <form name="addDBForm" novalidate>
+        <div class="form-group" ng-class="{'has-error': addDBForm.$invalid}">
+            <label>Database</label>
+            <select class="form-control" ng-model="data.value" ng-options="db.id as db.name for db in data.databases | filter:{keys:0,visible:false}" required></select>
+        </div>
+    </form>    
+</div>    
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="addDBForm.$invalid" ng-click="ok()">Create</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+</div>

@@ -106,13 +106,14 @@
                         <i class="fa fa-angle-dynamic pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li ng-repeat="db in dbs">
+                        <li ng-repeat="db in dbs | filter:{visible:true}">
                             <a href="#!/server/{[current.serverId]}/db/{[db.id]}/search" active-link="#!/server/{[current.serverId]}/db/{[db.id]}" active-link-parent active-link-nested>
-                                <i class="fa fa-angle-double-right"></i> {[db.name]} <small class="badge pull-right bg-blue">{[db.keys]}</small>
+                                <i class="fa fa-angle-double-right"></i> {[db.name]}
+                                <small class="badge pull-right" ng-class="{'bg-blue': db.keys > 0}">{[db.keys]}</small>
                             </a>
                         </li>
                         <li>
-                            <a href="#!/server/{[current.serverId]}/db/create" active-link active-link-parent>
+                            <a href ng-click="addDb()">
                                 <i class="fa fa-plus-circle"></i> Add database
                             </a>
                         </li>

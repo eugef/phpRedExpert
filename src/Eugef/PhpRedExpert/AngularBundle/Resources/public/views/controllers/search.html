@@ -68,7 +68,7 @@
         <b>No results</b> for specified search pattern.
     </div>
     
-    <div class="alert alert-info alert-dismissable ng-hide" ng-show="!search.result.keys.length">
+    <div class="alert alert-info alert-dismissable ng-hide" ng-show="!search.result.keys.length && $parent.getCurrentDB().keys > 0">
         <i class="fa fa-info"></i>
         <b>Supported search patterns:</b> 
         <ul>
@@ -78,6 +78,18 @@
             <li>* matches the all keys</li>
         </ul>    
         Use \ to escape special characters if you want to match them verbatim.
+    </div>
+    
+    <div class="alert alert-warning alert-dismissable ng-hide" ng-show="$parent.getCurrentDB().keys == 0">
+        <i class="fa fa-warning"></i>
+        <b>This database is empty.</b> Use one of the following links to add new keys:
+        <ul>
+            <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/string">String</a></li>
+            <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/hash">Hash</a></li>
+            <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/list">List</a></li>
+            <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/set">Set</a></li>
+            <li><a href="#!/server/{[current.serverId]}/db/{[current.dbId]}/key/add/zset">Sorted set</a></li>
+        </ul>    
     </div>
 
 </div>

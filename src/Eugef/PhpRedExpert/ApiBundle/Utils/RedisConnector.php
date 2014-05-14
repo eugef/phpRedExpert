@@ -14,12 +14,11 @@ class RedisConnector
 
     static $KEY_TYPES = array(
         \Redis::REDIS_STRING => 'string',
-        \Redis::REDIS_HASH   => 'hash',
-        \Redis::REDIS_LIST   => 'list',
-        \Redis::REDIS_SET    => 'set',
-        \Redis::REDIS_ZSET   => 'zset',
+        \Redis::REDIS_HASH => 'hash',
+        \Redis::REDIS_LIST => 'list',
+        \Redis::REDIS_SET => 'set',
+        \Redis::REDIS_ZSET => 'zset',
     );
-    
     private $config = array();
     private $db;
 
@@ -34,8 +33,9 @@ class RedisConnector
 
         $this->config = $config;
     }
-    
-    public static function hasValue($keyName) {
+
+    public static function hasValue($keyName)
+    {
         return (isset($keyName) && strlen($keyName));
     }
 
@@ -43,8 +43,7 @@ class RedisConnector
     {
         if (isset($this->config['databases'][$id][$name])) {
             return $this->config['databases'][$id][$name];
-        } 
-        else {
+        } else {
             return $default;
         }
     }
@@ -57,18 +56,29 @@ class RedisConnector
     public function getServerDbs()
     {
         $info = $this->db->info();
+        $databases = $this->getServerConfig('databases', TRUE) | 1;
 
         $result = array();
 
-        foreach ($info as $key => $value) {
-            if (preg_match('/^db([0-9]+)?$/', $key, $keyMatches)) {
-                preg_match('/^keys=([0-9]+),expires=([0-9]+)/', $value, $valueMatches);
-                $result[$keyMatches[1]] = array(
-                    'id' => (int) $keyMatches[1],
-                    'keys' => (int) $valueMatches[1],
-                    'expires' => (int) $valueMatches[2],
-                    'default' => $this->getDBConfigValue($keyMatches[1], 'default'),
-                    'name' => $this->getDBConfigValue($keyMatches[1], 'name'),
+        for ($i = 0; $i < $databases - 1; $i++) {
+            if (isset($info['db' . $i])) {
+                $dbInfoValues = array();
+                preg_match('/^keys=([0-9]+),expires=([0-9]+)/', $info['db' . $i], $dbInfoValues);
+                $result[$i] = array(
+                    'id' => $i,
+                    'keys' => (int) $dbInfoValues[1],
+                    'expires' => (int) $dbInfoValues[2],
+                    'default' => $this->getDBConfigValue($i, 'default'),
+                    'name' => $this->getDBConfigValue($i, 'name'),
+                );
+            } else {
+                // Database is empty
+                $result[$i] = array(
+                    'id' => $i,
+                    'keys' => 0,
+                    'expires' => 0,
+                    'default' => $this->getDBConfigValue($i, 'default'),
+                    'name' => $this->getDBConfigValue($i, 'name'),
                 );
             }
         }
@@ -156,8 +166,7 @@ class RedisConnector
         if (isset($attributes->ttl)) {
             if ($attributes->ttl > 0) {
                 $result['ttl'] = $this->db->expire($keyName, $attributes->ttl);
-            } 
-            else {
+            } else {
                 $result['ttl'] = $this->db->persist($keyName);
             }
         }
@@ -203,8 +212,7 @@ class RedisConnector
                 'size' => $this->getKeySize($keyName),
                 'value' => $keyValue,
             );
-        } 
-        else {
+        } else {
             return FALSE;
         }
     }
@@ -216,15 +224,15 @@ class RedisConnector
             case self::$KEY_TYPES[\Redis::REDIS_STRING]:
                 $result = $this->db->set($key->name, isset($key->value->value) ? $key->value->value : '');
                 break;
-            
+
             case self::$KEY_TYPES[\Redis::REDIS_HASH]:
                 if (self::hasValue($key->value->field)) {
                     $result = $this->db->hset($key->name, $key->value->field, isset($key->value->value) ? $key->value->value : '');
                 }
                 break;
-                
+
             case self::$KEY_TYPES[\Redis::REDIS_LIST]:
-                if (self::hasValue($key->value->value)) {    
+                if (self::hasValue($key->value->value)) {
                     switch ($key->value->action) {
                         case 'prepend':
                             $result = $this->db->lpush($key->name, $key->value->value);
@@ -236,7 +244,7 @@ class RedisConnector
                             $result = $this->db->linsert($key->name, \Redis::AFTER, $key->value->pivot, $key->value->value);
                             break;
                         case 'set':
-                            $result = $this->db->lset($key->name, (int)$key->value->index, $key->value->value);
+                            $result = $this->db->lset($key->name, (int) $key->value->index, $key->value->value);
                             break;
                         case 'append':
                         default:
@@ -244,18 +252,18 @@ class RedisConnector
                     }
                 }
                 break;
-            
+
             case self::$KEY_TYPES[\Redis::REDIS_SET]:
                 $result = $this->db->sadd($key->name, isset($key->value->value) ? $key->value->value : '');
                 break;
-            
+
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
                 if (self::hasValue($key->value->score)) {
                     $result = $this->db->zadd($key->name, $key->value->score, isset($key->value->value) ? $key->value->value : '');
                 }
                 break;
         }
-        
+
         return $result;
     }
 
@@ -266,13 +274,13 @@ class RedisConnector
             case self::$KEY_TYPES[\Redis::REDIS_STRING]:
                 $result = $this->db->setnx($key->name, isset($key->value->value) ? $key->value->value : '');
                 break;
-                
+
             case self::$KEY_TYPES[\Redis::REDIS_HASH]:
                 if (self::hasValue($key->value->field)) {
                     $result = $this->db->hsetnx($key->name, $key->value->field, isset($key->value->value) ? $key->value->value : '');
                 }
-                break; 
-                
+                break;
+
             case self::$KEY_TYPES[\Redis::REDIS_LIST]:
                 if (self::hasValue($key->value->value)) {
                     switch ($key->value->action) {
@@ -285,62 +293,63 @@ class RedisConnector
                     }
                 }
                 break;
-            
+
             case self::$KEY_TYPES[\Redis::REDIS_SET]:
                 $result = $this->db->sadd($key->name, isset($key->value->value) ? $key->value->value : '');
                 break;
-            
+
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
                 if (self::hasValue($key->value->score)) {
                     $result = $this->db->zadd($key->name, $key->value->score, isset($key->value->value) ? $key->value->value : '');
-                }    
+                }
                 break;
         }
-        
+
         if ($result) {
             // Add TTL if key was created
             if ($key->ttl > 0) {
                 $this->db->expire($key->name, $key->ttl);
             }
         }
-        
+
         return $result;
     }
-    
-    public function deleteKeyValues($key) {
+
+    public function deleteKeyValues($key)
+    {
         $result = FALSE;
-                
+
         switch ($key->type) {
             case self::$KEY_TYPES[\Redis::REDIS_HASH]:
-                foreach ($key->values as $keyValue) {                
+                foreach ($key->values as $keyValue) {
                     $result = $this->db->hdel($key->name, $keyValue);
-                }    
+                }
                 break;
-                
+
             case self::$KEY_TYPES[\Redis::REDIS_LIST]:
                 // workaround to delete list item by index:
                 foreach ($key->values as $keyValue) {
                     // http://redis.io/commands/lrem#comment-1375293995
                     $deleteValue = uniqid('phpredexpert-delete-', TRUE);
                     $result = $this->db->multi()->lset($key->name, $keyValue, $deleteValue)->lrem($key->name, $deleteValue)->exec();
-                }    
+                }
                 // save result of last operation in a transaction
                 $result = end($result);
                 break;
-            
+
             case self::$KEY_TYPES[\Redis::REDIS_SET]:
-                foreach ($key->values as $keyValue) {  
+                foreach ($key->values as $keyValue) {
                     $result = $this->db->srem($key->name, $keyValue);
-                }    
+                }
                 break;
-            
+
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
-                foreach ($key->values as $keyValue) {  
+                foreach ($key->values as $keyValue) {
                     $result = $this->db->zrem($key->name, $keyValue);
-                }    
+                }
                 break;
         }
-        
+
         return $result;
     }
 
@@ -352,7 +361,7 @@ class RedisConnector
     public function getServerClients()
     {
         $clients = $this->db->client('LIST');
-        for ($i=0; $i<count($clients); $i++) {
+        for ($i = 0; $i < count($clients); $i++) {
             $clients[$i]['fd'] = (int) $clients[$i]['fd'];
             $clients[$i]['age'] = (int) $clients[$i]['age'];
             $clients[$i]['idle'] = (int) $clients[$i]['idle'];
@@ -367,9 +376,8 @@ class RedisConnector
             $clients[$i]['omem'] = (int) $clients[$i]['omem'];
         }
         return $clients;
-        
     }
-    
+
     public function killServerClients($clients)
     {
         foreach ($clients as $client) {
@@ -378,9 +386,13 @@ class RedisConnector
         return TRUE;
     }
 
-    public function getServerConfig($pattern = '*')
+    public function getServerConfig($pattern = '*', $onlyValue = FALSE)
     {
-        return $this->db->config('GET', $pattern);
+        $result = $this->db->config('GET', $pattern);
+        if ($onlyValue) {
+            $result = reset($result);
+        }
+        return $result;
     }
 
 }

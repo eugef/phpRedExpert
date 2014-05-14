@@ -24,6 +24,11 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
         console.log('AppController');
 
         $scope.init = function(serverId, dbId) {
+            console.log('init');
+            
+            serverId = parseInt(serverId, 10);
+            dbId = parseInt(dbId, 10);
+            
             var deferred = $q.defer();
             
             if ($scope.current.serverId == null) {
@@ -41,13 +46,14 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                 }
                 else {
                     if ($scope.current.dbId != dbId) {
+                        console.log('!!! changeDB');
                         $scope.changeDB(dbId); 
                     }    
                     deferred.resolve();
                 }
             }
 
-            console.log('init');
+            console.log('init / end');
             return deferred.promise;
         }
 
@@ -66,11 +72,11 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                         }
 
                         $scope.servers.push({
-                            'id' : server.id,
-                            'name' : server.name ? server.name : server.host + ':' + server.port,
-                            'password' : server.password,
-                            'host' : server.host,
-                            'port' : server.port,
+                            id : server.id,
+                            name : server.name ? server.name : server.host + ':' + server.port,
+                            password : server.password,
+                            host : server.host,
+                            port : server.port,
                         });
                     });
 
@@ -100,28 +106,23 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                     $scope.current.dbId = null;
                     $scope.default.dbId = null;
 
-                    angular.forEach(response.data.items, function(db) {
+                    angular.forEach(response.data, function(db) {
                         if ($scope.default.dbId == null || db.default) {
                             $scope.default.dbId = db.id;
                         }
 
                         $scope.dbs.push({
-                            'id' : db.id,
-                            'name' : db.name ? db.name : 'DB ' + db.id,
-                            'keys' : db.keys,
-                            'expires' : db.expires,
+                            id : db.id,
+                            name : db.name ? db.name : 'DB ' + db.id,
+                            keys : db.keys,
+                            expires : db.expires,
+                            visible : db.keys > 0 || !!db.default
                         });
                     });
+
+                    $scope.changeDB(newDbId);
                     
-                    $scope.getServer(serverId).databases = response.data.metadata.databases;
-
-                    if ($scope.dbExists(newDbId)) {
-                        $scope.current.dbId = newDbId; 
-                    }
-                    else {
-                        $scope.current.dbId = $scope.default.dbId; 
-                    }
-
+                    console.log($scope.dbs);
                     console.log('loadDBs / done');
                 },
                 function(error) {
@@ -133,10 +134,11 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
         $scope.changeDB = function(dbId) {
             console.log('changeDB ' + dbId);
             if ($scope.dbExists(dbId)) {
+                $scope.getDB(dbId).visible = true;
                 $scope.current.dbId = dbId;
             } 
             else {
-                alert('Database doesn\'t exists');
+                $scope.current.dbId = $scope.default.dbId; 
             }
         }
 
@@ -171,6 +173,18 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                 }
             };
             return null;
+        }
+        
+        $scope.addDb = function() {
+            console.log('addDb');
+            $scope.showModal('ModalEditKeyAttributeController', 'adddb.html',                  
+                {
+                    databases: $scope.dbs,
+                }
+            ).result.then(function(newDB) {
+                $location.path('server/' + $scope.current.serverId + '/db/' + newDB);
+                console.log('addDb / end');
+            });
         }
         
         $scope.showModalConfirm = function(settings) {
