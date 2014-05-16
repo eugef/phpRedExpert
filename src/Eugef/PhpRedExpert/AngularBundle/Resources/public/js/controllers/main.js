@@ -196,7 +196,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
             }).result.then(function() {
                 RedisService.flushDB($scope.current.serverId, $scope.current.dbId).then(
                     function(response) {
-                        $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId);
+                        $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search');
                         
                         // reduce amount of keys in whole db
                         $scope.getCurrentDB().keys = 0;
