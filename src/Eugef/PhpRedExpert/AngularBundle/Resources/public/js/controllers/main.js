@@ -182,7 +182,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                     databases: $scope.dbs,
                 }
             ).result.then(function(newDB) {
-                $location.path('server/' + $scope.current.serverId + '/db/' + newDB);
+                $location.path('server/' + $scope.current.serverId + '/db/' + newDB + '/search');
                 console.log('addDb / end');
             });
         }
