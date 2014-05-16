@@ -64,6 +64,21 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
             },
             
             /**
+             * DB API calls
+             */
+            
+            flushDB: function(serverId, dbId) {
+                return $http.post(
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/flush'
+                ).then(function(response) {
+                    if (angular.isObject(keySearchCache)) {
+                        keySearchCache.removeAll();
+                    }
+                    return response;
+                });
+            },
+            
+            /**
              * keys API calls
              */
             

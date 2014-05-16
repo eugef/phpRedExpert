@@ -187,6 +187,24 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
             });
         }
         
+        $scope.flushDB = function()  {
+            $scope.showModalConfirm({
+                title: 'Flush database?',
+                message: 'All keys are about to be permanently deleted',
+                warning: 'You can\'t undo this action!',
+                action: 'Flush'
+            }).result.then(function() {
+                RedisService.flushDB($scope.current.serverId, $scope.current.dbId).then(
+                    function(response) {
+                        $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId);
+                        
+                        // reduce amount of keys in whole db
+                        $scope.getCurrentDB().keys = 0;
+                    }
+                );
+            });
+        }
+        
         $scope.showModalConfirm = function(settings) {
             return $scope.showModal('ModalConfirmController', 'confirm.html', settings);
         }

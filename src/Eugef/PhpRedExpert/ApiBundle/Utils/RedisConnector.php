@@ -394,5 +394,10 @@ class RedisConnector
         }
         return $result;
     }
+    
+    public function flushDb()
+    {
+        $this->db->flushDB();
+    }
 
 }
