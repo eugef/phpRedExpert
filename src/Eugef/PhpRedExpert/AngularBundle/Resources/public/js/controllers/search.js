@@ -174,7 +174,41 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         }  
         
         $scope.moveKeys = function() {
-            $scope.$parent.showModalAlert({title: 'Error', message: 'This function is not implemented yet!'});
+            console.log('moveKeys');
+            var moveKeys = $scope.search.result.selected;
+            
+            if (moveKeys) {
+                $scope.$parent.showModal('ModalEditKeyAttributeController', 'movekeys.html',                  
+                    {
+                        message: (moveKeys.length == 1 ? '1 key is' : moveKeys.length + ' keys are') + ' about to be moved:',
+                        items: moveKeys,
+                        databases: $scope.$parent.dbs,
+                        value: $scope.$parent.current.dbId
+                    }
+                ).result.then(function(newDB) {
+                    RedisService.moveKeys($scope.current.serverId, $scope.current.dbId, moveKeys, newDB).then(
+                        function(response) {
+                            console.log(response);
+                            // remove moved keys from scope
+                            for (var i = $scope.search.result.keys.length - 1; i >= 0; i--) {
+                                if (moveKeys.indexOf($scope.search.result.keys[i].name) >= 0) {
+                                    $scope.search.result.keys.splice(i, 1);
+                                }
+                            }
+                            // reduce amount of keys in search result and current db
+                            $scope.search.result.total -= response.data.result;
+                            $scope.$parent.getCurrentDB().keys -= response.data.result;
+                            
+                            // increase amount of keys in a new db
+                            // make it visible (usefull when db was empty)
+                            $scope.$parent.getDB(newDB).keys += response.data.result;
+                            $scope.$parent.getDB(newDB).visible = true;
+
+                            console.log('moveKeys / done');
+                        }
+                    );
+                });
+            }
         }
         
         $scope.getKeyUri = function(key, skipEncode) {
@@ -220,7 +254,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             if ($routeParams.pattern) {
                 console.log('search');
                 console.log($routeParams);
-                var page = parseInt($routeParams.page, 10) > 0 ? parseInt($routeParams.page, 10) : 1;
+                var page = parseInt($routeParams.page, 10) | 1;
                 $scope.searchKey($routeParams.pattern, page);
             }
         });        

@@ -120,7 +120,22 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
                     }
                     return response;
                 });
-            },    
+            },  
+            
+            moveKeys: function(serverId, dbId, keys, newDbId) {
+                return $http.post(
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/move', 
+                    {
+                        keys: keys,
+                        db: newDbId
+                    }
+                ).then(function(response) {
+                    if (angular.isObject(keySearchCache)) {
+                        keySearchCache.removeAll();
+                    }
+                    return response;
+                });
+            }, 
             
             editKeyAttributes: function(serverId, dbId, keyName, attributes) {
                 return $http.post(

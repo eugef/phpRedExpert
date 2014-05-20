@@ -14,10 +14,10 @@ class RedisConnector
 
     static $KEY_TYPES = array(
         \Redis::REDIS_STRING => 'string',
-        \Redis::REDIS_HASH => 'hash',
-        \Redis::REDIS_LIST => 'list',
-        \Redis::REDIS_SET => 'set',
-        \Redis::REDIS_ZSET => 'zset',
+        \Redis::REDIS_HASH   => 'hash',
+        \Redis::REDIS_LIST   => 'list',
+        \Redis::REDIS_SET    => 'set',
+        \Redis::REDIS_ZSET   => 'zset',
     );
     private $config = array();
     private $db;
@@ -39,18 +39,24 @@ class RedisConnector
         return (isset($keyName) && strlen($keyName));
     }
 
-    private function getDBConfigValue($id, $name, $default = NULL)
+    private function getDbConfigValue($id, $name, $default = NULL)
     {
         if (isset($this->config['databases'][$id][$name])) {
             return $this->config['databases'][$id][$name];
-        } else {
+        }
+        else {
             return $default;
         }
     }
 
-    public function selectDB($dbId)
+    public function selectDb($dbId)
     {
         return $this->db->select($dbId);
+    }
+
+    public function isDbExist($dbId)
+    {
+        return ($dbId >= 0) && ($dbId < $this->getServerConfig('databases', TRUE));
     }
 
     public function getServerDbs()
@@ -65,20 +71,21 @@ class RedisConnector
                 $dbInfoValues = array();
                 preg_match('/^keys=([0-9]+),expires=([0-9]+)/', $info['db' . $i], $dbInfoValues);
                 $result[$i] = array(
-                    'id' => $i,
-                    'keys' => (int) $dbInfoValues[1],
+                    'id'      => $i,
+                    'keys'    => (int) $dbInfoValues[1],
                     'expires' => (int) $dbInfoValues[2],
-                    'default' => $this->getDBConfigValue($i, 'default'),
-                    'name' => $this->getDBConfigValue($i, 'name'),
+                    'default' => $this->getDbConfigValue($i, 'default'),
+                    'name'    => $this->getDbConfigValue($i, 'name'),
                 );
-            } else {
+            }
+            else {
                 // Database is empty
                 $result[$i] = array(
-                    'id' => $i,
-                    'keys' => 0,
+                    'id'      => $i,
+                    'keys'    => 0,
                     'expires' => 0,
-                    'default' => $this->getDBConfigValue($i, 'default'),
-                    'name' => $this->getDBConfigValue($i, 'name'),
+                    'default' => $this->getDbConfigValue($i, 'default'),
+                    'name'    => $this->getDbConfigValue($i, 'name'),
                 );
             }
         }
@@ -143,11 +150,11 @@ class RedisConnector
 
         for ($i = 0; $i < $keysCount; $i++) {
             $result[] = array(
-                'name' => $keys[$i],
-                'type' => $this->getKeyType($keys[$i]),
+                'name'     => $keys[$i],
+                'type'     => $this->getKeyType($keys[$i]),
                 'encoding' => $this->getKeyEncoding($keys[$i]),
-                'ttl' => $this->getKeyTTL($keys[$i]),
-                'size' => $this->getKeySize($keys[$i]),
+                'ttl'      => $this->getKeyTTL($keys[$i]),
+                'size'     => $this->getKeySize($keys[$i]),
             );
         }
 
@@ -159,6 +166,17 @@ class RedisConnector
         return $this->db->delete($keyNames);
     }
 
+    public function moveKeys($keyNames, $newDb)
+    {
+        $result = 0;
+        
+        foreach ($keyNames as $keyName) {
+            $result += $this->db->move($keyName, $newDb);
+        }
+        
+        return $result;
+    }
+
     public function editKeyAttributes($keyName, $attributes)
     {
         $result = array();
@@ -166,7 +184,8 @@ class RedisConnector
         if (isset($attributes->ttl)) {
             if ($attributes->ttl > 0) {
                 $result['ttl'] = $this->db->expire($keyName, $attributes->ttl);
-            } else {
+            }
+            else {
                 $result['ttl'] = $this->db->persist($keyName);
             }
         }
@@ -205,14 +224,15 @@ class RedisConnector
 
         if ($keyValue !== FALSE) {
             return array(
-                'name' => $keyName,
-                'type' => self::$KEY_TYPES[$keyType],
+                'name'     => $keyName,
+                'type'     => self::$KEY_TYPES[$keyType],
                 'encoding' => $this->getKeyEncoding($keyName),
-                'ttl' => $this->getKeyTTL($keyName),
-                'size' => $this->getKeySize($keyName),
-                'value' => $keyValue,
+                'ttl'      => $this->getKeyTTL($keyName),
+                'size'     => $this->getKeySize($keyName),
+                'value'    => $keyValue,
             );
-        } else {
+        }
+        else {
             return FALSE;
         }
     }
@@ -394,7 +414,7 @@ class RedisConnector
         }
         return $result;
     }
-    
+
     public function flushDb()
     {
         $this->db->flushDB();

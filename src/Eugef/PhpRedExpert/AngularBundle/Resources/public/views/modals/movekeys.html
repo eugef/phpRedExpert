@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h4>Move the key(s)</h4>
+</div>
+<div class="modal-body">
+    <p>{[data.message]}</p>
+    <ul ng-show="data.items.length" class="ng-hide row">
+        <li ng-repeat="item in data.items" class="col-md-6 li-2-columns">{[item]}</li>
+    </ul>
+    <p>When key already exists in the destination database, it won't be moved.</p>
+    <form name="moveKeyForm" novalidate>
+        <div class="form-group" ng-class="{'has-error': moveKeyForm.$invalid}">
+            <label>Database</label>
+            <select class="form-control" ng-model="data.value" ng-options="db.id as db.name for db in data.databases" required></select>
+            <p class="help-block">Select destination database.</p>
+        </div>
+    </form>  
+</div>    
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="moveKeyForm.$invalid" ng-click="ok()">Move</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+</div>

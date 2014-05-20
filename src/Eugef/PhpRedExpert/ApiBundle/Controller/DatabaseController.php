@@ -8,14 +8,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DatabaseController extends AbstractRedisController
 {
-    public function flushAction($serverId, $dbId) 
+
+    public function flushAction($serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
         return new JsonResponse(
             array(
                 'result' => $this->redis->flushDB(),
-            )            
+            )
         );
     }
+
 }

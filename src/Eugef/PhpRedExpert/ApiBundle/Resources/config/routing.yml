@@ -71,6 +71,14 @@ eugef_php_red_expert_keys_delete:
         serverId: "\d+"
         dbId: "\d+"
         
+eugef_php_red_expert_keys_delete:
+    pattern:  /server/{serverId}/db/{dbId}/keys/move
+    defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Move, _format: json}
+    requirements:
+        _method: POST
+        serverId: "\d+"
+        dbId: "\d+"        
+        
 eugef_php_red_expert_keys_attrs:
     pattern:  /server/{serverId}/db/{dbId}/keys/attrs
     defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Attributes, _format: json}
