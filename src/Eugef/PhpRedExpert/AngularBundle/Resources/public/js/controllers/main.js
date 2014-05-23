@@ -134,12 +134,21 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
         $scope.changeDB = function(dbId) {
             console.log('changeDB ' + dbId);
             if ($scope.dbExists(dbId)) {
-                $scope.getDB(dbId).visible = true;
                 $scope.current.dbId = dbId;
             } 
             else {
                 $scope.current.dbId = $scope.default.dbId; 
             }
+            
+            for (var i = 0; i < $scope.dbs.length; i++) {
+                if ($scope.dbs[i].id == $scope.current.dbId) {
+                    $scope.dbs[i].visible = true;
+                    $scope.dbs[i].current = true;
+                }
+                else {
+                    $scope.dbs[i].current = false;
+                }
+            };
         }
 
         $scope.serverExists = function(serverId) {

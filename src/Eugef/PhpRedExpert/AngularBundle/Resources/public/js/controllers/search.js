@@ -180,10 +180,10 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
             if (moveKeys) {
                 $scope.$parent.showModal('ModalEditKeyAttributeController', 'movekeys.html',                  
                     {
+                        title: 'Move the key(s)?',
                         message: (moveKeys.length == 1 ? '1 key is' : moveKeys.length + ' keys are') + ' about to be moved:',
                         items: moveKeys,
-                        databases: $scope.$parent.dbs,
-                        value: $scope.$parent.current.dbId
+                        databases: $scope.$parent.dbs
                     }
                 ).result.then(function(newDB) {
                     RedisService.moveKeys($scope.current.serverId, $scope.current.dbId, moveKeys, newDB).then(

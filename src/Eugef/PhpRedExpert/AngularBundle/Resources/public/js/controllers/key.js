@@ -267,6 +267,42 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
             }
         }
         
+        $scope.moveKey = function() {
+            console.log('moveKey');
+            var moveKeys = [$scope.key.name];
+            
+            if (moveKeys) {
+                $scope.$parent.showModal('ModalEditKeyAttributeController', 'movekeys.html',                  
+                    {
+                        title: 'Move the key?',
+                        message: 'Key is about to be moved:',
+                        items: moveKeys,
+                        databases: $scope.$parent.dbs
+                    }
+                ).result.then(function(newDB) {
+                    RedisService.moveKeys($scope.current.serverId, $scope.current.dbId, moveKeys, newDB).then(
+                        function(response) {
+                            console.log(response);
+                            //remove key from scope
+                            $scope.key = {
+                                name: $scope.key.name
+                            };
+                            
+                            // reduce amount of keys in current db
+                            $scope.$parent.getCurrentDB().keys -= response.data.result;
+                            
+                            // increase amount of keys in a new db
+                            // make it visible (usefull when db was empty)
+                            $scope.$parent.getDB(newDB).keys += response.data.result;
+                            $scope.$parent.getDB(newDB).visible = true;
+
+                            console.log('moveKey / done');
+                        }
+                    );
+                });
+            }
+        }
+        
         $scope.closeAlert = function(index) {
             $scope.alerts.splice(index, 1);
         };
