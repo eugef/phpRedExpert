@@ -7,7 +7,7 @@
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         {% stylesheets 
-            'bundles/eugefphpredexpertangular/vendor/bootstrap-css/index.css' 
+            'bundles/eugefphpredexpertangular/vendor/bootstrap-css/bootstrap.css' 
             'bundles/eugefphpredexpertangular/adminlte/css/*' 
             'bundles/eugefphpredexpertangular/css/application.css'
             filter='cssrewrite' 
@@ -17,7 +17,7 @@
         <script>
             var CONFIG = {
                 apiUri : 'app_dev.php/api/',
-                assetsUri : '/phpredexpert/web/bundles/eugefphpredexpertangular/',
+                assetsUri : '/bundles/eugefphpredexpertangular/',
                 cache: true
             };
         </script>
@@ -25,11 +25,11 @@
     <body ng-app="myApp" ng-controller="AppController" class="skin-black">
         {% block content %}{% endblock %}
         {% javascripts 
-            'bundles/eugefphpredexpertangular/vendor/angular/angular.js'
-            'bundles/eugefphpredexpertangular/vendor/angular-route/angular-route.js'
-            'bundles/eugefphpredexpertangular/vendor/angular-cache/dist/angular-cache.js'
+            'bundles/eugefphpredexpertangular/vendor/angularjs/angular.js'
+            'bundles/eugefphpredexpertangular/vendor/angularjs/angular-route.js'
+            'bundles/eugefphpredexpertangular/vendor/angular-cache/src/angular-cache.js'
             'bundles/eugefphpredexpertangular/vendor/angular-bootstrap/ui-bootstrap-tpls.js'
-            'bundles/eugefphpredexpertangular/vendor/angular-ui-utils/unique.js'
+            'bundles/eugefphpredexpertangular/vendor/angular-ui-utils-unique/unique.js'
             'bundles/eugefphpredexpertangular/js/*'
             'bundles/eugefphpredexpertangular/js/*/*'
         %}

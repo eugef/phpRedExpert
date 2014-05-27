@@ -23,7 +23,12 @@
         "sensio/distribution-bundle": "~2.3",
         "sensio/framework-extra-bundle": "~3.0",
         "sensio/generator-bundle": "~2.3",
-        "incenteev/composer-parameter-handler": "~2.0"
+        "incenteev/composer-parameter-handler": "~2.0",
+        "components/angular.js": "~1.2",
+        "components/angular-cache": "*",
+        "components/angular-bootstrap": "*",
+        "components/angular-ui-utils-unique" : "*",
+        "components/bootstrap-css" : "*"
     },
     "scripts": {
         "post-install-cmd": [
@@ -31,20 +36,19 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "bower install"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "bower install"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "component-dir": "src/Eugef/PhpRedExpert/AngularBundle/Resources/public/vendor"
     },
     "extra": {
         "symfony-app-dir": "app",
@@ -53,5 +57,95 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "components/angular-cache",
+                "type": "component",
+                "version": "2.3.4",
+                "dist": {
+                    "url": "https://github.com/jmdobry/angular-cache/archive/2.3.4.zip",
+                    "type": "zip"
+                },
+                "extra": {
+                    "component": {
+                        "files": [
+                            "src/angular-cache.js"
+                        ]
+                    }
+                },
+                "require": {
+                    "robloach/component-installer": "*"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "components/angular-bootstrap",
+                "type": "component",
+                "version": "0.11",
+                "dist": {
+                    "url": "https://github.com/angular-ui/bootstrap-bower/archive/0.11.0.zip",
+                    "type": "zip"
+                },
+                "extra": {
+                    "component": {
+                        "files": [
+                            "ui-bootstrap-tpls.js"
+                        ]
+                    }
+                },
+                "require": {
+                    "robloach/component-installer": "*"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "components/angular-ui-utils-unique",
+                "type": "component",
+                "version": "0.1.1",
+                "dist": {
+                    "url": "https://github.com/angular-ui/ui-utils/archive/unique-0.1.1.zip",
+                    "type": "zip"
+                },
+                "extra": {
+                    "component": {
+                        "files": [
+                            "unique.js"
+                        ]
+                    }
+                },
+                "require": {
+                    "robloach/component-installer": "*"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "components/bootstrap-css",
+                "type": "component",
+                "version": "3.0.3",
+                "dist": {
+                    "url": "https://raw.githubusercontent.com/twbs/bootstrap/v3.0.3/dist/css/bootstrap.css",
+                    "type": "file"
+                },
+                "extra": {
+                    "component": {
+                        "files": [
+                            "bootstrap.css"
+                        ]
+                    }
+                },
+                "require": {
+                    "robloach/component-installer": "*"
+                }
+            }
+        }
+    ]
 }
