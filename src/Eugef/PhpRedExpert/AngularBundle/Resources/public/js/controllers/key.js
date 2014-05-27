@@ -295,6 +295,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', 'RedisSe
                             // make it visible (usefull when db was empty)
                             $scope.$parent.getDB(newDB).keys += response.data.result;
                             $scope.$parent.getDB(newDB).visible = true;
+                            
+                            $scope.alerts.push({type: 'success', message: 'Key is succesfully moved'});
 
                             console.log('moveKey / done');
                         }
