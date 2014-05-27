@@ -38,7 +38,37 @@ class RedisConnector
     {
         return (isset($keyName) && strlen($keyName));
     }
-
+    
+    /**
+     * Convert value to UTF-8 encoding
+     * 
+     * Key values can contain non UTF-8 characters that should be converted.
+     * 
+     * @TODO move $from_encoding to config (per DB or server)
+     * 
+     * @param mixed $value Array or string
+     * @return mixed
+     */
+    public static function convertUTF8($value) {
+        if (is_array($value)) {
+            $newValue = array();
+            foreach ($value as $key => $item) {
+                if (is_string($item)) {
+                    $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
+                }
+                if (is_string($key)) {
+                    $key = mb_convert_encoding($key, 'UTF-8', 'UTF-8');
+                }
+                $newValue[$key] = $item;
+            }; 
+        }
+        elseif (is_string($value)) {
+           $newValue = mb_convert_encoding($value, 'UTF-8', 'UTF-8'); 
+        }
+        
+        return $newValue;
+    }
+    
     private function getDbConfigValue($id, $name, $default = NULL)
     {
         if (isset($this->config['databases'][$id][$name])) {
@@ -111,21 +141,26 @@ class RedisConnector
     private function getKeySize($keyName)
     {
         switch ($this->db->type($keyName)) {
-            case \Redis::REDIS_LIST:
-                $size = $this->db->lSize($keyName);
-                break;
-            case \Redis::REDIS_SET:
-                $size = $this->db->sCard($keyName);
-                break;
-            case \Redis::REDIS_HASH:
-                $size = $this->db->hLen($keyName);
-                break;
-            case \Redis::REDIS_ZSET:
-                $size = $this->db->zCard($keyName);
-                break;
             case \Redis::REDIS_STRING:
                 $size = $this->db->strlen($keyName);
                 break;
+            
+            case \Redis::REDIS_HASH:
+                $size = $this->db->hLen($keyName);
+                break;
+            
+            case \Redis::REDIS_LIST:
+                $size = $this->db->lSize($keyName);
+                break;
+            
+            case \Redis::REDIS_SET:
+                $size = $this->db->sCard($keyName);
+                break;
+            
+            case \Redis::REDIS_ZSET:
+                $size = $this->db->zCard($keyName);
+                break;
+            
             default:
                 $size = -1;
         }
@@ -206,19 +241,21 @@ class RedisConnector
             case \Redis::REDIS_STRING:
                 $keyValue = $this->db->get($keyName);
                 break;
+            
+            case \Redis::REDIS_HASH:
+                $keyValue = $this->db->hGetAll($keyName);
+                break;
+                
+            case \Redis::REDIS_LIST:
+                $keyValue = $this->db->lRange($keyName, 0, -1);
+                break;    
+                
             case \Redis::REDIS_SET:
                 $keyValue = $this->db->sMembers($keyName);
                 break;
-            case \Redis::REDIS_LIST:
-                // TODO: add pagination for list items here
-                $keyValue = $this->db->lRange($keyName, 0, -1);
-                break;
+            
             case \Redis::REDIS_ZSET:
-                // TODO: add pagination for sorted sets items here
                 $keyValue = $this->db->zRange($keyName, 0, -1, TRUE);
-                break;
-            case \Redis::REDIS_HASH:
-                $keyValue = $this->db->hGetAll($keyName);
                 break;
         }
 
@@ -229,7 +266,7 @@ class RedisConnector
                 'encoding' => $this->getKeyEncoding($keyName),
                 'ttl'      => $this->getKeyTTL($keyName),
                 'size'     => $this->getKeySize($keyName),
-                'value'    => $keyValue,
+                'value'    => self::convertUTF8($keyValue),
             );
         }
         else {
