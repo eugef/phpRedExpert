@@ -16,8 +16,8 @@
         {% endstylesheets %}
         <script>
             var CONFIG = {
-                apiUri : 'app_dev.php/api/',
-                assetsUri : '/bundles/eugefphpredexpertangular/',
+                apiUri : '{{ asset('app_dev.php/api/') }}',
+                assetsUri : '{{ asset('bundles/eugefphpredexpertangular/') }}',
                 cache: true,
                 debug: true
             };
