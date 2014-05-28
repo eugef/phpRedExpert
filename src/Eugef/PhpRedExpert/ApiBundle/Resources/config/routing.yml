@@ -39,9 +39,9 @@ eugef_php_red_expert_server_config:
         _method: GET
         serverId: "\d+"
         
-eugef_php_red_expert_server_clients_kill:
+eugef_php_red_expert_database_flush:
     pattern:  /server/{serverId}/db/{dbId}/flush
-    defaults: { _controller: EugefPhpRedExpertApiBundle:Database:FLush, _format: json}
+    defaults: { _controller: EugefPhpRedExpertApiBundle:Database:Flush, _format: json}
     requirements:
         _method: POST
         serverId: "\d+"

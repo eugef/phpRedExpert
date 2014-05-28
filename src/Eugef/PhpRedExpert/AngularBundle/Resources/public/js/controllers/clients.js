@@ -68,7 +68,7 @@ App.controller('ClientsController', ['$scope', '$routeParams', 'RedisService',
             }
         }
         
-        $scope.$watch('clients.result.items', function(){
+        $scope.$watch('clients.result.items', function() {
             $scope.clients.result.selected = [];
             for (var i = 0; i < $scope.clients.result.items.length; i++) {
                 if ($scope.clients.result.items[i].selected) {
