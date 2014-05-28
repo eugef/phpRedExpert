@@ -1,7 +1,6 @@
-App.controller('SearchController', ['$scope', '$routeParams', '$location', 'RedisService',
-    function ($scope, $routeParams, $location, RedisService) {
-        console.log('SearchController');
-        console.log($routeParams);
+App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log', 'RedisService',
+    function ($scope, $routeParams, $location, $log, RedisService) {
+        $log.debug('SearchController', $routeParams);
         
         $scope.search = {
             pattern: '',
@@ -28,11 +27,14 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         }
         
         $scope.searchKey = function(pattern, page) {
-            console.log('searchKey: ' + page + '[' + $scope.search.page + ']');
+            $log.debug('searchKey', arguments);
+            
             $scope.search.pattern = pattern;
                         
             return RedisService.searchKeys($scope.current.serverId, $scope.current.dbId, pattern, page).then(
                 function(response) {
+                    $log.debug('searchKey / done');
+                    
                     /*
                      * because pagination plugin watches total count and page,
                      * these variables should be changed in one scope
@@ -46,14 +48,12 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                     angular.forEach(response.data.items, function(value){
                         $scope.search.result.keys.push(value);
                     });
-
-                    console.log('searchKey / done');
                 }
             );
         }
         
         $scope.selectKeyExclusive = function(key) {
-            console.log('keySelect: ' + key);
+            $log.debug('selectKeyExclusive', arguments);
        
             for (var i=0; i<$scope.search.result.keys.length; i++) {
                 if ($scope.search.result.keys[i].name == key) {
@@ -69,7 +69,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         }
         
         $scope.deleteKeys = function() {
-            console.log('deleteSelectedKeys');
+            $log.debug('deleteKeys');
+            
             var deleteKeys = $scope.search.result.selected;
             if (deleteKeys) {
                 $scope.$parent.showModalConfirm({
@@ -81,7 +82,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                 }).result.then(function() {
                     RedisService.deleteKeys($scope.current.serverId, $scope.current.dbId, deleteKeys).then(
                         function(response) {
-                            console.log(response);
+                            $log.debug('deleteKeys / done', response.data);
+                            
                             // remove deleted keys from scope
                             for (var i = $scope.search.result.keys.length - 1; i >= 0; i--) {
                                 if (deleteKeys.indexOf($scope.search.result.keys[i].name) >= 0) {
@@ -91,8 +93,6 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                             // reduce amount of keys in search result and whole db
                             $scope.search.result.total -= response.data.result;
                             $scope.$parent.getCurrentDB().keys -= response.data.result;
-
-                            console.log('deleteSelectedKeys / done');
                         }
                     );
                 });
@@ -100,7 +100,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         }
         
         $scope.editKeyTtl = function() {
-            console.log('changeKeyTtl');
+            $log.debug('editKeyTtl');
+            
             var key = $scope.search.result.selected[0];
             var ttl = 0;
             
@@ -120,6 +121,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                 ).result.then(function(newTtl) {
                     RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, key, {ttl: newTtl}).then(
                         function(response) {
+                            $log.debug('editKeyTtl / done', response.data);
+                            
                             // update key ttl in scope
                             for (var i = $scope.search.result.keys.length - 1; i >= 0; i--) {
                                 if ($scope.search.result.keys[i].name == key) {
@@ -127,8 +130,6 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                                     break;
                                 }
                             }
-
-                            console.log('changeKeyTtl / done');
                         }
                     );
                 });
@@ -136,7 +137,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         }  
         
         $scope.editKeyName = function() {
-            console.log('editKeyName');
+            $log.debug('editKeyName');
+            
             var key = $scope.search.result.selected[0];
             
             if (key) {
@@ -149,6 +151,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                     if (newName != key) {
                         RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, key, {name: newName}).then(
                             function(response) {
+                                $log.debug('editKeyName / done', response.data);
+                                
                                 if (response.data.result.name) {
                                     // update key name in scope
                                     for (var i = $scope.search.result.keys.length - 1; i >= 0; i--) {
@@ -164,8 +168,6 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                                         message: 'Could not rename key "' + key + '" to "' + newName + '"'
                                     });
                                 }
-
-                                console.log('editKeyName / done');
                             }
                         );
                     }
@@ -174,7 +176,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         }  
         
         $scope.moveKeys = function() {
-            console.log('moveKeys');
+            $log.debug('moveKeys');
+            
             var moveKeys = $scope.search.result.selected;
             
             if (moveKeys) {
@@ -188,7 +191,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                 ).result.then(function(newDB) {
                     RedisService.moveKeys($scope.current.serverId, $scope.current.dbId, moveKeys, newDB).then(
                         function(response) {
-                            console.log(response);
+                            $log.debug('moveKeys / done', response.data);
+                            
                             // remove moved keys from scope
                             for (var i = $scope.search.result.keys.length - 1; i >= 0; i--) {
                                 if (moveKeys.indexOf($scope.search.result.keys[i].name) >= 0) {
@@ -203,8 +207,6 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
                             // make it visible (usefull when db was empty)
                             $scope.$parent.getDB(newDB).keys += response.data.result;
                             $scope.$parent.getDB(newDB).visible = true;
-
-                            console.log('moveKeys / done');
                         }
                     );
                 });
@@ -230,8 +232,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         }
         
         $scope.setPage = function() {
-            console.log('set page: [' + $scope.search.page + ']');
-            console.log($scope.search);
+            $log.debug('setPage', $scope.search.page);
+
             $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern) + '/' + encodeURIComponent($scope.search.page), false);
             $scope.searchKey($scope.search.pattern, $scope.search.page);
         };
@@ -246,14 +248,14 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', 'Redi
         }, true);
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
+            $log.debug('SearchController.init');
+            
             $scope.$parent.view = {
                 title: 'Database',
                 subtitle: $scope.getCurrentDB().name
             };
             
             if ($routeParams.pattern) {
-                console.log('search');
-                console.log($routeParams);
                 var page = parseInt($routeParams.page, 10) | 1;
                 $scope.searchKey($routeParams.pattern, page);
             }

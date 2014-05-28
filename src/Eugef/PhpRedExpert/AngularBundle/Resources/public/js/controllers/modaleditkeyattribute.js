@@ -1,6 +1,6 @@
-App.controller('ModalEditKeyAttributeController', ['$scope', '$modalInstance', 'settings',
-    function ($scope, $modalInstance, settings) {
-        console.log('ModalEditKeyAttributeController');
+App.controller('ModalEditKeyAttributeController', ['$scope', '$modalInstance', '$log', 'settings',
+    function ($scope, $modalInstance, $log, settings) {
+        $log.debug('ModalEditKeyAttributeController', settings);
         
         $scope.data = settings;
         

@@ -1,6 +1,6 @@
-App.controller('ModalAlertController', ['$scope', '$modalInstance', 'settings',
-    function ($scope, $modalInstance, settings) {
-        console.log('ModalAlertController');
+App.controller('ModalAlertController', ['$scope', '$modalInstance', '$log', 'settings',
+    function ($scope, $modalInstance, $log, settings) {
+        $log.debug('ModalAlertController', settings);
         
         $scope.data = settings;
         

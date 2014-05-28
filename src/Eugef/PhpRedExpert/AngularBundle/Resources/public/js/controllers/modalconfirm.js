@@ -1,6 +1,6 @@
-App.controller('ModalConfirmController', ['$scope', '$modalInstance', 'settings',
-    function ($scope, $modalInstance, settings) {
-        console.log('ModalConfirmController');
+App.controller('ModalConfirmController', ['$scope', '$modalInstance', '$log', 'settings',
+    function ($scope, $modalInstance, $log, settings) {
+        $log.debug('ModalConfirmController', settings);
         
         $scope.data = settings;
         $scope.data.action = angular.isDefined(settings.action) ? settings.action : 'Ok'

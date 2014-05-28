@@ -1,9 +1,6 @@
-App.controller('ClientsController', ['$scope', '$routeParams', 'RedisService', 
-    function ($scope, $routeParams, RedisService) {
-        console.log('ClientsController');
-        console.log($routeParams);
-        
-        $scope.clients = []; 
+App.controller('ClientsController', ['$scope', '$routeParams', '$log', 'RedisService', 
+    function ($scope, $routeParams, $log, RedisService) {
+        $log.debug('ClientsController', $routeParams);
         
         $scope.clients = {
             sort: {
@@ -19,19 +16,21 @@ App.controller('ClientsController', ['$scope', '$routeParams', 'RedisService',
         $scope.getServerClients = function(refresh) {
             refresh = angular.isDefined(refresh) ? refresh : false;
             
-            console.log('getClients: ' + refresh);
+            $log.debug('getServerClients', arguments);
                                     
             return RedisService.getServerClients($scope.current.serverId, refresh).then(
                 function(response) {
                     $scope.clients.result.items = response.data.items;
                     $scope.clients.result.selected = [];
-                    console.log($scope.clients);
-                    console.log('getClients / done');
+                    
+                    $log.debug('getServerClients / done', $scope.clients);
                 }
             );
         }
         
         $scope.killServerClients = function() {
+            $log.debug('killServerClients');
+            
             var killClients = $scope.clients.result.selected;
             if (killClients) {
                 $scope.$parent.showModalConfirm({
@@ -43,9 +42,10 @@ App.controller('ClientsController', ['$scope', '$routeParams', 'RedisService',
                 }).result.then(function() {
                     RedisService.killServerClients($scope.current.serverId, killClients).then(
                         function(response) {
+                            $log.debug('killServerClients / done', response.data);
+                            
                             // Refresh clients
                             $scope.getServerClients(true);
-                            console.log('killClients / done');
                         }
                     );
                 });
@@ -53,7 +53,7 @@ App.controller('ClientsController', ['$scope', '$routeParams', 'RedisService',
         }
         
         $scope.selectItemExclusive = function(addr) {
-            console.log('itemSelect: ' + addr);
+            $log.debug('selectItemExclusive', arguments);
        
             for (var i=0; i<$scope.clients.result.items.length; i++) {
                 if ($scope.clients.result.items[i].addr == addr) {
@@ -78,12 +78,13 @@ App.controller('ClientsController', ['$scope', '$routeParams', 'RedisService',
         }, true);
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
+            $log.debug('ClientsController.init');
+            
             $scope.$parent.view = {
                 title: 'Clients',
                 subtitle: $scope.getCurrentServer().name
             };
             
-            console.log('clients');
             $scope.getServerClients();
         });        
     }

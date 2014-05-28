@@ -1,41 +1,41 @@
-App.controller('DashboardController', ['$scope', '$routeParams', '$location', 'RedisService', 
-    function ($scope, $routeParams, $location, RedisService) {
-        console.log('DashboardController');
-        console.log($routeParams);
+App.controller('DashboardController', ['$scope', '$routeParams', '$location', '$log', 'RedisService', 
+    function ($scope, $routeParams, $location, $log, RedisService) {
+        $log.debug('DashboardController', $routeParams);
         
         $scope.board = {};        
         
         $scope.getInfo = function() {
-            console.log('getInfo');
+            $log.debug('getInfo');
                         
             return RedisService.getServerInfo($scope.current.serverId).then(
                 function(response) {
+                    $log.debug('getInfo / done', response.data);
+                    
                     $scope.board.info = response.data;
-
-                    console.log('getInfo / done');
                 }
             );
         }
         
         $scope.getConfig = function() {
-            console.log('getConfig');
+            $log.debug('getConfig');
                         
             return RedisService.getServerConfig($scope.current.serverId).then(
                 function(response) {
+                    $log.debug('getConfig / done', response.data);
+                    
                     $scope.board.config = response.data;
-
-                    console.log('getConfig / done');
                 }
             );
         }
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
+            $log.debug('DashboardController.init');
+            
             $scope.$parent.view = {
                 title: 'Dashboard',
                 subtitle: $scope.getCurrentServer().name
             };
-            
-            console.log('dashboard');
+
             $scope.getInfo();
             $scope.getConfig();
         });        

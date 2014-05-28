@@ -1,8 +1,8 @@
-App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal', 'config', 'RedisService', 
-    function ($scope, $q, $location, $route, $modal, config, RedisService) {
-    
+App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal', '$log', 'config', 'RedisService', 
+    function ($scope, $q, $location, $route, $modal, $log, config, RedisService) {
+        $log.debug('AppController', $route);
+
         $scope.$route = $route;
-        console.log($route);
         $scope.$location = $location;
         
         $scope.view = {
@@ -21,10 +21,8 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
             dbId: null
         };
 
-        console.log('AppController');
-
         $scope.init = function(serverId, dbId) {
-            console.log('init');
+            $log.debug('AppController.init');
             
             serverId = parseInt(serverId, 10);
             dbId = parseInt(dbId, 10);
@@ -46,22 +44,24 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                 }
                 else {
                     if ($scope.current.dbId != dbId) {
-                        console.log('!!! changeDB');
                         $scope.changeDB(dbId); 
                     }    
                     deferred.resolve();
                 }
             }
 
-            console.log('init / end');
+            $log.debug('AppController.init / done');
+            
             return deferred.promise;
         }
 
         $scope.loadServers = function(newServerId) {
-            console.log('loadServers');
+            $log.debug('loadServers', arguments);
 
             return RedisService.getServers().then(
                 function(response) {
+                    $log.debug('loadServers / done', response.data);
+                    
                     $scope.servers = [];
                     $scope.current.serverId = null;
                     $scope.default.serverId = null;
@@ -85,14 +85,13 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                     } 
                     else {
                         $scope.current.serverId = $scope.default.serverId;
-                    }
-                    console.log('loadServers / done');
+                    }                    
                 }
             );
         }   
 
         $scope.loadDBs = function(serverId, newDbId) {
-            console.log('loadDBs');
+            $log.debug('loadDBs');
 
             // if error is thrown - defer object should be resolved
             if (!$scope.serverExists(serverId)) {
@@ -101,6 +100,8 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
 
             return RedisService.getServerDBs(serverId).then(
                 function(response) {
+                    $log.debug('loadDBs / done', response.data)
+                    
                     $scope.dbs = [];
                     $scope.current.serverId = serverId;
                     $scope.current.dbId = null;
@@ -121,18 +122,16 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                     });
 
                     $scope.changeDB(newDbId);
-                    
-                    console.log($scope.dbs);
-                    console.log('loadDBs / done');
                 },
                 function(error) {
-                    alert(error.data.error.message);
+                    $log.error(error.data.error.message);
                 }
             );
         };
 
         $scope.changeDB = function(dbId) {
-            console.log('changeDB ' + dbId);
+            $log.debug('changeDB', dbId);
+            
             if ($scope.dbExists(dbId)) {
                 $scope.current.dbId = dbId;
             } 
@@ -185,14 +184,16 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
         }
         
         $scope.addDb = function() {
-            console.log('addDb');
+            $log.debug('addDb');
+            
             $scope.showModal('ModalEditKeyAttributeController', 'adddb.html',                  
                 {
                     databases: $scope.dbs,
                 }
             ).result.then(function(newDB) {
+                $log.debug('addDb / end', newDB);
+                
                 $location.path('server/' + $scope.current.serverId + '/db/' + newDB + '/search');
-                console.log('addDb / end');
             });
         }
         

@@ -25,6 +25,14 @@ App.run(['$route', '$rootScope', '$location',
     }
 ]);
 
+// Logging
+
+App.config(['$logProvider', 'config', 
+    function($logProvider, config) {
+        $logProvider.debugEnabled(config.debug);
+    }]
+);
+
 // Router
 
 App.config(['$routeProvider', '$locationProvider', 'config', 
