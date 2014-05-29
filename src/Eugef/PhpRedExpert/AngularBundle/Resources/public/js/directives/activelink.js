@@ -9,12 +9,12 @@ App.directive('activeLink', ['$location',
                 var nested = angular.isDefined(attrs.activeLinkNested) ? true : false;
                 
                 function inPath(needle, haystack) {
+                    var current = (haystack == needle);
                     if (nested) {
-                        return (haystack.indexOf(needle) == 0);
+                        current |= (haystack.indexOf(needle + '/') == 0);
                     }
-                    else {
-                        return (haystack == needle);
-                    }
+                    
+                    return current;
                 }
                 
                 function toggleClass(linkPath, locationPath) {
