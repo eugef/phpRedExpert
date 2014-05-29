@@ -94,7 +94,8 @@
                 "extra": {
                     "component": {
                         "files": [
-                            "ui-bootstrap-tpls.js"
+                            "ui-bootstrap-tpls.js",
+                            "ui-bootstrap-tpls.min.js"
                         ]
                     }
                 },
@@ -116,7 +117,8 @@
                 "extra": {
                     "component": {
                         "files": [
-                            "unique.js"
+                            "unique.js",
+                            "unique.min.js"
                         ]
                     }
                 },

@@ -10,7 +10,8 @@
             'bundles/eugefphpredexpertangular/vendor/bootstrap-css/bootstrap.css' 
             'bundles/eugefphpredexpertangular/adminlte/css/*' 
             'bundles/eugefphpredexpertangular/css/application.css'
-            filter='cssrewrite' 
+            filter='cssrewrite'
+            output='css/main.css'
         %}
             <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
         {% endstylesheets %}
@@ -19,7 +20,7 @@
                 apiUri : '{{ app.request.baseUrl ~ '/api/' }}',
                 assetsUri : '{{ asset('bundles/eugefphpredexpertangular/') }}',
                 cache: true,
-                debug: {{ app.environment == 'dev' ? 'true' : 'false' }}
+                debug: {{ app.debug ? 'true' : 'false' }}
             };
         </script>
     </head>
@@ -33,6 +34,7 @@
             'bundles/eugefphpredexpertangular/vendor/angular-ui-utils-unique/unique.js'
             'bundles/eugefphpredexpertangular/js/*'
             'bundles/eugefphpredexpertangular/js/*/*'
+            output='js/main.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}

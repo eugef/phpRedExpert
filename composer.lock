@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4a7038c60f291ad65e952163b223b61f",
+    "hash": "6dcaa85d8a5164c18dc0654faec6ecb1",
     "packages": [
         {
             "name": "components/angular-bootstrap",
@@ -22,7 +22,8 @@
             "extra": {
                 "component": {
                     "files": [
-                        "ui-bootstrap-tpls.js"
+                        "ui-bootstrap-tpls.js",
+                        "ui-bootstrap-tpls.min.js"
                     ]
                 }
             }
@@ -64,7 +65,8 @@
             "extra": {
                 "component": {
                     "files": [
-                        "unique.js"
+                        "unique.js",
+                        "unique.min.js"
                     ]
                 }
             }
