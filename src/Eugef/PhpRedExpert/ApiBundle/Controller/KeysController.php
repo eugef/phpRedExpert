@@ -23,7 +23,7 @@ class KeysController extends AbstractRedisController
     {
         $this->initialize($serverId, $dbId);
 
-        $searchConfig = $this->container->getParameter('search');
+        $itemsPerPage = $this->container->getParameter('search_per_page');
         $page = abs($this->getRequest()->get('page', 0));
         $pattern = trim($this->getRequest()->get('pattern', NULL));
 
@@ -31,7 +31,7 @@ class KeysController extends AbstractRedisController
             throw new HttpException(400, 'Search pattern is not specified');
         }
 
-        $keys = $this->redis->searchKeys($pattern, $page * $searchConfig['items_per_page'], $searchConfig['items_per_page'], $total);
+        $keys = $this->redis->searchKeys($pattern, $page * $itemsPerPage, $itemsPerPage, $total);
 
         return new JsonResponse(
             array(
@@ -39,7 +39,7 @@ class KeysController extends AbstractRedisController
                 'metadata' => array(
                     'count'     => count($keys),
                     'total'     => $total,
-                    'page_size' => $searchConfig['items_per_page'],
+                    'page_size' => $itemsPerPage,
                 ),
             )
         );

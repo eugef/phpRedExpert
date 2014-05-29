@@ -13,8 +13,7 @@ parameters:
         port: 6379
         name: server2
         password: null
-    search:
-      items_per_page: 100
+    search_per_page: 20
 
     mailer_transport:  smtp
     mailer_host:       127.0.0.1
