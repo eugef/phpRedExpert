@@ -16,10 +16,10 @@
         {% endstylesheets %}
         <script>
             var CONFIG = {
-                apiUri : '{{ asset('app_dev.php/api/') }}',
+                apiUri : '{{ app.request.baseUrl ~ '/api/' }}',
                 assetsUri : '{{ asset('bundles/eugefphpredexpertangular/') }}',
                 cache: true,
-                debug: true
+                debug: {{ app.environment == 'dev' ? 'true' : 'false' }}
             };
         </script>
     </head>
