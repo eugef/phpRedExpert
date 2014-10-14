@@ -5,14 +5,7 @@ parameters:
         port: 6379
         name: null
         password: null
-        databases:
-          0:
-            name: cache
-      -
-        host: localhost
-        port: 6379
-        name: server2
-        password: null
+
     search_per_page: 20
 
     locale:            en

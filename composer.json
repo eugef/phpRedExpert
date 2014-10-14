@@ -1,6 +1,6 @@
 {
     "name": "eugef/phpredexpert",
-    "description": "Management tool for Redis.",
+    "description": "Web management tool for Redis.",
     "authors": [
         {
             "name": "Eugene Fidelin",
@@ -22,7 +22,6 @@
         "sensio/distribution-bundle": "~2.3",
         "sensio/framework-extra-bundle": "~3.0",
         "sensio/generator-bundle": "~2.3",
-        "incenteev/composer-parameter-handler": "~2.0",
         "components/angular.js": "~1.2",
         "components/angular-cache": "*",
         "components/angular-bootstrap": "*",
@@ -31,14 +30,12 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
