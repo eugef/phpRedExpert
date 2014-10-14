@@ -15,10 +15,5 @@ parameters:
         password: null
     search_per_page: 20
 
-    mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
-
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
