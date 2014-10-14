@@ -1,7 +1,7 @@
 phpRedExpert
 ============
 
-Simple but powerful tool for Redis management and administration.
+Simple and powerful web tool for Redis management and administration.
 
 ## Requirments
 
