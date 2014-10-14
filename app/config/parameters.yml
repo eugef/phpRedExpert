@@ -3,8 +3,8 @@ parameters:
       -
         host: 127.0.0.1
         port: 6379
-        name: null
-        password: null
+        name: localhost redis
+        password:
 
     search_per_page: 20
 
