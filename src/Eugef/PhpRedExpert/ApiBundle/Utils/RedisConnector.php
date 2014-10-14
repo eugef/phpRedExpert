@@ -63,7 +63,10 @@ class RedisConnector
             }; 
         }
         elseif (is_string($value)) {
-           $newValue = mb_convert_encoding($value, 'UTF-8', 'UTF-8'); 
+            $newValue = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
+        }
+        else {
+            $newValue = $value;
         }
         
         return $newValue;
@@ -455,6 +458,7 @@ class RedisConnector
     public function flushDb()
     {
         $this->db->flushDB();
+        return TRUE;
     }
 
 }

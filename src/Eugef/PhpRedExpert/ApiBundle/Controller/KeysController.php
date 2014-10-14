@@ -2,30 +2,31 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
-use Eugef\PhpRedExpert\ApiBundle\Controller\AbstractRedisController;
 use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class KeysController extends AbstractRedisController
 {
 
     /**
-     * Search for keys match specified pattern
-     * 
+     * Search for keys match specified pattern.
+     *
+     * @param Request $request
      * @param int $serverId
      * @param int $dbId
-     * @return \Symfony\Component\HttpFoundation\JsonResponse 
-     *          List of keys with detailed information
      * @throws HttpException
+     * @return JsonResponse
+     *          List of keys with detailed information
      */
-    public function searchAction($serverId, $dbId)
+    public function searchAction(Request $request, $serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
         $itemsPerPage = $this->container->getParameter('search_per_page');
-        $page = abs($this->getRequest()->get('page', 0));
-        $pattern = trim($this->getRequest()->get('pattern', NULL));
+        $page = abs($request->get('page', 0));
+        $pattern = trim($request->get('pattern', NULL));
 
         if (!$pattern) {
             throw new HttpException(400, 'Search pattern is not specified');
@@ -45,11 +46,20 @@ class KeysController extends AbstractRedisController
         );
     }
 
-    public function deleteAction($serverId, $dbId)
+    /**
+     * Delete keys by name.
+     *
+     * @param Request $request
+     * @param int $serverId
+     * @param int $dbId
+     * @return JsonResponse
+     * @throws HttpException
+     */
+    public function deleteAction(Request $request, $serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
-        $data = json_decode($this->getRequest()->getContent());
+        $data = json_decode($request->getContent());
 
         if (empty($data->keys)) {
             throw new HttpException(400, 'Keys are not specified');
@@ -62,11 +72,20 @@ class KeysController extends AbstractRedisController
         );
     }
 
-    public function moveAction($serverId, $dbId)
+    /**
+     * Move keys to other DB.
+     *
+     * @param Request $request
+     * @param int $serverId
+     * @param int $dbId
+     * @return JsonResponse
+     * @throws HttpException
+     */
+    public function moveAction(Request $request, $serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
-        $data = json_decode($this->getRequest()->getContent());
+        $data = json_decode($request->getContent());
 
         if (empty($data->keys)) {
             throw new HttpException(400, 'Keys are not specified');
@@ -87,11 +106,20 @@ class KeysController extends AbstractRedisController
         );
     }
 
-    public function attributesAction($serverId, $dbId)
+    /**
+     * Change attributes (name and ttl) for the key.
+     *
+     * @param Request $request
+     * @param int $serverId
+     * @param int $dbId
+     * @return JsonResponse
+     * @throws HttpException
+     */
+    public function attributesAction(Request $request, $serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
-        $data = json_decode($this->getRequest()->getContent());
+        $data = json_decode($request->getContent());
 
         if (empty($data->key)) {
             throw new HttpException(400, 'Key is not specified');
@@ -108,11 +136,20 @@ class KeysController extends AbstractRedisController
         );
     }
 
-    public function viewAction($serverId, $dbId)
+    /**
+     * View the key value.
+     *
+     * @param Request $request
+     * @param int $serverId
+     * @param int $dbId
+     * @return JsonResponse
+     * @throws HttpException
+     */
+    public function viewAction(Request $request, $serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
-        $key = trim($this->getRequest()->get('key', NULL));
+        $key = trim($request->get('key', NULL));
 
         if (!RedisConnector::hasValue($key)) {
             throw new HttpException(400, 'Key name is not specified');
@@ -131,11 +168,20 @@ class KeysController extends AbstractRedisController
         );
     }
 
-    public function editAction($serverId, $dbId)
+    /**
+     * Edit the key value.
+     *
+     * @param Request $request
+     * @param int $serverId
+     * @param int $dbId
+     * @return JsonResponse
+     * @throws HttpException
+     */
+    public function editAction(Request $request, $serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
-        $data = json_decode($this->getRequest()->getContent());
+        $data = json_decode($request->getContent());
 
         if (!RedisConnector::hasValue($data->key->name)) {
             throw new HttpException(400, 'Key is not specified');
@@ -162,11 +208,20 @@ class KeysController extends AbstractRedisController
         );
     }
 
-    public function addAction($serverId, $dbId)
+    /**
+     * Add new key with value.
+     *
+     * @param Request $request
+     * @param int $serverId
+     * @param int $dbId
+     * @return JsonResponse
+     * @throws HttpException
+     */
+    public function addAction(Request $request, $serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
-        $data = json_decode($this->getRequest()->getContent());
+        $data = json_decode($request->getContent());
 
         if (!RedisConnector::hasValue($data->key->name)) {
             throw new HttpException(400, 'Key is not specified');
@@ -193,11 +248,20 @@ class KeysController extends AbstractRedisController
         );
     }
 
-    public function deleteValuesAction($serverId, $dbId)
+    /**
+     * Delete key value(s).
+     *
+     * @param Request $request
+     * @param int $serverId
+     * @param int $dbId
+     * @return JsonResponse
+     * @throws HttpException
+     */
+    public function deleteValuesAction(Request $request, $serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
-        $data = json_decode($this->getRequest()->getContent());
+        $data = json_decode($request->getContent());
 
         if (!RedisConnector::hasValue($data->key->name)) {
             throw new HttpException(400, 'Key is not specified');

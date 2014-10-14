@@ -2,14 +2,19 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
-use Eugef\PhpRedExpert\ApiBundle\Controller\AbstractRedisController;
 use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class ServerController extends AbstractRedisController
 {
 
+    /**
+     * Return list of configured Redis servers.
+     *
+     * @return JsonResponse
+     */
     public function listAction()
     {
         $servers = array();
@@ -22,10 +27,16 @@ class ServerController extends AbstractRedisController
                 'password' => empty($server['password']) ? false : true,
             );
         }
-        // Todo: add commom metadata for lists: total count, page, current count
+        // Todo: add common metadata for lists: total count, page, current count
         return new JsonResponse($servers);
     }
 
+    /**
+     * Returns list of available Dbs for the server.
+     *
+     * @param int $serverId
+     * @return JsonResponse
+     */
     public function databasesAction($serverId)
     {
         $this->initialize($serverId);
@@ -33,6 +44,12 @@ class ServerController extends AbstractRedisController
         return new JsonResponse($this->redis->getServerDbs());
     }
 
+    /**
+     * Result of INFO command for the server.
+     *
+     * @param int $serverId
+     * @return JsonResponse
+     */
     public function infoAction($serverId)
     {
         $this->initialize($serverId);
@@ -40,6 +57,12 @@ class ServerController extends AbstractRedisController
         return new JsonResponse($this->redis->getServerInfo());
     }
 
+    /**
+     * List of server clients.
+     *
+     * @param int $serverId
+     * @return JsonResponse
+     */
     public function clientsListAction($serverId)
     {
         $this->initialize($serverId);
@@ -59,11 +82,19 @@ class ServerController extends AbstractRedisController
         );
     }
 
-    public function clientsKillAction($serverId)
+    /**
+     * Kill clients of the server.
+     *
+     * @param Request $request
+     * @param int $serverId
+     * @return JsonResponse
+     * @throws HttpException
+     */
+    public function clientsKillAction(Request $request, $serverId)
     {
         $this->initialize($serverId);
 
-        $data = json_decode($this->getRequest()->getContent());
+        $data = json_decode($request->getContent());
 
         if (empty($data->clients)) {
             throw new HttpException(400, 'Clients are not specified');
@@ -76,6 +107,12 @@ class ServerController extends AbstractRedisController
         );
     }
 
+    /**
+     * Result of CONFIG command for the server.
+     *
+     * @param int $serverId
+     * @return JsonResponse
+     */
     public function configAction($serverId)
     {
         $this->initialize($serverId);
