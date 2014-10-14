@@ -14,7 +14,8 @@ app/config/parameters.yml
 
 # Composer
 composer.phar
-src/Eugef/PhpRedExpert/AngularBundle/Resources/public/vendor/*
+src/Eugef/PhpRedExpert/AngularBundle/Resources/public/vendor/
 
 # IDE
 nbproject/*
+.idea/*
