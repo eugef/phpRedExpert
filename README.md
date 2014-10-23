@@ -1,12 +1,22 @@
-phpRedExpert
-============
+# What is phpRedExpert?
 
-Simple and powerful web tool for Redis management and administration.
+**phpRedExpert** is lightweight and powerful web tool for [Redis](www.redis.io) key-value store management and administration. It allows to manage keys, monitor and configure Redis serverss in a simple and intuitive way. 
 
-## Requirments
+**phpRedExpert** is especially handy if you don't like/want to access Redis through its CLI and supports a wide range of operations.
 
-phpRedExpert is tested and works well with
+# Purpose of phpRedExpert
 
-- PHP 5.3+
-- PHPRedis extension 2.2.3+
-- Redis 2.6+
+* Easy access to Redis through intuitive web interface
+* Improved user experience for keys manipulation
+* Administering multiple Redis servers
+* Support for bulk keys operations
+
+# Documentation
+
+* [**Getting started**](https://github.com/eugef/phpRedExpert/wiki/Getting-started)
+  * [Requirments](https://github.com/eugef/phpRedExpert/wiki/Getting-started#requirements)
+  * [Installation](https://github.com/eugef/phpRedExpert/wiki/Getting-started#installation)
+    * [Install with Composer](https://github.com/eugef/phpRedExpert/wiki/Getting-started#install-with-composer)
+    * [Download a Release archive](https://github.com/eugef/phpRedExpert/wiki/Getting-started#download-a-release-archive)
+  * [Apache website setup](https://github.com/eugef/phpRedExpert/wiki/Getting-started#apache-website-setup)
+  * [phpRedExpert parameters](https://github.com/eugef/phpRedExpert/wiki/Getting-started#phpredexpert-parameters)
