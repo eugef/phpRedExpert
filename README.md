@@ -1,6 +1,6 @@
 # What is phpRedExpert?
 
-**phpRedExpert** is lightweight and powerful web tool for [Redis](www.redis.io) key-value store management and administration. It allows to manage keys, monitor and configure Redis serverss in a simple and intuitive way. 
+**phpRedExpert** is lightweight and powerful web tool for [Redis](www.redis.io) key-value store management and administration. It allows to manage keys, monitor and configure Redis servers in a simple and intuitive way. 
 
 **phpRedExpert** is especially handy if you don't like/want to access Redis through its CLI and supports a wide range of operations.
 
