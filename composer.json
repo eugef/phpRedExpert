@@ -1,6 +1,6 @@
 {
     "name": "eugef/phpredexpert",
-    "description": "Web management tool for Redis.",
+    "description": "Lightweight and powerful web tool for Redis key-value store management and administration.",
     "authors": [
         {
             "name": "Eugene Fidelin",

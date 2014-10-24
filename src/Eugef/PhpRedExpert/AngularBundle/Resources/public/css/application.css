@@ -1,4 +1,11 @@
 /*adminlte fixes*/
+body > .header .logo {
+    font-size: 20px;
+    line-height: 50px;
+    font-family: Comfortaa, cursive;
+    font-weight: 700;
+}
+
 .content {
     padding-bottom: 0;
 }
@@ -145,4 +152,8 @@ pre.scrollable {
 .nav-tabs>li.active.dropdown>a:focus {
     cursor: pointer;
     color: #72afd2;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
+    border: 0;
 }
