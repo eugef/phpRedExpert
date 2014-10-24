@@ -6,6 +6,11 @@ body > .header .logo {
     font-weight: 700;
 }
 
+.user-header .logo-text {
+    font-family: Comfortaa, cursive;
+    font-weight: 700;
+}
+
 .content {
     padding-bottom: 0;
 }
