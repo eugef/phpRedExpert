@@ -1,3 +1,4 @@
+![phpRedExpert](https://raw.githubusercontent.com/eugef/phpRedExpert/gh-pages/docs/phpredexpert-logo-text.png)
 # What is phpRedExpert?
 
 **phpRedExpert** is lightweight and powerful web tool for [Redis](www.redis.io) key-value store management and administration. It allows to manage keys, monitor and configure Redis servers in a simple and intuitive way. 
