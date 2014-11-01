@@ -1,9 +1,11 @@
 ![phpRedExpert](https://raw.githubusercontent.com/eugef/phpRedExpert/gh-pages/docs/phpredexpert-logo-text.png)
 ## What is phpRedExpert?
 
-**phpRedExpert** is lightweight and powerful web tool for [Redis](www.redis.io) key-value store management and administration. It allows to manage keys, monitor and configure Redis servers in a simple and intuitive way. 
+**phpRedExpert** is a lightweight and powerful web tool for [Redis](www.redis.io) key-value store management and administration. It allows you to manage keys, monitor and configure Redis servers in a simple and intuitive way. 
 
-**phpRedExpert** is especially handy if you don't like/want to access Redis through its CLI and supports a wide range of operations.
+**phpRedExpert** supports a wide range of operations and is especially handy if you don't want to access Redis through its CLI.
+
+**phpRedExpert** is created using the most advanced and leading frameworks and libraries. [Symfony](http://symfony.com/) is used for its backend and [AngularJS](https://angularjs.org/) with [Bootstrap](http://getbootstrap.com/) for the frontend.
 
 ## Purpose of phpRedExpert
 
