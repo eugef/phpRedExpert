@@ -34,3 +34,6 @@
   * [Server connection settings](https://github.com/eugef/phpRedExpert/wiki/Configuration#server-connection-settings)
   * [Database names](https://github.com/eugef/phpRedExpert/wiki/Configuration#database-names)
   * [Display settings](https://github.com/eugef/phpRedExpert/wiki/Configuration#display-settings)
+* [**User Guide**](https://github.com/eugef/phpRedExpert/wiki/User-Guide)
+* [**FAQ**](https://github.com/eugef/phpRedExpert/wiki/FAQ)
+* [**Contributing**](https://github.com/eugef/phpRedExpert/wiki/Contributing)
