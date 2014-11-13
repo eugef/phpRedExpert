@@ -17,3 +17,6 @@ src/Eugef/PhpRedExpert/AngularBundle/Resources/public/vendor/
 # IDE
 nbproject/*
 .idea/*
+phpRedExpert.iml
+
+.vagrant
