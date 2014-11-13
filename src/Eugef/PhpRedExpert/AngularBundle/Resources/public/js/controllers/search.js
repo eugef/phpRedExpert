@@ -21,7 +21,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
         
         $scope.submitSearch = function() {
 			if ($scope.searchForm.$valid) {
-                $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern), false);
+                $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + $scope.search.pattern, false);
                 $scope.searchKey($scope.search.pattern, 1);
 			}            
         }
@@ -213,28 +213,22 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
             }
         }
         
-        $scope.getKeyUri = function(key, skipEncode) {
-            skipEncode = angular.isDefined(skipEncode) ? skipEncode : false;
-            var keyUri = 'server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + encodeURIComponent(key);
-            if (skipEncode) {
-                return keyUri;
-            }
-            else {
-                return encodeURI(keyUri)
-            }
+        $scope.getKeyUri = function(key, encode) {
+            encode = angular.isDefined(encode) ? encode : false;
+            return keyUri = 'server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + (encode ? encodeURIComponent(key) : key);
         }
         
         $scope.openKey = function() {
             var key = $scope.search.result.selected[0];
             if (key) {
-                $location.path($scope.getKeyUri(key, true));
+                $location.path($scope.getKeyUri(key));
             }
         }
         
         $scope.setPage = function() {
             $log.debug('setPage', $scope.search.page);
 
-            $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + encodeURIComponent($scope.search.pattern) + '/' + encodeURIComponent($scope.search.page), false);
+            $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + $scope.search.pattern + '/' + $scope.search.page, false);
             $scope.searchKey($scope.search.pattern, $scope.search.page);
         };
         

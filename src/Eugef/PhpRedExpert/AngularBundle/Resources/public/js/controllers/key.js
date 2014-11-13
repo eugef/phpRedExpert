@@ -14,7 +14,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                 type: keyType,
                 ttl: 0
             }
-            
+
             $scope.keyValue = $scope.defaultKeyValue(keyType);
         }
 
@@ -90,7 +90,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                         $scope.$parent.getCurrentDB().keys++;
                         
                         // change location for new key
-                        $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + encodeURIComponent($scope.key.name), false);
+                        $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + $scope.key.name, false);
                         
                         $log.debug('submitKey: add / done', $scope.key);
                     },
@@ -224,7 +224,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                             if (response.data.result.name) {
                                 $scope.key.name = newName;
                                 // update key name in url
-                                $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + encodeURIComponent($scope.key.name), false);
+                                $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + $scope.key.name, false);
                             }
                             else {
                                 $scope.$parent.showModalAlert({
@@ -236,7 +236,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     );
                 }
             });
-        } 
+        }
         
         $scope.deleteKey = function() {
             $log.debug('deleteKey');
@@ -310,7 +310,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
             if (angular.isDefined($routeParams.key)) {
                 $scope.$parent.view = {
                     title: 'View key',
-                    subtitle: $routeParams.key,
+                    subtitle: $routeParams.key
                 };
             
                 $scope.initEditKey($routeParams.key);
@@ -318,7 +318,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
             else {
                 $scope.$parent.view = {
                     title: 'Add key',
-                    subtitle: $routeParams.type,
+                    subtitle: $routeParams.type
                 };
                 
                 $scope.initAddKey($routeParams.type);

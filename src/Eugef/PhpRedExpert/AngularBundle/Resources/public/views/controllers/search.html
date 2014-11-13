@@ -45,7 +45,7 @@
                 <tbody>
                     <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse" ng-class="{selected: key.selected}">
                         <td class="checkbox-td"><label><input type="checkbox" ng-model="key.selected" /></label></td>
-                        <td ng-click="selectKeyExclusive(key.name)"><a href="#!/{[getKeyUri(key.name)]}">{[key.name]}</a></td>
+                        <td ng-click="selectKeyExclusive(key.name)"><a href="#!/{[(getKeyUri(key.name, true))]}">{[key.name]}</a></td>
                         <td ng-click="selecKeyExclusive(key.name)">{[key.type]}</td>
                         <td ng-click="selecKeyExclusive(key.name)">{[key.ttl | sec2time]}</td>
                         <td ng-click="selecKeyExclusive(key.name)">{[key.encoding]}</td>
