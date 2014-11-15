@@ -3,6 +3,7 @@
 ## What is phpRedExpert?
 
 [![Latest Stable Version](https://poser.pugx.org/eugef/phpredexpert/v/stable.svg)](https://github.com/eugef/phpRedExpert/wiki/Getting-started#installation)
+[![Dependency Status](https://gemnasium.com/eugef/phpRedExpert.svg)](https://gemnasium.com/eugef/phpRedExpert)
 [![License](https://poser.pugx.org/eugef/phpredexpert/license.svg)](https://github.com/eugef/phpRedExpert/blob/master/LICENSE)
 [![Issues](http://img.shields.io/github/issues/eugef/phpredexpert.svg)](https://github.com/eugef/phpRedExpert/issues)
 
