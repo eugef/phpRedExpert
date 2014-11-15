@@ -28,10 +28,10 @@ user { ['apache', 'nginx', 'httpd', 'www-data']:
 # copy dot files to ssh user's home directory
 exec { 'dotfiles':
   cwd     => "/home/${::ssh_username}",
-  command => "cp -r /vagrant/puphpet/files/dot/.[a-zA-Z0-9]* /home/${::ssh_username}/ \
+  command => "cp -r /vagrant/tools/puphpet/files/dot/.[a-zA-Z0-9]* /home/${::ssh_username}/ \
               && chown -R ${::ssh_username} /home/${::ssh_username}/.[a-zA-Z0-9]* \
-              && cp -r /vagrant/puphpet/files/dot/.[a-zA-Z0-9]* /root/",
-  onlyif  => 'test -d /vagrant/puphpet/files/dot',
+              && cp -r /vagrant/tools/puphpet/files/dot/.[a-zA-Z0-9]* /root/",
+  onlyif  => 'test -d /vagrant/tools/puphpet/files/dot',
   returns => [0, 1],
   require => User[$::ssh_username]
 }

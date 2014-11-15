@@ -1,7 +1,7 @@
 ---
 :backends: yaml
 :yaml:
-    :datadir: '/vagrant/puphpet'
+    :datadir: '/vagrant/tools/puphpet'
 :hierarchy:
     - config
 :logger: console

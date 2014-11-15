@@ -1,6 +1,6 @@
 require 'yaml'
 
-dir = File.dirname(File.expand_path(__FILE__))
+dir = File.dirname(File.expand_path(__FILE__)) + '/tools'
 
 configValues = YAML.load_file("#{dir}/puphpet/config.yaml")
 data         = configValues['vagrantfile-local']
@@ -182,15 +182,15 @@ Vagrant.configure('2') do |config|
   ssh_username = !data['ssh']['username'].nil? ? data['ssh']['username'] : 'vagrant'
 
   config.vm.provision 'shell' do |s|
-    s.path = 'puphpet/shell/initial-setup.sh'
-    s.args = '/vagrant/puphpet'
+    s.path = 'tools/puphpet/shell/initial-setup.sh'
+    s.args = '/vagrant/tools/puphpet'
   end
   config.vm.provision 'shell' do |kg|
-    kg.path = 'puphpet/shell/ssh-keygen.sh'
+    kg.path = 'tools/puphpet/shell/ssh-keygen.sh'
     kg.args = "#{ssh_username}"
   end
-  config.vm.provision :shell, :path => 'puphpet/shell/install-ruby.sh'
-  config.vm.provision :shell, :path => 'puphpet/shell/install-puppet.sh'
+  config.vm.provision :shell, :path => 'tools/puphpet/shell/install-ruby.sh'
+  config.vm.provision :shell, :path => 'tools/puphpet/shell/install-puppet.sh'
 
   config.vm.provision :puppet do |puppet|
     puppet.facter = {
@@ -208,14 +208,14 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.provision :shell do |s|
-    s.path = 'puphpet/shell/execute-files.sh'
+    s.path = 'tools/puphpet/shell/execute-files.sh'
     s.args = ['exec-once', 'exec-always']
   end
   config.vm.provision :shell, run: 'always' do |s|
-    s.path = 'puphpet/shell/execute-files.sh'
+    s.path = 'tools/puphpet/shell/execute-files.sh'
     s.args = ['startup-once', 'startup-always']
   end
-  config.vm.provision :shell, :path => 'puphpet/shell/important-notices.sh'
+  config.vm.provision :shell, :path => 'tools/puphpet/shell/important-notices.sh'
 
   if File.file?("#{dir}/puphpet/files/dot/ssh/id_rsa")
     config.ssh.private_key_path = [
