@@ -4,7 +4,7 @@
 
 Development should be done within provided VM.
 
-Folowing dependecises should be installed:
+Folowing dependencies should be installed:
 * [Vagrant](https://www.vagrantup.com/downloads.html)
 * [Virtual box](https://www.virtualbox.org/wiki/Downloads)
 * NFSd for Linux machines
