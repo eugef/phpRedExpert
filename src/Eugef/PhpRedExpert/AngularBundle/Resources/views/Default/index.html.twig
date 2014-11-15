@@ -57,8 +57,8 @@
                         <li class="user-header bg-light-blue">
                             <img src="{{ asset('bundles/eugefphpredexpertangular/images/logo.png') }}" alt="phpRedExpert" />
                             <p class="logo-text">
-                                phpRedExpert 1.0
-                                <small>24-10-2014</small>
+                                phpRedExpert {{ (app_version == '$Format:%d$') ? 'dev' : app_version }}
+                                <small>{{ (app_release_date == '$Format:%ct$') ? 'no release date' : app_release_date | date('d M Y') }}</small>
                             </p>
                         </li>
                         <li class="user-body">

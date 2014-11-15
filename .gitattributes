@@ -2,3 +2,4 @@
 .gitignore export-ignore
 Vagrantfile export-ignore
 tools/ export-ignore
+app/config/application.yml export-subst
