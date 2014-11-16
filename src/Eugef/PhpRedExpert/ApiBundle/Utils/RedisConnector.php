@@ -12,13 +12,14 @@ class RedisConnector
 
     const PORT_DEFAULT = 6379;
 
-    static $KEY_TYPES = array(
+    public static $KEY_TYPES = array(
         \Redis::REDIS_STRING => 'string',
         \Redis::REDIS_HASH   => 'hash',
         \Redis::REDIS_LIST   => 'list',
         \Redis::REDIS_SET    => 'set',
         \Redis::REDIS_ZSET   => 'zset',
     );
+
     private $config = array();
     private $db;
 
