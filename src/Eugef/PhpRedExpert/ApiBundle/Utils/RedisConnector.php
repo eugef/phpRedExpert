@@ -73,6 +73,10 @@ class RedisConnector
         return $newValue;
     }
     
+    /**
+     * @param integer $id
+     * @param string $name
+     */
     private function getDbConfigValue($id, $name, $default = NULL)
     {
         if (isset($this->config['databases'][$id][$name])) {
@@ -83,6 +87,9 @@ class RedisConnector
         }
     }
 
+    /**
+     * @param integer $dbId
+     */
     public function selectDb($dbId)
     {
         return $this->db->select($dbId);
@@ -172,6 +179,9 @@ class RedisConnector
         return $size;
     }
 
+    /**
+     * @param string $pattern
+     */
     public function searchKeys($pattern, $offset = 0, $length = NULL, &$totalCount = NULL)
     {
         $result = array();
