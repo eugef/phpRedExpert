@@ -8,5 +8,5 @@ parameters:
 
     search_per_page: 20
 
-    locale:            en
-    secret:            ThisTokenIsNotSoSecretChangeIt
+    locale: en
+    secret: CwraFfMpOh4e9z1z8yj6
