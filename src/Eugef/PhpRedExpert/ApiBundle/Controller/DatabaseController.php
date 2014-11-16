@@ -2,9 +2,7 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
-use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class DatabaseController extends AbstractRedisController
 {
