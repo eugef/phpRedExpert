@@ -43,16 +43,13 @@
         ]
     },
     "config": {
-        "bin-dir": "bin",
+        "bin-dir": "tools",
         "component-dir": "src/Eugef/PhpRedExpert/AngularBundle/Resources/public/vendor"
     },
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
-        "symfony-assets-install": "relative",
-        "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
-        }
+        "symfony-assets-install": "relative"
     },
     "repositories": [
         {
