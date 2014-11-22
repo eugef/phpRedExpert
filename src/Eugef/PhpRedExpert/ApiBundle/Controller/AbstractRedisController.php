@@ -2,11 +2,12 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use FOS\RestBundle\Controller\FOSRestController;
+
 use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 
-abstract class AbstractRedisController extends Controller
+abstract class AbstractRedisController extends FOSRestController
 {
 
     /**

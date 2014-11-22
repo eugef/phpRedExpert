@@ -1,44 +1,7 @@
-eugef_php_red_expert_server_list:
-    pattern: /server/list
-    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:List, _format: json}
-    requirements:
-        _method: GET
-    
-eugef_php_red_expert_server_databases:
-    pattern:  /server/{serverId}/databases
-    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:Databases, _format: json}
-    requirements:
-        _method: GET
-        serverId: "\d+"
-        
-eugef_php_red_expert_server_info:
-    pattern:  /server/{serverId}/info
-    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:Info, _format: json}
-    requirements:
-        _method: GET
-        serverId: "\d+"
-        
-eugef_php_red_expert_server_clients_list:
-    pattern:  /server/{serverId}/clients
-    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:ClientsList, _format: json}
-    requirements:
-        _method: GET
-        serverId: "\d+"
-        
-eugef_php_red_expert_server_clients_kill:
-    pattern:  /server/{serverId}/clients/kill
-    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:ClientsKill, _format: json}
-    requirements:
-        _method: POST
-        serverId: "\d+"
-        
-eugef_php_red_expert_server_config:
-    pattern:  /server/{serverId}/config
-    defaults: { _controller: EugefPhpRedExpertApiBundle:Server:Config, _format: json}
-    requirements:
-        _method: GET
-        serverId: "\d+"
-        
+eugef_php_red_expert_server:
+    type:     rest
+    resource: Eugef\PhpRedExpert\ApiBundle\Controller\ServerController
+
 eugef_php_red_expert_database_flush:
     pattern:  /server/{serverId}/db/{dbId}/flush
     defaults: { _controller: EugefPhpRedExpertApiBundle:Database:Flush, _format: json}

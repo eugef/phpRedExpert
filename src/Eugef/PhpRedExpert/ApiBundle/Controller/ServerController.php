@@ -2,10 +2,12 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Get,
+    FOS\RestBundle\Controller\Annotations\Post,
+    FOS\RestBundle\Controller\Annotations\RequestParam,
+    FOS\RestBundle\Controller\Annotations\View;
+
 use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class ServerController extends AbstractRedisController
 {
@@ -13,7 +15,10 @@ class ServerController extends AbstractRedisController
     /**
      * Return list of configured Redis servers.
      *
-     * @return JsonResponse
+     * @Get("/server/list")
+     * @View()
+     *
+     * @return array list
      */
     public function listAction()
     {
@@ -28,40 +33,73 @@ class ServerController extends AbstractRedisController
             );
         }
         // Todo: add common metadata for lists: total count, page, current count
-        return new JsonResponse($servers);
+        return $servers;
     }
 
     /**
      * Returns list of available Dbs for the server.
      *
+     * @Get("/server/{serverId}/databases",
+     *      requirements = {"serverId": "\d+"}
+     * )
+     * @View()
+     *
      * @param int $serverId
-     * @return JsonResponse
+     * @return array list
      */
     public function databasesAction($serverId)
     {
         $this->initialize($serverId);
 
-        return new JsonResponse($this->redis->getServerDbs());
+        return $this->redis->getServerDbs();
     }
 
     /**
      * Result of INFO command for the server.
      *
+     * @Get("/server/{serverId}/info",
+     *      requirements = {"serverId": "\d+"}
+     * )
+     * @View()
+     *
      * @param int $serverId
-     * @return JsonResponse
+     * @return array list
      */
     public function infoAction($serverId)
     {
         $this->initialize($serverId);
 
-        return new JsonResponse($this->redis->getServerInfo());
+        return $this->redis->getServerInfo();
+    }
+
+    /**
+     * Result of CONFIG command for the server.
+     *
+     * @Get("/server/{serverId}/config",
+     *      requirements = {"serverId": "\d+"}
+     * )
+     * @View()
+     *
+     * @param int $serverId
+     * @return array list
+     */
+    public function configAction($serverId)
+    {
+        $this->initialize($serverId);
+
+        return $this->redis->getServerConfig();
     }
 
     /**
      * List of server clients.
      *
+     * @Get("/server/{serverId}/clients",
+     *      requirements = {"serverId": "\d+"}
+     * )
+     * @View()
+     *
      * @param int $serverId
-     * @return JsonResponse
+     * @return array list
      */
     public function clientsListAction($serverId)
     {
@@ -70,54 +108,36 @@ class ServerController extends AbstractRedisController
         $clients = $this->redis->getServerClients();
         $clientsCount = count($clients);
 
-        return new JsonResponse(
-            array(
+        return array(
             'items'    => $clients,
-                'metadata' => array(
-                    'count'     => $clientsCount,
-                    'total'     => $clientsCount,
-                    'page_size' => $clientsCount,
-                ),
-            )
+            'metadata' => array(
+                'count'     => $clientsCount,
+                'total'     => $clientsCount,
+                'page_size' => $clientsCount,
+            ),
         );
     }
 
     /**
      * Kill clients of the server.
      *
-     * @param Request $request
-     * @param int $serverId
-     * @return JsonResponse
-     * @throws HttpException
-     */
-    public function clientsKillAction(Request $request, $serverId)
-    {
-        $this->initialize($serverId);
-
-        $data = json_decode($request->getContent());
-
-        if (empty($data->clients)) {
-            throw new HttpException(400, 'Clients are not specified');
-        }
-
-        return new JsonResponse(
-            array(
-                'result' => $this->redis->killServerClients($data->clients),
-            )
-        );
-    }
-
-    /**
-     * Result of CONFIG command for the server.
+     * @Post("/server/{serverId}/clients/kill",
+     *      requirements = {"serverId": "\d+"}
+     * )
+     * @RequestParam(name="clients", array=true, requirements=".+")
+     * @View()
      *
      * @param int $serverId
-     * @return JsonResponse
+     * @param array $clients
+     * @return array result
      */
-    public function configAction($serverId)
+    public function clientsKillAction($serverId, $clients)
     {
         $this->initialize($serverId);
 
-        return new JsonResponse($this->redis->getServerConfig());
+        return array(
+            'result' => $this->redis->killServerClients($clients),
+        );
     }
 
 }
