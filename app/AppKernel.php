@@ -14,6 +14,8 @@ class AppKernel extends Kernel
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
+            new FOS\RestBundle\FOSRestBundle(),
             new Eugef\PhpRedExpert\ApiBundle\EugefPhpRedExpertApiBundle(),
             new Eugef\PhpRedExpert\AngularBundle\EugefPhpRedExpertAngularBundle(),
         );

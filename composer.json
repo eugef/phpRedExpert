@@ -21,6 +21,8 @@
         "symfony/monolog-bundle": "~2.6",
         "sensio/distribution-bundle": "~3.0",
         "sensio/framework-extra-bundle": "~3.0",
+        "friendsofsymfony/rest-bundle" : "~1.4",
+        "jms/serializer-bundle": "*",
         "components/angular.js": "~1.3",
         "components/angular-cache": "*",
         "components/angular-bootstrap": "*",
