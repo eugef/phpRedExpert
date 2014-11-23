@@ -2,11 +2,10 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get,
-    FOS\RestBundle\Controller\Annotations\Post,
-    FOS\RestBundle\Controller\Annotations\RequestParam,
-    FOS\RestBundle\Controller\Annotations\View;
-
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
+use FOS\RestBundle\Controller\Annotations\View;
 use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 
 class ServerController extends AbstractRedisController
