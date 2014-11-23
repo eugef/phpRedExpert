@@ -2,14 +2,10 @@ eugef_php_red_expert_server:
     type:     rest
     resource: Eugef\PhpRedExpert\ApiBundle\Controller\ServerController
 
-eugef_php_red_expert_database_flush:
-    pattern:  /server/{serverId}/db/{dbId}/flush
-    defaults: { _controller: EugefPhpRedExpertApiBundle:Database:Flush, _format: json}
-    requirements:
-        _method: POST
-        serverId: "\d+"
-        dbId: "\d+"
-        
+eugef_php_red_expert_database:
+    type:     rest
+    resource: Eugef\PhpRedExpert\ApiBundle\Controller\DatabaseController
+
 eugef_php_red_expert_keys_search:
     pattern:  /server/{serverId}/db/{dbId}/keys/search
     defaults: {_controller: EugefPhpRedExpertApiBundle:Keys:Search, _format: json}

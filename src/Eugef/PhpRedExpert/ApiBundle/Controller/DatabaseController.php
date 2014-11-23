@@ -2,7 +2,8 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\View;
 
 class DatabaseController extends AbstractRedisController
 {
@@ -10,18 +11,21 @@ class DatabaseController extends AbstractRedisController
     /**
      * Flush DB.
      *
+     * @Post("/server/{serverId}/db/{dbId}/flush",
+     *      requirements = {"serverId": "\d+", "dbId": "\d+"}
+     * )
+     * @View()
+     *
      * @param int $serverId
      * @param int $dbId
-     * @return JsonResponse
+     * @return array result
      */
     public function flushAction($serverId, $dbId)
     {
         $this->initialize($serverId, $dbId);
 
-        return new JsonResponse(
-            array(
-                'result' => $this->redis->flushDB(),
-            )
+        return array(
+            'result' => $this->redis->flushDB(),
         );
     }
 
