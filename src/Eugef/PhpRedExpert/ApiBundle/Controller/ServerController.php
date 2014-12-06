@@ -130,7 +130,7 @@ class ServerController extends AbstractRedisController
      * @param array $clients
      * @return array result
      */
-    public function clientsKillAction($serverId, $clients)
+    public function clientsKillAction($serverId, array $clients)
     {
         $this->initialize($serverId);
 
