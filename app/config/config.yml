@@ -54,3 +54,5 @@ fos_rest:
         view_response_listener: 'force'
     routing_loader:
         default_format: json
+    body_converter:
+        enabled: true

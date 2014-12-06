@@ -2,16 +2,20 @@
 
 namespace Eugef\PhpRedExpert\ApiBundle\Utils;
 
+use Eugef\PhpRedExpert\ApiBundle\Model\RedisKey;
+
 /**
- * Description of RedisConnector
+ * RedisConnector
  *
  * @author eugef
  */
 class RedisConnector
 {
-
     const PORT_DEFAULT = 6379;
 
+    /**
+     * @var array
+     */
     public static $KEY_TYPES = array(
         \Redis::REDIS_STRING => 'string',
         \Redis::REDIS_HASH   => 'hash',
@@ -20,7 +24,14 @@ class RedisConnector
         \Redis::REDIS_ZSET   => 'zset',
     );
 
+    /**
+     * @var array
+     */
     private $config = array();
+
+    /**
+     * @var \Redis()
+     */
     private $db;
 
     public function __construct($config)
@@ -35,11 +46,6 @@ class RedisConnector
         $this->config = $config;
     }
 
-    public static function hasValue($keyName)
-    {
-        return (isset($keyName) && strlen($keyName));
-    }
-    
     /**
      * Convert value to UTF-8 encoding
      * 
@@ -72,15 +78,17 @@ class RedisConnector
         
         return $newValue;
     }
-    
+
     /**
-     * @param integer $id
+     * @param int $dbId
      * @param string $name
+     * @param mixed $default
+     * @return mixed
      */
-    private function getDbConfigValue($id, $name, $default = NULL)
+    private function getDbConfigValue($dbId, $name, $default = null)
     {
-        if (isset($this->config['databases'][$id][$name])) {
-            return $this->config['databases'][$id][$name];
+        if (isset($this->config['databases'][$dbId][$name])) {
+            return $this->config['databases'][$dbId][$name];
         }
         else {
             return $default;
@@ -88,22 +96,30 @@ class RedisConnector
     }
 
     /**
-     * @param integer $dbId
+     * @param int $dbId
+     * @return bool
      */
     public function selectDb($dbId)
     {
         return $this->db->select($dbId);
     }
 
+    /**
+     * @param int $dbId
+     * @return bool
+     */
     public function isDbExist($dbId)
     {
         return ($dbId >= 0) && ($dbId < $this->getServerConfig('databases', TRUE));
     }
 
+    /**
+     * @return array
+     */
     public function getServerDbs()
     {
         $info = $this->db->info();
-        $databases = $this->getServerConfig('databases', TRUE) | 1;
+        $databases = $this->getServerConfig('databases', true) | 1;
 
         $result = array();
 
@@ -134,21 +150,37 @@ class RedisConnector
         return $result;
     }
 
+    /**
+     * @param string $keyName
+     * @return string
+     */
     private function getKeyType($keyName)
     {
         return self::$KEY_TYPES[$this->db->type($keyName)];
     }
 
+    /**
+     * @param string $keyName
+     * @return int
+     */
     private function getKeyTTL($keyName)
     {
         return $this->db->ttl($keyName);
     }
 
+    /**
+     * @param string $keyName
+     * @return string
+     */
     private function getKeyEncoding($keyName)
     {
         return $this->db->object('encoding', $keyName);
     }
 
+    /**
+     * @param string $keyName
+     * @return int
+     */
     private function getKeySize($keyName)
     {
         switch ($this->db->type($keyName)) {
@@ -181,8 +213,12 @@ class RedisConnector
 
     /**
      * @param string $pattern
+     * @param int $offset
+     * @param null $length
+     * @param null $totalCount
+     * @return array
      */
-    public function searchKeys($pattern, $offset = 0, $length = NULL, &$totalCount = NULL)
+    public function searchKeys($pattern, $offset = 0, $length = null, &$totalCount = null)
     {
         $result = array();
 
@@ -210,12 +246,21 @@ class RedisConnector
         return $result;
     }
 
-    public function deleteKeys($keyNames)
+    /**
+     * @param array $keyNames
+     * return int
+     */
+    public function deleteKeys(array $keyNames)
     {
         return $this->db->delete($keyNames);
     }
 
-    public function moveKeys($keyNames, $newDb)
+    /**
+     * @param array $keyNames
+     * @param $newDb
+     * @return int
+     */
+    public function moveKeys(array $keyNames, $newDb)
     {
         $result = 0;
         
@@ -226,29 +271,38 @@ class RedisConnector
         return $result;
     }
 
-    public function editKeyAttributes($keyName, $attributes)
+    /**
+     * @param $keyName
+     * @param array $attributes
+     * @return array
+     */
+    public function editKeyAttributes($keyName, array $attributes)
     {
         $result = array();
 
-        if (isset($attributes->ttl)) {
-            if ($attributes->ttl > 0) {
-                $result['ttl'] = $this->db->expire($keyName, $attributes->ttl);
+        if (isset($attributes['ttl'])) {
+            if ($attributes['ttl'] > 0) {
+                $result['ttl'] = $this->db->expire($keyName, $attributes['ttl']);
             }
             else {
                 $result['ttl'] = $this->db->persist($keyName);
             }
         }
 
-        if (isset($attributes->name)) {
-            $result['name'] = $this->db->renamenx($keyName, trim($attributes->name));
+        if (isset($attributes['name'])) {
+            $result['name'] = $this->db->renamenx($keyName, trim($attributes['name']));
         }
 
         return $result;
     }
 
+    /**
+     * @param $keyName
+     * @return array|bool
+     */
     public function getKey($keyName)
     {
-        $keyValue = FALSE;
+        $keyValue = false;
         $keyType = $this->db->type($keyName);
 
         switch ($keyType) {
@@ -269,11 +323,11 @@ class RedisConnector
                 break;
             
             case \Redis::REDIS_ZSET:
-                $keyValue = $this->db->zRange($keyName, 0, -1, TRUE);
+                $keyValue = $this->db->zRange($keyName, 0, -1, true);
                 break;
         }
 
-        if ($keyValue !== FALSE) {
+        if ($keyValue !== false) {
             return array(
                 'name'     => $keyName,
                 'type'     => self::$KEY_TYPES[$keyType],
@@ -282,55 +336,58 @@ class RedisConnector
                 'size'     => $this->getKeySize($keyName),
                 'value'    => self::convertUTF8($keyValue),
             );
-        }
-        else {
-            return FALSE;
+        } else {
+            return false;
         }
     }
 
-    public function editKey($key)
+    /**
+     * @param RedisKey $key
+     * @return bool|int
+     */
+    public function editKey(RedisKey $key)
     {
-        $result = FALSE;
-        switch ($key->type) {
+        $result = false;
+        switch ($key->getType()) {
             case self::$KEY_TYPES[\Redis::REDIS_STRING]:
-                $result = $this->db->set($key->name, isset($key->value->value) ? $key->value->value : '');
+                $result = $this->db->set($key->getName(), $key->getValue('value', ''), $key->getTtl());
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_HASH]:
-                if (self::hasValue($key->value->field)) {
-                    $result = $this->db->hset($key->name, $key->value->field, isset($key->value->value) ? $key->value->value : '');
+                if ($key->hasValue('field')) {
+                    $result = $this->db->hset($key->getName(), $key->getValue('field'), $key->getValue('value', ''));
                 }
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_LIST]:
-                if (self::hasValue($key->value->value)) {
-                    switch ($key->value->action) {
+                if ($key->hasValue('value')) {
+                    switch ($key->getValue('action')) {
                         case 'prepend':
-                            $result = $this->db->lpush($key->name, $key->value->value);
+                            $result = $this->db->lpush($key->getName(), $key->getValue('value'));
                             break;
                         case 'before':
-                            $result = $this->db->linsert($key->name, \Redis::BEFORE, $key->value->pivot, $key->value->value);
+                            $result = $this->db->linsert($key->getName(), \Redis::BEFORE, $key->getValue('pivot'), $key->getValue('value'));
                             break;
                         case 'after':
-                            $result = $this->db->linsert($key->name, \Redis::AFTER, $key->value->pivot, $key->value->value);
+                            $result = $this->db->linsert($key->getName(), \Redis::AFTER, $key->getValue('pivot'), $key->getValue('value'));
                             break;
                         case 'set':
-                            $result = $this->db->lset($key->name, (int) $key->value->index, $key->value->value);
+                            $result = $this->db->lset($key->getName(), (int) $key->getValue('index'), $key->getValue('value'));
                             break;
                         case 'append':
                         default:
-                            $result = $this->db->rpush($key->name, $key->value->value);
+                            $result = $this->db->rpush($key->getName(), $key->getValue('value'));
                     }
                 }
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_SET]:
-                $result = $this->db->sadd($key->name, isset($key->value->value) ? $key->value->value : '');
+                $result = $this->db->sadd($key->getName(), $key->getValue('value', ''));
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
-                if (self::hasValue($key->value->score)) {
-                    $result = $this->db->zadd($key->name, $key->value->score, isset($key->value->value) ? $key->value->value : '');
+                if ($key->hasValue('value')) {
+                    $result = $this->db->zadd($key->getName(), (float) $key->getValue('score', 0), $key->getValue('value'));
                 }
                 break;
         }
@@ -338,85 +395,97 @@ class RedisConnector
         return $result;
     }
 
-    public function addKey($key)
+    /**
+     * @param RedisKey $key
+     * @return bool|int
+     */
+    public function addKey(RedisKey $key)
     {
-        $result = FALSE;
-        switch ($key->type) {
+        $result = false;
+        switch ($key->getType()) {
             case self::$KEY_TYPES[\Redis::REDIS_STRING]:
-                $result = $this->db->setnx($key->name, isset($key->value->value) ? $key->value->value : '');
+                $result = $this->db->setnx($key->getName(), $key->getValue('value', ''));
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_HASH]:
-                if (self::hasValue($key->value->field)) {
-                    $result = $this->db->hsetnx($key->name, $key->value->field, isset($key->value->value) ? $key->value->value : '');
+                if ($key->hasValue('field')) {
+                    $result = $this->db->hsetnx($key->getName(), $key->getValue('field'), $key->getValue('value', ''));
                 }
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_LIST]:
-                if (self::hasValue($key->value->value)) {
-                    switch ($key->value->action) {
+                if ($key->hasValue('value')) {
+                    switch ($key->getValue('action')) {
                         case 'prepend':
-                            $result = $this->db->lpush($key->name, $key->value->value);
+                            $result = $this->db->lpush($key->getName(), $key->getValue('value'));
                             break;
                         case 'append':
                         default:
-                            $result = $this->db->rpush($key->name, $key->value->value);
+                            $result = $this->db->rpush($key->getName(), $key->getValue('value'));
                     }
                 }
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_SET]:
-                $result = $this->db->sadd($key->name, isset($key->value->value) ? $key->value->value : '');
+                $result = $this->db->sadd($key->getName(), $key->getValue('value', ''));
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
-                if (self::hasValue($key->value->score)) {
-                    $result = $this->db->zadd($key->name, $key->value->score, isset($key->value->value) ? $key->value->value : '');
+                if ($key->hasValue('value')) {
+                    $result = $this->db->zadd($key->getName(), (float)$key->getValue('score', 0), $key->getValue('value'));
                 }
                 break;
         }
 
         if ($result) {
             // Add TTL if key was created
-            if ($key->ttl > 0) {
-                $this->db->expire($key->name, $key->ttl);
+            if ($key->getTtl() > 0) {
+                $this->db->expire($key->getName(), $key->getTtl());
             }
         }
 
         return $result;
     }
 
-    public function deleteKeyValues($key)
+    /**
+     * @param RedisKey $key
+     * @return bool|int|mixed
+     */
+    public function deleteKeyValues(RedisKey $key)
     {
-        $result = FALSE;
+        $result = false;
 
-        switch ($key->type) {
+        switch ($key->getType()) {
             case self::$KEY_TYPES[\Redis::REDIS_HASH]:
-                foreach ($key->values as $keyValue) {
-                    $result = $this->db->hdel($key->name, $keyValue);
+                foreach ($key->getValue('delete') as $keyValue) {
+                    $result = $this->db->hdel($key->getName(), $keyValue);
                 }
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_LIST]:
-                // workaround to delete list item by index:
-                foreach ($key->values as $keyValue) {
+                foreach ($key->getValue('delete') as $keyIndex) {
+                    // workaround to delete list item by index:
                     // http://redis.io/commands/lrem#comment-1375293995
-                    $deleteValue = uniqid('phpredexpert-delete-', TRUE);
-                    $result = $this->db->multi()->lset($key->name, $keyValue, $deleteValue)->lrem($key->name, $deleteValue)->exec();
+                    $deleteValue = uniqid('phpredexpert-delete-', true);
+                    $result = $this->db
+                        ->multi()
+                            ->lset($key->getName(), $keyIndex, $deleteValue)
+                            ->lrem($key->getName(), $deleteValue)
+                        ->exec();
                 }
                 // save result of last operation in a transaction
                 $result = end($result);
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_SET]:
-                foreach ($key->values as $keyValue) {
-                    $result = $this->db->srem($key->name, $keyValue);
+                foreach ($key->getValue('delete') as $keyValue) {
+                    $result = $this->db->srem($key->getName(), $keyValue);
                 }
                 break;
 
             case self::$KEY_TYPES[\Redis::REDIS_ZSET]:
-                foreach ($key->values as $keyValue) {
-                    $result = $this->db->zrem($key->name, $keyValue);
+                foreach ($key->getValue('delete') as $keyValue) {
+                    $result = $this->db->zrem($key->getName(), $keyValue);
                 }
                 break;
         }
@@ -424,11 +493,17 @@ class RedisConnector
         return $result;
     }
 
+    /**
+     * @return array
+     */
     public function getServerInfo()
     {
         return $this->db->info();
     }
 
+    /**
+     * @return array
+     */
     public function getServerClients()
     {
         $clients = $this->db->client('LIST');
@@ -443,27 +518,43 @@ class RedisConnector
         return $clients;
     }
 
-    public function killServerClients($clients)
+    /**
+     * @param array $clients
+     * @return bool
+     */
+    public function killServerClients(array $clients)
     {
         foreach ($clients as $client) {
             $this->db->client('KILL', $client);
         }
-        return TRUE;
+
+        return true;
     }
 
-    public function getServerConfig($pattern = '*', $onlyValue = FALSE)
+    /**
+     * @param string $pattern
+     * @param bool $onlyValue
+     * @return array|mixed
+     */
+    public function getServerConfig($pattern = '*', $onlyValue = false)
     {
         $result = $this->db->config('GET', $pattern);
+
         if ($onlyValue) {
             $result = reset($result);
         }
+
         return $result;
     }
 
+    /**
+     * @return bool
+     */
     public function flushDb()
     {
         $this->db->flushDB();
-        return TRUE;
+
+        return true;
     }
 
 }

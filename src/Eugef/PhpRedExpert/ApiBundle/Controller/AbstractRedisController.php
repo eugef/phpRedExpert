@@ -4,7 +4,6 @@ namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use FOS\RestBundle\Controller\FOSRestController;
-
 use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 
 abstract class AbstractRedisController extends FOSRestController
@@ -23,7 +22,7 @@ abstract class AbstractRedisController extends FOSRestController
      * @param int $dbId
      * @throws HttpException
      */
-    protected function initialize($serverId, $dbId = NULL)
+    protected function initialize($serverId, $dbId = null)
     {
         $servers = $this->container->getParameter('redis_servers');
 

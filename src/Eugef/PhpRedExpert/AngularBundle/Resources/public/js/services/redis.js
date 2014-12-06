@@ -1,18 +1,16 @@
 App.factory('RedisService', ['$http', '$angularCacheFactory', 'config', 
     function($http, cacheFactory, config) {
+        var keySearchCache = false;
         if (config.cache) {
-            var keySearchCache = cacheFactory('keySearchCache', 
+            keySearchCache = cacheFactory('keySearchCache',
                 { 
                     maxAge: 10 * 60 * 1000,
                     deleteOnExpire: 'passive'
                 }
             );
         }
-        else {
-            var keySearchCache = false;
-        }
         
-        var service = {
+        return {
             
             /**
              * Server API calls
@@ -163,10 +161,7 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
             
             editKey: function(serverId, dbId, key) {
                 return $http.post(
-                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/edit', 
-                    {
-                        key: key
-                    }
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/edit', key
                 ).then(function(response) {
                     if (angular.isObject(keySearchCache)) {
                         keySearchCache.removeAll();
@@ -177,10 +172,7 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
             
             addKey: function(serverId, dbId, key) {
                 return $http.post(
-                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/add', 
-                    {
-                        key: key
-                    }
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/add', key
                 ).then(function(response) {
                     if (angular.isObject(keySearchCache)) {
                         keySearchCache.removeAll();
@@ -191,10 +183,7 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
             
             deleteKeyValues: function(serverId, dbId, key) {
                 return $http.post(
-                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/delete-values', 
-                    {
-                        key: key
-                    }
+                    config.apiUri + 'server/' + serverId + '/db/' + dbId + '/keys/delete-values', key
                 ).then(function(response) {
                     if (angular.isObject(keySearchCache)) {
                         keySearchCache.removeAll();
@@ -204,7 +193,5 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
             }
 
         };
-        
-        return service;
     }
 ]);

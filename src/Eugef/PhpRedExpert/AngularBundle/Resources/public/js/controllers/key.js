@@ -13,10 +13,10 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                 new: true,
                 type: keyType,
                 ttl: 0
-            }
+            };
 
             $scope.keyValue = $scope.defaultKeyValue(keyType);
-        }
+        };
 
         $scope.initEditKey = function(keyName) {
             $log.debug('initEditKey', arguments);
@@ -37,7 +37,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     };
                 }
             );    
-        }
+        };
         
         $scope.defaultKeyValue = function(keyType, value) {
             switch (keyType) {
@@ -67,7 +67,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                         value: ''
                     };
             }
-        }
+        };
                 
         $scope.submitKey = function() {
             var key = {
@@ -115,14 +115,14 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     }
                 );
             }
-        }
+        };
         
         $scope.initEditHashField = function(field) {
             $scope.keyValue = {
                 field: field,
                 value: $scope.key.value[field]
             };
-        }
+        };
         
         $scope.initEditListItem = function(index) {
             $scope.keyValue = {
@@ -131,7 +131,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                 index: index,
                 pivot: ''
             };
-        }
+        };
         
         $scope.deleteKeyValue = function(value) {
             $log.debug('deleteKeyValue', arguments);
@@ -164,12 +164,14 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                         $scope.alerts.push({type: 'danger', message: 'Key item is not deleted'});
                     }
                 );
-            }
+            };
             
             var key = {
                 name: $scope.key.name,
                 type: $scope.key.type,
-                values: [value]
+                value: {
+                    delete: [value]
+                }
             };
             
             if ($scope.key.size > 1) {
@@ -186,7 +188,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     execute();
                 });
             }
-        }
+        };
         
         $scope.editKeyTtl = function() {
             $log.debug('editKeyTtl');
@@ -199,13 +201,13 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
             ).result.then(function(newTtl) {
                 RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, $scope.key.name, {ttl: newTtl}).then(
                     function(response) {
-                        $log.debug('editKeyTtl / done', response.data)
+                        $log.debug('editKeyTtl / done', response.data);
                         
                         $scope.key.ttl = newTtl;
                     }
                 );
             });
-        }  
+        };
         
         $scope.editKeyName = function() {
             $log.debug('editKeyName');
@@ -219,7 +221,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                 if (newName != $scope.key.name) {
                     RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, $scope.key.name, {name: newName}).then(
                         function(response) {
-                            $log.debug('editKeyName / done', response.data)
+                            $log.debug('editKeyName / done', response.data);
                             
                             if (response.data.result.name) {
                                 $scope.key.name = newName;
@@ -236,7 +238,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     );
                 }
             });
-        }
+        };
         
         $scope.deleteKey = function() {
             $log.debug('deleteKey');
@@ -264,7 +266,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     }
                 );
             });
-        }
+        };
         
         $scope.moveKey = function() {
             $log.debug('moveKey');
@@ -298,7 +300,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     }
                 );
             });
-        }
+        };
         
         $scope.closeAlert = function(index) {
             $scope.alerts.splice(index, 1);
