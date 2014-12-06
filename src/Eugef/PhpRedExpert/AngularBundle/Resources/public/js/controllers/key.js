@@ -155,7 +155,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                             // reduce amount of keys in whole db
                             $scope.$parent.getCurrentDB().keys --;
                             
-                            $scope.alerts.push({type: 'success', message: 'Key is succesfully deleted'});
+                            $scope.alerts.push({type: 'success', message: 'Key is successfully deleted'});
                             
                             $log.debug('deleteKeyValue / done / whole key');
                         }
