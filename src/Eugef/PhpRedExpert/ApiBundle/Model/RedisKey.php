@@ -107,7 +107,7 @@ class RedisKey {
     }
 
     /**
-     * @param $item
+     * @param string $item
      * @return bool
      */
     public function hasValue($item)
