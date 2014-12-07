@@ -18,7 +18,7 @@
                         </select>
                     </div>    
                     <div class="form-group no-margin ng-hide" ng-show="['after' ,'before'].indexOf(keyValue.action) != -1" ng-class="{'has-error': keyForm.pivot.$invalid}">
-                        <input type="text" name="pivot" class="form-control" placeholder="Pivot value" ng-model="keyValue.pivot" typeahead="value for value in key.value | filter:$viewValue | unique:$viewValue | limitTo:10" typeahead-editable="false" ng-required="['after' ,'before'].indexOf(keyValue.action) != -1">
+                        <input type="text" name="pivot" class="form-control" placeholder="Pivot value" ng-model="keyValue.pivot" typeahead="value for value in key.value | filter:$viewValue | unique:true | limitTo:10" typeahead-editable="false" ng-required="['after' ,'before'].indexOf(keyValue.action) != -1">
                     </div>
                     <div class="form-group no-margin ng-hide" ng-show="['set'].indexOf(keyValue.action) != -1">
                         <select class="form-control" ng-model="keyValue.index" ng-options="value for value in [] | range:0:key.value.length" ng-required="['set'].indexOf(keyValue.action) != -1"></select>
