@@ -132,6 +132,10 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                 pivot: ''
             };
         };
+
+        $scope.isKeyListValueAction = function(actions) {
+            return actions.indexOf($scope.keyValue.action) != -1;
+        };
         
         $scope.deleteKeyValue = function(value) {
             $log.debug('deleteKeyValue', arguments);
