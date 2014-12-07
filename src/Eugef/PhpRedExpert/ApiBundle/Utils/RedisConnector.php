@@ -257,7 +257,7 @@ class RedisConnector
 
     /**
      * @param array $keyNames
-     * @param $newDb
+     * @param integer $newDb
      * @return int
      */
     public function moveKeys(array $keyNames, $newDb)
@@ -272,7 +272,7 @@ class RedisConnector
     }
 
     /**
-     * @param $keyName
+     * @param string $keyName
      * @param array $attributes
      * @return array
      */
@@ -297,7 +297,7 @@ class RedisConnector
     }
 
     /**
-     * @param $keyName
+     * @param string $keyName
      * @return array|bool
      */
     public function getKey($keyName)
