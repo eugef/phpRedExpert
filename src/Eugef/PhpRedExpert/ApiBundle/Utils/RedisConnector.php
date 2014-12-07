@@ -4,11 +4,6 @@ namespace Eugef\PhpRedExpert\ApiBundle\Utils;
 
 use Eugef\PhpRedExpert\ApiBundle\Model\RedisKey;
 
-/**
- * RedisConnector
- *
- * @author eugef
- */
 class RedisConnector
 {
     const PORT_DEFAULT = 6379;
@@ -34,7 +29,10 @@ class RedisConnector
      */
     private $db;
 
-    public function __construct($config)
+    /**
+     * @param array $config
+     */
+    public function __construct(array $config)
     {
         $this->db = new \Redis();
         $this->db->connect($config['host'], $config['port']);
@@ -80,7 +78,7 @@ class RedisConnector
     }
 
     /**
-     * @param int $dbId
+     * @param integer $dbId
      * @param string $name
      * @param mixed $default
      * @return mixed
@@ -96,8 +94,8 @@ class RedisConnector
     }
 
     /**
-     * @param int $dbId
-     * @return bool
+     * @param integer $dbId
+     * @return boolean
      */
     public function selectDb($dbId)
     {
@@ -105,12 +103,12 @@ class RedisConnector
     }
 
     /**
-     * @param int $dbId
-     * @return bool
+     * @param integer $dbId
+     * @return boolean
      */
     public function isDbExist($dbId)
     {
-        return ($dbId >= 0) && ($dbId < $this->getServerConfig('databases', TRUE));
+        return ($dbId >= 0) && ($dbId < $this->getServerConfig('databases', true));
     }
 
     /**
@@ -161,7 +159,7 @@ class RedisConnector
 
     /**
      * @param string $keyName
-     * @return int
+     * @return integer
      */
     private function getKeyTTL($keyName)
     {
@@ -179,7 +177,7 @@ class RedisConnector
 
     /**
      * @param string $keyName
-     * @return int
+     * @return integer
      */
     private function getKeySize($keyName)
     {
@@ -213,9 +211,9 @@ class RedisConnector
 
     /**
      * @param string $pattern
-     * @param int $offset
-     * @param null $length
-     * @param null $totalCount
+     * @param integer $offset
+     * @param integer $length
+     * @param integer $totalCount
      * @return array
      */
     public function searchKeys($pattern, $offset = 0, $length = null, &$totalCount = null)
@@ -248,7 +246,7 @@ class RedisConnector
 
     /**
      * @param array $keyNames
-     * return int
+     * return integer
      */
     public function deleteKeys(array $keyNames)
     {
@@ -258,7 +256,7 @@ class RedisConnector
     /**
      * @param array $keyNames
      * @param integer $newDb
-     * @return int
+     * @return integer
      */
     public function moveKeys(array $keyNames, $newDb)
     {
@@ -298,7 +296,7 @@ class RedisConnector
 
     /**
      * @param string $keyName
-     * @return array|bool
+     * @return array|boolean
      */
     public function getKey($keyName)
     {
@@ -343,7 +341,7 @@ class RedisConnector
 
     /**
      * @param RedisKey $key
-     * @return bool|int
+     * @return boolean
      */
     public function editKey(RedisKey $key)
     {
@@ -397,7 +395,7 @@ class RedisConnector
 
     /**
      * @param RedisKey $key
-     * @return bool|int
+     * @return boolean
      */
     public function addKey(RedisKey $key)
     {
@@ -449,7 +447,7 @@ class RedisConnector
 
     /**
      * @param RedisKey $key
-     * @return bool|int|mixed
+     * @return boolean
      */
     public function deleteKeyValues(RedisKey $key)
     {
@@ -520,7 +518,7 @@ class RedisConnector
 
     /**
      * @param array $clients
-     * @return bool
+     * @return boolean
      */
     public function killServerClients(array $clients)
     {
@@ -533,8 +531,8 @@ class RedisConnector
 
     /**
      * @param string $pattern
-     * @param bool $onlyValue
-     * @return array|mixed
+     * @param boolean $onlyValue
+     * @return array|string
      */
     public function getServerConfig($pattern = '*', $onlyValue = false)
     {
@@ -548,13 +546,11 @@ class RedisConnector
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function flushDb()
     {
-        $this->db->flushDB();
-
-        return true;
+        return $this->db->flushDB();
     }
 
 }

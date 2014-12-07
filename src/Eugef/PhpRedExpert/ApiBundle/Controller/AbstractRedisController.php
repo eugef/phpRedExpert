@@ -18,8 +18,8 @@ abstract class AbstractRedisController extends FOSRestController
     /**
      * Initialize with the specified server and db
      * 
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
      * @throws HttpException
      */
     protected function initialize($serverId, $dbId = null)

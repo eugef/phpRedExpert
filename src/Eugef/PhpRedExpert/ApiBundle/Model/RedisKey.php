@@ -12,7 +12,6 @@ class RedisKey {
     public static $TYPES = array('string', 'hash', 'list', 'set', 'zset');
 
     /**
-     * @Serializer\SerializedName("name")
      * @Serializer\Type("string")
      *
      * @var string
@@ -29,7 +28,7 @@ class RedisKey {
     /**
      * @Serializer\Type("integer")
      *
-     * @var int
+     * @var integer
      */
     private $ttl;
 
@@ -49,7 +48,7 @@ class RedisKey {
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function hasName()
     {
@@ -65,7 +64,7 @@ class RedisKey {
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getTtl()
     {
@@ -73,7 +72,7 @@ class RedisKey {
     }
 
     /**
-     * @param int $ttl
+     * @param integer $ttl
      */
     public function setTtl($ttl)
     {
@@ -108,7 +107,7 @@ class RedisKey {
 
     /**
      * @param string $item
-     * @return bool
+     * @return boolean
      */
     public function hasValue($item)
     {
@@ -136,6 +135,5 @@ class RedisKey {
     {
         $this->value = $value;
     }
-
 
 }

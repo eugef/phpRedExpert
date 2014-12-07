@@ -4,6 +4,7 @@ namespace Eugef\PhpRedExpert\ApiBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\View;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class DatabaseController extends AbstractRedisController
 {
@@ -16,8 +17,9 @@ class DatabaseController extends AbstractRedisController
      * )
      * @View()
      *
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
+     * @throws HttpException
      * @return array result
      */
     public function flushAction($serverId, $dbId)

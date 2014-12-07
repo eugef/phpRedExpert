@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\View;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 
 class ServerController extends AbstractRedisController
@@ -31,7 +32,6 @@ class ServerController extends AbstractRedisController
                 'password' => empty($server['password']) ? false : true,
             );
         }
-        // Todo: add common metadata for lists: total count, page, current count
         return $servers;
     }
 
@@ -43,7 +43,8 @@ class ServerController extends AbstractRedisController
      * )
      * @View()
      *
-     * @param int $serverId
+     * @param integer $serverId
+     * @throws HttpException
      * @return array list
      */
     public function databasesAction($serverId)
@@ -61,7 +62,8 @@ class ServerController extends AbstractRedisController
      * )
      * @View()
      *
-     * @param int $serverId
+     * @param integer $serverId
+     * @throws HttpException
      * @return array list
      */
     public function infoAction($serverId)
@@ -79,7 +81,8 @@ class ServerController extends AbstractRedisController
      * )
      * @View()
      *
-     * @param int $serverId
+     * @param integer $serverId
+     * @throws HttpException
      * @return array list
      */
     public function configAction($serverId)
@@ -97,7 +100,8 @@ class ServerController extends AbstractRedisController
      * )
      * @View()
      *
-     * @param int $serverId
+     * @param integer $serverId
+     * @throws HttpException
      * @return array list
      */
     public function clientsListAction($serverId)
@@ -128,6 +132,7 @@ class ServerController extends AbstractRedisController
      *
      * @param int $serverId
      * @param array $clients
+     * @throws HttpException
      * @return array result
      */
     public function clientsKillAction($serverId, array $clients)

@@ -21,15 +21,14 @@ class KeysController extends AbstractRedisController
      * @Get("/server/{serverId}/db/{dbId}/keys/search",
      *      requirements = {"serverId": "\d+", "dbId": "\d+"}
      * )
-     *
      * @QueryParam(name="pattern", requirements=".+", strict=true)
      * @QueryParam(name="page", requirements="\d+", default="0")
      * @View()
      *
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
      * @param string $pattern
-     * @param int $page
+     * @param integer $page
      * @throws HttpException
      * @return array List of keys with detailed information
      */
@@ -61,11 +60,11 @@ class KeysController extends AbstractRedisController
      * @RequestParam(name="keys", array=true, requirements=".+")
      * @View()
      *
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
      * @param array $keys
-     * @return array result
      * @throws HttpException
+     * @return array result
      */
     public function deleteAction($serverId, $dbId, array $keys)
     {
@@ -86,12 +85,12 @@ class KeysController extends AbstractRedisController
      * @RequestParam(name="db", requirements="\d+", strict=true)
      * @View()
      *
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
      * @param array $keys
-     * @param int $db
-     * @return array result
+     * @param integer $db
      * @throws HttpException
+     * @return array result
      */
     public function moveAction($serverId, $dbId, array $keys, $db)
     {
@@ -120,12 +119,12 @@ class KeysController extends AbstractRedisController
      * @RequestParam(name="attributes", array=true)
      * @View()
      *
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
      * @param string $key
      * @param array $attributes
-     * @return array result
      * @throws HttpException
+     * @return array result
      */
     public function attributesAction($serverId, $dbId, $key, array $attributes)
     {
@@ -145,11 +144,11 @@ class KeysController extends AbstractRedisController
      * @QueryParam(name="key", requirements=".+", strict=true)
      * @View()
      *
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
      * @param string $key
-     * @return array Key value data
      * @throws HttpException
+     * @return array Key value data
      */
     public function viewAction($serverId, $dbId, $key)
     {
@@ -179,11 +178,11 @@ class KeysController extends AbstractRedisController
      * @ParamConverter("key", converter="fos_rest.request_body", class="Eugef\PhpRedExpert\ApiBundle\Model\RedisKey")
      * @View()
      *
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
      * @param RedisKey $key
-     * @return array key value data
      * @throws HttpException
+     * @return array key value data
      */
     public function editAction($serverId, $dbId, RedisKey $key)
     {
@@ -221,8 +220,8 @@ class KeysController extends AbstractRedisController
      * @ParamConverter("key", converter="fos_rest.request_body", class="Eugef\PhpRedExpert\ApiBundle\Model\RedisKey")
      * @View()
      *
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
      * @param RedisKey $key
      * @throws HttpException
      * @return array
@@ -241,7 +240,7 @@ class KeysController extends AbstractRedisController
 
         $result = $this->redis->addKey($key);
 
-        if ($result === FALSE) {
+        if ($result === false) {
             throw new HttpException(404, 'Key is not added');
         }
 
@@ -262,8 +261,8 @@ class KeysController extends AbstractRedisController
      * @ParamConverter("key", converter="fos_rest.request_body", class="Eugef\PhpRedExpert\ApiBundle\Model\RedisKey")
      * @View()
      *
-     * @param int $serverId
-     * @param int $dbId
+     * @param integer $serverId
+     * @param integer $dbId
      * @param RedisKey $key
      * @throws HttpException
      * @return array
@@ -286,7 +285,7 @@ class KeysController extends AbstractRedisController
 
         $result = $this->redis->deleteKeyValues($key);
 
-        if ($result === FALSE) {
+        if ($result === false) {
             throw new HttpException(404, 'Key values are not deleted');
         }
 
