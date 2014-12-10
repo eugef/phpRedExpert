@@ -9,7 +9,7 @@ class RedisKey {
     /**
      * @var array
      */
-    private static $TYPES = array('string', 'hash', 'list', 'set', 'zset');
+    protected static $TYPES = array('string', 'hash', 'list', 'set', 'zset');
 
     /**
      * @Serializer\Type("string")
