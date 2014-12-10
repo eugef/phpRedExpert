@@ -24,7 +24,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                 $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/search/' + $scope.search.pattern, false);
                 $scope.searchKey($scope.search.pattern, 1);
 			}            
-        }
+        };
         
         $scope.searchKey = function(pattern, page) {
             $log.debug('searchKey', arguments);
@@ -50,7 +50,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     });
                 }
             );
-        }
+        };
         
         $scope.selectKeyExclusive = function(key) {
             $log.debug('selectKeyExclusive', arguments);
@@ -66,7 +66,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     $scope.search.result.keys[i].selected = false;
                 }
             }
-        }
+        };
         
         $scope.deleteKeys = function() {
             $log.debug('deleteKeys');
@@ -97,7 +97,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     );
                 });
             }
-        }
+        };
         
         $scope.editKeyTtl = function() {
             $log.debug('editKeyTtl');
@@ -119,7 +119,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                         key: key
                     }
                 ).result.then(function(newTtl) {
-                    RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, key, {ttl: newTtl}).then(
+                    RedisService.expireKey($scope.current.serverId, $scope.current.dbId, key, newTtl).then(
                         function(response) {
                             $log.debug('editKeyTtl / done', response.data);
                             
@@ -134,7 +134,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     );
                 });
             }
-        }  
+        };
         
         $scope.editKeyName = function() {
             $log.debug('editKeyName');
@@ -149,11 +149,11 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     }
                 ).result.then(function(newName) {
                     if (newName != key) {
-                        RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, key, {name: newName}).then(
+                        RedisService.renameKey($scope.current.serverId, $scope.current.dbId, key, newName).then(
                             function(response) {
                                 $log.debug('editKeyName / done', response.data);
                                 
-                                if (response.data.result.name) {
+                                if (response.data.result) {
                                     // update key name in scope
                                     for (var i = $scope.search.result.keys.length - 1; i >= 0; i--) {
                                         if ($scope.search.result.keys[i].name == key) {
@@ -173,7 +173,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     }
                 });
             }
-        }  
+        };
         
         $scope.moveKeys = function() {
             $log.debug('moveKeys');
@@ -211,19 +211,19 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     );
                 });
             }
-        }
+        };
         
         $scope.getKeyUri = function(key, encode) {
             encode = angular.isDefined(encode) ? encode : false;
             return keyUri = 'server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + (encode ? encodeURIComponent(key) : key);
-        }
+        };
         
         $scope.openKey = function() {
             var key = $scope.search.result.selected[0];
             if (key) {
                 $location.path($scope.getKeyUri(key));
             }
-        }
+        };
         
         $scope.setPage = function() {
             $log.debug('setPage', $scope.search.page);

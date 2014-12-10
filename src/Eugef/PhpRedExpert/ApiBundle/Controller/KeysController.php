@@ -9,7 +9,6 @@ use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Eugef\PhpRedExpert\ApiBundle\Utils\RedisConnector;
 use Eugef\PhpRedExpert\ApiBundle\Model\RedisKey;
 
 class KeysController extends AbstractRedisController
@@ -48,6 +47,142 @@ class KeysController extends AbstractRedisController
                 'total'     => $total,
                 'page_size' => $itemsPerPage,
             ),
+        );
+    }
+
+    /**
+     * View the key value.
+     *
+     * @Get("/server/{serverId}/db/{dbId}/keys/view",
+     *      requirements = {"serverId": "\d+", "dbId": "\d+"}
+     * )
+     * @QueryParam(name="key", requirements=".+", strict=true)
+     * @View()
+     *
+     * @param integer $serverId
+     * @param integer $dbId
+     * @param string $key
+     * @throws HttpException
+     * @return array Key value data
+     */
+    public function viewAction($serverId, $dbId, $key)
+    {
+        $this->initialize($serverId, $dbId);
+
+        $result = $this->redis->getKey($key);
+
+        if (!$result) {
+            throw new HttpException(404, 'Key is not found');
+        }
+
+        return array(
+            'key' => $result,
+        );
+    }
+
+    /**
+     * Create new key with a value.
+     *
+     * @Post("/server/{serverId}/db/{dbId}/keys/create",
+     *      requirements = {"serverId": "\d+", "dbId": "\d+"}
+     * )
+     * @RequestParam(name="name", requirements=".+")
+     * @RequestParam(name="type", requirements=".+")
+     * @RequestParam(name="ttl", requirements="\d+")
+     * @RequestParam(name="value", array=true)
+     * @ParamConverter("key", converter="fos_rest.request_body", class="Eugef\PhpRedExpert\ApiBundle\Model\RedisKey")
+     * @View()
+     *
+     * @param integer $serverId
+     * @param integer $dbId
+     * @param RedisKey $key
+     * @throws HttpException
+     * @return array
+     */
+    public function createAction($serverId, $dbId, RedisKey $key)
+    {
+        $this->initialize($serverId, $dbId);
+
+        if (!$key->validName()) {
+            throw new HttpException(400, 'Key name is not specified');
+        }
+
+        if (!$key->validType()) {
+            throw new HttpException(400, 'Key type is invalid');
+        }
+
+        $result = $this->redis->createKey($key);
+
+        if ($result === false) {
+            throw new HttpException(404, 'Key is not created');
+        }
+
+        return array(
+            'key' => $this->redis->getKey($key->getName()),
+        );
+    }
+
+    /**
+     * Rename key.
+     *
+     * @Post("/server/{serverId}/db/{dbId}/keys/rename",
+     *      requirements = {"serverId": "\d+", "dbId": "\d+"}
+     * )
+     * @RequestParam(name="name", requirements=".+")
+     * @RequestParam(name="value", array=true)
+     * @ParamConverter("key", converter="fos_rest.request_body", class="Eugef\PhpRedExpert\ApiBundle\Model\RedisKey")
+     * @View()
+     *
+     * @param integer $serverId
+     * @param integer $dbId
+     * @param RedisKey $key
+     * @throws HttpException
+     * @return array result
+     */
+    public function renameAction($serverId, $dbId, RedisKey $key)
+    {
+        $this->initialize($serverId, $dbId);
+
+        if (!$key->validName()) {
+            throw new HttpException(400, 'Key name is not specified');
+        }
+
+        if (!$key->hasValue('name')) {
+            throw new HttpException(400, 'New name is not specified');
+        }
+
+        return array(
+            'result' => $this->redis->renameKey($key),
+        );
+    }
+
+    /**
+     * Change ttl for the key.
+     *
+     * @Post("/server/{serverId}/db/{dbId}/keys/expire",
+     *      requirements = {"serverId": "\d+", "dbId": "\d+"}
+     * )
+     * @RequestParam(name="name", requirements=".+")
+     * @RequestParam(name="ttl", requirements="\d+")
+     * @ParamConverter("key", converter="fos_rest.request_body", class="Eugef\PhpRedExpert\ApiBundle\Model\RedisKey")
+     * @View()
+     *
+     * @param integer $serverId
+     * @param integer $dbId
+     * @param RedisKey $key
+     * @throws HttpException
+     * @return array result
+     */
+    public function expireAction($serverId, $dbId, RedisKey $key)
+    {
+        $this->initialize($serverId, $dbId);
+
+        if (!$key->validName()) {
+            throw new HttpException(400, 'Key name is not specified');
+        }
+
+        return array(
+            'result' => $this->redis->expireKey($key),
         );
     }
 
@@ -110,65 +245,9 @@ class KeysController extends AbstractRedisController
     }
 
     /**
-     * Change attributes (name and ttl) for the key.
+     * Update the key value.
      *
-     * @Post("/server/{serverId}/db/{dbId}/keys/attrs",
-     *      requirements = {"serverId": "\d+", "dbId": "\d+"}
-     * )
-     * @RequestParam(name="key", requirements=".+")
-     * @RequestParam(name="attributes", array=true)
-     * @View()
-     *
-     * @param integer $serverId
-     * @param integer $dbId
-     * @param string $key
-     * @param array $attributes
-     * @throws HttpException
-     * @return array result
-     */
-    public function attributesAction($serverId, $dbId, $key, array $attributes)
-    {
-        $this->initialize($serverId, $dbId);
-
-        return array(
-            'result' => $this->redis->editKeyAttributes($key, $attributes),
-        );
-    }
-
-    /**
-     * View the key value.
-     *
-     * @Get("/server/{serverId}/db/{dbId}/keys/view",
-     *      requirements = {"serverId": "\d+", "dbId": "\d+"}
-     * )
-     * @QueryParam(name="key", requirements=".+", strict=true)
-     * @View()
-     *
-     * @param integer $serverId
-     * @param integer $dbId
-     * @param string $key
-     * @throws HttpException
-     * @return array Key value data
-     */
-    public function viewAction($serverId, $dbId, $key)
-    {
-        $this->initialize($serverId, $dbId);
-
-        $result = $this->redis->getKey($key);
-
-        if (!$result) {
-            throw new HttpException(404, 'Key is not found');
-        }
-
-        return array(
-            'key' => $result,
-        );
-    }
-
-    /**
-     * Edit the key value.
-     *
-     * @Post("/server/{serverId}/db/{dbId}/keys/edit",
+     * @Post("/server/{serverId}/db/{dbId}/keys/values/update",
      *      requirements = {"serverId": "\d+", "dbId": "\d+"}
      * )
      * @RequestParam(name="name", requirements=".+")
@@ -184,64 +263,22 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array key value data
      */
-    public function editAction($serverId, $dbId, RedisKey $key)
+    public function updateValuesAction($serverId, $dbId, RedisKey $key)
     {
         $this->initialize($serverId, $dbId);
 
-        if (!$key->hasName()) {
+        if (!$key->validName()) {
             throw new HttpException(400, 'Key name is not specified');
         }
 
-        if (!in_array($key->getType(), RedisConnector::$KEY_TYPES, true)) {
+        if (!$key->validType()) {
             throw new HttpException(400, 'Key type is invalid');
         }
 
-        $result = $this->redis->editKey($key);
+        $result = $this->redis->updateKey($key);
 
         if ($result === false) {
-            throw new HttpException(404, 'Key is not updated');
-        }
-
-        return array(
-            'key' => $this->redis->getKey($key->getName()),
-        );
-    }
-
-    /**
-     * Add new key with value.
-     *
-     * @Post("/server/{serverId}/db/{dbId}/keys/add",
-     *      requirements = {"serverId": "\d+", "dbId": "\d+"}
-     * )
-     * @RequestParam(name="name", requirements=".+")
-     * @RequestParam(name="type", requirements=".+")
-     * @RequestParam(name="ttl", requirements="\d+")
-     * @RequestParam(name="value", array=true)
-     * @ParamConverter("key", converter="fos_rest.request_body", class="Eugef\PhpRedExpert\ApiBundle\Model\RedisKey")
-     * @View()
-     *
-     * @param integer $serverId
-     * @param integer $dbId
-     * @param RedisKey $key
-     * @throws HttpException
-     * @return array
-     */
-    public function addAction($serverId, $dbId, RedisKey $key)
-    {
-        $this->initialize($serverId, $dbId);
-
-        if (!$key->hasName()) {
-            throw new HttpException(400, 'Key name is not specified');
-        }
-
-        if (!in_array($key->getType(), RedisConnector::$KEY_TYPES, true)) {
-            throw new HttpException(400, 'Key type is invalid');
-        }
-
-        $result = $this->redis->addKey($key);
-
-        if ($result === false) {
-            throw new HttpException(404, 'Key is not added');
+            throw new HttpException(404, 'Key value is not updated');
         }
 
         return array(
@@ -252,7 +289,7 @@ class KeysController extends AbstractRedisController
     /**
      * Delete key value(s).
      *
-     * @Post("/server/{serverId}/db/{dbId}/keys/delete-values",
+     * @Post("/server/{serverId}/db/{dbId}/keys/values/delete",
      *      requirements = {"serverId": "\d+", "dbId": "\d+"}
      * )
      * @RequestParam(name="name", requirements=".+")
@@ -271,11 +308,11 @@ class KeysController extends AbstractRedisController
     {
         $this->initialize($serverId, $dbId);
 
-        if (!$key->hasName()) {
+        if (!$key->validName()) {
             throw new HttpException(400, 'Key name is not specified');
         }
 
-        if (!in_array($key->getType(), RedisConnector::$KEY_TYPES, true)) {
+        if (!$key->validType()) {
             throw new HttpException(400, 'Key type is invalid');
         }
 

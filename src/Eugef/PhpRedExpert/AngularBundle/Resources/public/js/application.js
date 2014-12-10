@@ -59,7 +59,7 @@ App.config(['$routeProvider', '$locationProvider', 'config',
                 templateUrl: config.assetsUri + 'views/controllers/key.html',
                 controller: 'KeyController'
             }).        
-            when('/server/:serverId/db/:dbId/key/add/:type', {
+            when('/server/:serverId/db/:dbId/key/create/:type', {
                 templateUrl: config.assetsUri + 'views/controllers/key.html',
                 controller: 'KeyController'
             }).        

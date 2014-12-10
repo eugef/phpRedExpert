@@ -11,7 +11,7 @@ class RedisConnector
     /**
      * @var array
      */
-    public static $KEY_TYPES = array(
+    private static $KEY_TYPES = array(
         \Redis::REDIS_STRING => 'string',
         \Redis::REDIS_HASH   => 'hash',
         \Redis::REDIS_LIST   => 'list',
@@ -270,28 +270,26 @@ class RedisConnector
     }
 
     /**
-     * @param string $keyName
-     * @param array $attributes
-     * @return array
+     * @param RedisKey $key
+     * @return boolean
      */
-    public function editKeyAttributes($keyName, array $attributes)
+    public function renameKey(RedisKey $key)
     {
-        $result = array();
+        return $this->db->renamenx($key->getName(), trim($key->getValue('name')));
+    }
 
-        if (isset($attributes['ttl'])) {
-            if ($attributes['ttl'] > 0) {
-                $result['ttl'] = $this->db->expire($keyName, $attributes['ttl']);
-            }
-            else {
-                $result['ttl'] = $this->db->persist($keyName);
-            }
+    /**
+     * @param RedisKey $key
+     * @return boolean
+     */
+    public function expireKey(RedisKey $key)
+    {
+        if ($key->getTtl() > 0) {
+            return $this->db->expire($key->getName(), $key->getTtl());
         }
-
-        if (isset($attributes['name'])) {
-            $result['name'] = $this->db->renamenx($keyName, trim($attributes['name']));
+        else {
+            return $this->db->persist($key->getName());
         }
-
-        return $result;
     }
 
     /**
@@ -343,7 +341,7 @@ class RedisConnector
      * @param RedisKey $key
      * @return boolean
      */
-    public function editKey(RedisKey $key)
+    public function updateKey(RedisKey $key)
     {
         $result = false;
         switch ($key->getType()) {
@@ -397,7 +395,7 @@ class RedisConnector
      * @param RedisKey $key
      * @return boolean
      */
-    public function addKey(RedisKey $key)
+    public function createKey(RedisKey $key)
     {
         $result = false;
         switch ($key->getType()) {

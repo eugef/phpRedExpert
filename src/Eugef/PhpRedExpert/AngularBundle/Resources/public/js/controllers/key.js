@@ -6,8 +6,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
         $scope.keyValue = {};
         $scope.alerts = [];
         
-        $scope.initAddKey = function(keyType) {
-            $log.debug('initAddKey', arguments);
+        $scope.initCreateKey = function(keyType) {
+            $log.debug('initCreateKey', arguments);
             
             $scope.key = {
                 new: true,
@@ -18,8 +18,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
             $scope.keyValue = $scope.defaultKeyValue(keyType);
         };
 
-        $scope.initEditKey = function(keyName) {
-            $log.debug('initEditKey', arguments);
+        $scope.initUpdateKey = function(keyName) {
+            $log.debug('initUpdateKey', arguments);
             
             return RedisService.viewKey($scope.current.serverId, $scope.current.dbId, keyName).then(
                 function(response) {
@@ -28,7 +28,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     
                     $scope.keyValue = $scope.defaultKeyValue($scope.key.type, $scope.key.value);
 
-                    $log.debug('initEditKey / done', $scope.key);
+                    $log.debug('initUpdateKey / done', $scope.key);
                 },
                 function(response) {
                     // key not found - add its name for warning message
@@ -80,7 +80,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
             if ($scope.key.new) {
                 $log.debug('submitKey: add');
                 
-                return RedisService.addKey($scope.current.serverId, $scope.current.dbId, key).then(
+                return RedisService.createKey($scope.current.serverId, $scope.current.dbId, key).then(
                     function(response) {
                         $scope.key = response.data.key;
                         $scope.key.ttl = $scope.key.ttl < 0 ? 0 : $scope.key.ttl;
@@ -102,7 +102,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
             else {
                 $log.debug('submitKey: edit');
                 
-                return RedisService.editKey($scope.current.serverId, $scope.current.dbId, key).then(
+                return RedisService.updateKeyValues($scope.current.serverId, $scope.current.dbId, key).then(
                     function(response) {
                         $scope.key = response.data.key;
                         $scope.key.ttl = $scope.key.ttl < 0 ? 0 : $scope.key.ttl;
@@ -203,7 +203,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     key: $scope.key.name
                 }
             ).result.then(function(newTtl) {
-                RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, $scope.key.name, {ttl: newTtl}).then(
+                RedisService.expireKey($scope.current.serverId, $scope.current.dbId, $scope.key.name, newTtl).then(
                     function(response) {
                         $log.debug('editKeyTtl / done', response.data);
                         
@@ -223,11 +223,11 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                 }
             ).result.then(function(newName) {
                 if (newName != $scope.key.name) {
-                    RedisService.editKeyAttributes($scope.current.serverId, $scope.current.dbId, $scope.key.name, {name: newName}).then(
+                    RedisService.renameKey($scope.current.serverId, $scope.current.dbId, $scope.key.name, newName).then(
                         function(response) {
                             $log.debug('editKeyName / done', response.data);
                             
-                            if (response.data.result.name) {
+                            if (response.data.result) {
                                 $scope.key.name = newName;
                                 // update key name in url
                                 $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + $scope.key.name, false);
@@ -300,7 +300,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                         $scope.$parent.getDB(newDB).keys += response.data.result;
                         $scope.$parent.getDB(newDB).visible = true;
 
-                        $scope.alerts.push({type: 'success', message: 'Key is succesfully moved'});
+                        $scope.alerts.push({type: 'success', message: 'Key is successfully moved'});
                     }
                 );
             });
@@ -319,15 +319,15 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     subtitle: $routeParams.key
                 };
             
-                $scope.initEditKey($routeParams.key);
+                $scope.initUpdateKey($routeParams.key);
             }
             else {
                 $scope.$parent.view = {
-                    title: 'Add key',
+                    title: 'Create key',
                     subtitle: $routeParams.type
                 };
                 
-                $scope.initAddKey($routeParams.type);
+                $scope.initCreateKey($routeParams.type);
             }
         });        
     }

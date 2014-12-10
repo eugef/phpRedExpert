@@ -9,7 +9,7 @@ class RedisKey {
     /**
      * @var array
      */
-    public static $TYPES = array('string', 'hash', 'list', 'set', 'zset');
+    private static $TYPES = array('string', 'hash', 'list', 'set', 'zset');
 
     /**
      * @Serializer\Type("string")
@@ -50,7 +50,7 @@ class RedisKey {
     /**
      * @return boolean
      */
-    public function hasName()
+    public function validName()
     {
         return strlen($this->name) > 0;
     }
@@ -85,6 +85,14 @@ class RedisKey {
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function validType()
+    {
+        return in_array($this->type, static::$TYPES, true);
     }
 
     /**
