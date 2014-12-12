@@ -245,8 +245,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
             $log.debug('SearchController.init');
             
             $scope.$parent.view = {
-                title: 'Database',
-                subtitle: $scope.getCurrentDB().name
+                title: $scope.getCurrentDB().name,
+                subtitle: 'Browse'
             };
             
             if ($routeParams.pattern) {

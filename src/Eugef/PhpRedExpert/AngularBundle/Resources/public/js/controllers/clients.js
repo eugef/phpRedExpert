@@ -26,7 +26,7 @@ App.controller('ClientsController', ['$scope', '$routeParams', '$log', 'RedisSer
                     $log.debug('getServerClients / done', $scope.clients);
                 }
             );
-        }
+        };
         
         $scope.killServerClients = function() {
             $log.debug('killServerClients');
@@ -50,7 +50,7 @@ App.controller('ClientsController', ['$scope', '$routeParams', '$log', 'RedisSer
                     );
                 });
             }
-        }
+        };
         
         $scope.selectItemExclusive = function(addr) {
             $log.debug('selectItemExclusive', arguments);
@@ -66,7 +66,7 @@ App.controller('ClientsController', ['$scope', '$routeParams', '$log', 'RedisSer
                     $scope.clients.result.items[i].selected = false;
                 }
             }
-        }
+        };
         
         $scope.$watch('clients.result.items', function() {
             $scope.clients.result.selected = [];
@@ -82,7 +82,7 @@ App.controller('ClientsController', ['$scope', '$routeParams', '$log', 'RedisSer
             
             $scope.$parent.view = {
                 title: 'Clients',
-                subtitle: $scope.getCurrentServer().name
+                subtitle: ''
             };
             
             $scope.getServerClients();

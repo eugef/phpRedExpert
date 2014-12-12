@@ -84,11 +84,7 @@
                     <img src="{{ asset('bundles/eugefphpredexpertangular/images/redis.png') }}" class="img-circle" alt="Redis server" />
                 </div>
                 <div class="pull-left info">
-                    <p>{[getCurrentServer().name]}</p>
-                    <a href>
-                        <i class="fa fa-lock text-success" ng-show="getCurrentServer().password"> password</i>
-                        <i class="fa fa-unlock-alt text-warning" ng-hide="getCurrentServer().password"> no password</i>
-                    </a>
+                    {[getCurrentServer().name]}
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->

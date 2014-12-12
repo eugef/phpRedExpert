@@ -14,7 +14,7 @@ App.controller('DashboardController', ['$scope', '$routeParams', '$location', '$
                     $scope.board.info = response.data;
                 }
             );
-        }
+        };
         
         $scope.getConfig = function() {
             $log.debug('getConfig');
@@ -26,14 +26,14 @@ App.controller('DashboardController', ['$scope', '$routeParams', '$location', '$
                     $scope.board.config = response.data;
                 }
             );
-        }
+        };
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
             $log.debug('DashboardController.init');
             
             $scope.$parent.view = {
                 title: 'Dashboard',
-                subtitle: $scope.getCurrentServer().name
+                subtitle: ''
             };
 
             $scope.getInfo();

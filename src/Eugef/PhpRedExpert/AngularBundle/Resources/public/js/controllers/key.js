@@ -315,16 +315,16 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
             
             if (angular.isDefined($routeParams.key)) {
                 $scope.$parent.view = {
-                    title: 'View key',
-                    subtitle: $routeParams.key
+                    title: $scope.getCurrentDB().name,
+                    subtitle: 'View key "' + $routeParams.key + '"'
                 };
             
                 $scope.initUpdateKey($routeParams.key);
             }
             else {
                 $scope.$parent.view = {
-                    title: 'Create key',
-                    subtitle: $routeParams.type
+                    title: $scope.getCurrentDB().name,
+                    subtitle: 'Create ' + $routeParams.type + ' key'
                 };
                 
                 $scope.initCreateKey($routeParams.type);

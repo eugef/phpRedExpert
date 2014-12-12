@@ -24,6 +24,24 @@ body > .header .logo {
     font-weight: bold;
 }
 
+body > .header .logo {
+    border-bottom: 1px solid #444;
+}
+
+.user-panel > .image > img {
+    width: 40px;
+    height: 40px;
+}
+
+.user-panel > .info {
+    height: 40px;
+    width: 160px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    padding: 5px 5px 5px 10px;
+    line-height: 30px;
+}
+
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li.active > a {
     background: #f6f6f6;
     text-decoration: none;
@@ -161,4 +179,9 @@ pre.scrollable {
 
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
     border: 0;
+}
+
+.right-side > .content-header > h1 > small {
+    font-size: 22px;
+    font-weight: normal;
 }
