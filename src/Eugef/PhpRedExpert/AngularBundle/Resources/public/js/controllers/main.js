@@ -53,7 +53,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
             $log.debug('AppController.init / done');
             
             return deferred.promise;
-        }
+        };
 
         $scope.loadServers = function(newServerId) {
             $log.debug('loadServers', arguments);
@@ -76,7 +76,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                             name : server.name ? server.name : server.host + ':' + server.port,
                             password : server.password,
                             host : server.host,
-                            port : server.port,
+                            port : server.port
                         });
                     });
 
@@ -88,7 +88,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                     }                    
                 }
             );
-        }   
+        };
 
         $scope.loadDBs = function(serverId, newDbId) {
             $log.debug('loadDBs');
@@ -100,7 +100,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
 
             return RedisService.getServerDBs(serverId).then(
                 function(response) {
-                    $log.debug('loadDBs / done', response.data)
+                    $log.debug('loadDBs / done', response.data);
                     
                     $scope.dbs = [];
                     $scope.current.serverId = serverId;
@@ -117,7 +117,7 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                             name : db.name ? db.name : 'DB ' + db.id,
                             keys : db.keys,
                             expires : db.expires,
-                            visible : db.keys > 0 || !!db.default
+                            visible : db.keys > 0 || !!db.default || db.id == 0
                         });
                     });
 
@@ -147,55 +147,55 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                 else {
                     $scope.dbs[i].current = false;
                 }
-            };
-        }
+            }
+        };
 
         $scope.serverExists = function(serverId) {
             return $scope.find($scope.servers, 'id', serverId) !== null;
-        }
+        };
 
         $scope.dbExists = function(dbId) {
             return $scope.find($scope.dbs, 'id', dbId) !== null;
-        }
+        };
         
         $scope.getDB = function(dbId) {
             return $scope.find($scope.dbs, 'id', dbId);
-        }
+        };
         
         $scope.getCurrentDB = function() {
             return $scope.getDB($scope.current.dbId);
-        }
+        };
 
         $scope.getServer = function(serverId) {
             return $scope.find($scope.servers, 'id', serverId);
-        }
+        };
         
         $scope.getCurrentServer = function() {
             return $scope.getServer($scope.current.serverId);
-        }
+        };
         
         $scope.find = function(array, key, value) {
             for (var i = 0; i < array.length; i++) {
                 if (array[i][key] == value) {
                     return array[i];
                 }
-            };
+            }
             return null;
-        }
+        };
         
         $scope.addDb = function() {
             $log.debug('addDb');
             
             $scope.showModal('ModalEditKeyAttributeController', 'adddb.html',                  
                 {
-                    databases: $scope.dbs,
+                    databases: $scope.dbs
                 }
             ).result.then(function(newDB) {
                 $log.debug('addDb / end', newDB);
                 
                 $location.path('server/' + $scope.current.serverId + '/db/' + newDB + '/search');
             });
-        }
+        };
         
         $scope.flushDB = function()  {
             $scope.showModalConfirm({
@@ -213,15 +213,15 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                     }
                 );
             });
-        }
+        };
         
         $scope.showModalConfirm = function(settings) {
             return $scope.showModal('ModalConfirmController', 'confirm.html', settings);
-        }
+        };
         
         $scope.showModalAlert = function(settings) {
             return $scope.showModal('ModalAlertController', 'alert.html', settings, true);
-        }
+        };
         
         $scope.showModal = function(controller, template, settings, backdrop) {
             return $modal.open({
@@ -234,11 +234,11 @@ App.controller('AppController', ['$scope', '$q', '$location', '$route', '$modal'
                     }      
                 }    
             });
-        }
+        };
         
         $scope.partialsUri = function(template) {
             return config.assetsUri + 'views/partials/' + template;
-        }
+        };
 
     }
 ]);
