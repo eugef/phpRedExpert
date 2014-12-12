@@ -7,7 +7,9 @@
     <form name="addDBForm" novalidate>
         <div class="form-group" ng-class="{'has-error': addDBForm.$invalid}">
             <label>Database</label>
-            <select class="form-control" ng-model="data.value" ng-options="db.id as db.name for db in data.databases | filter:{keys:0,visible:false}" required></select>
+            <select class="form-control" ng-model="data.value" ng-options="db.id as db.name for db in data.databases | filter:{keys:0,visible:false}" required>
+                <option value="" disabled>Choose new database</option>
+            </select>
         </div>
     </form>    
 </div>    
