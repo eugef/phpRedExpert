@@ -31,7 +31,7 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array List of keys with detailed information
      */
-    public function searchAction($serverId, $dbId, $pattern, $page)
+    public function searchKeysAction($serverId, $dbId, $pattern, $page)
     {
         $this->initialize($serverId, $dbId);
 
@@ -51,7 +51,7 @@ class KeysController extends AbstractRedisController
     }
 
     /**
-     * View the key value.
+     * Get the key value.
      *
      * @Get("/server/{serverId}/db/{dbId}/keys/view",
      *      requirements = {"serverId": "\d+", "dbId": "\d+"}
@@ -65,7 +65,7 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array Key value data
      */
-    public function viewAction($serverId, $dbId, $key)
+    public function getKeyAction($serverId, $dbId, $key)
     {
         $this->initialize($serverId, $dbId);
 
@@ -99,7 +99,7 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array
      */
-    public function createAction($serverId, $dbId, RedisKey $key)
+    public function createKeyAction($serverId, $dbId, RedisKey $key)
     {
         $this->initialize($serverId, $dbId);
 
@@ -139,7 +139,7 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array result
      */
-    public function renameAction($serverId, $dbId, RedisKey $key)
+    public function renameKeyAction($serverId, $dbId, RedisKey $key)
     {
         $this->initialize($serverId, $dbId);
 
@@ -173,7 +173,7 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array result
      */
-    public function expireAction($serverId, $dbId, RedisKey $key)
+    public function expireKeyAction($serverId, $dbId, RedisKey $key)
     {
         $this->initialize($serverId, $dbId);
 
@@ -201,7 +201,7 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array result
      */
-    public function deleteAction($serverId, $dbId, array $keys)
+    public function deleteKeysAction($serverId, $dbId, array $keys)
     {
         $this->initialize($serverId, $dbId);
 
@@ -227,7 +227,7 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array result
      */
-    public function moveAction($serverId, $dbId, array $keys, $db)
+    public function moveKeysAction($serverId, $dbId, array $keys, $db)
     {
         $this->initialize($serverId, $dbId);
 
@@ -263,7 +263,7 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array key value data
      */
-    public function updateValuesAction($serverId, $dbId, RedisKey $key)
+    public function updateKeyValuesAction($serverId, $dbId, RedisKey $key)
     {
         $this->initialize($serverId, $dbId);
 
@@ -304,7 +304,7 @@ class KeysController extends AbstractRedisController
      * @throws HttpException
      * @return array
      */
-    public function deleteValuesAction($serverId, $dbId, RedisKey $key)
+    public function deleteKeyValuesAction($serverId, $dbId, RedisKey $key)
     {
         $this->initialize($serverId, $dbId);
 

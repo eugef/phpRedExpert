@@ -20,7 +20,7 @@ class ServerController extends AbstractRedisController
      *
      * @return array list
      */
-    public function listAction()
+    public function getServersListAction()
     {
         $servers = array();
         foreach ($this->container->getParameter('redis_servers') as $id => $server) {
@@ -36,25 +36,6 @@ class ServerController extends AbstractRedisController
     }
 
     /**
-     * Returns list of available Dbs for the server.
-     *
-     * @Get("/server/{serverId}/databases",
-     *      requirements = {"serverId": "\d+"}
-     * )
-     * @View()
-     *
-     * @param integer $serverId
-     * @throws HttpException
-     * @return array list
-     */
-    public function databasesAction($serverId)
-    {
-        $this->initialize($serverId);
-
-        return $this->redis->getServerDbs();
-    }
-
-    /**
      * Result of INFO command for the server.
      *
      * @Get("/server/{serverId}/info",
@@ -66,7 +47,7 @@ class ServerController extends AbstractRedisController
      * @throws HttpException
      * @return array list
      */
-    public function infoAction($serverId)
+    public function getServerInfoAction($serverId)
     {
         $this->initialize($serverId);
 
@@ -85,7 +66,7 @@ class ServerController extends AbstractRedisController
      * @throws HttpException
      * @return array list
      */
-    public function configAction($serverId)
+    public function getServerConfigAction($serverId)
     {
         $this->initialize($serverId);
 
@@ -104,7 +85,7 @@ class ServerController extends AbstractRedisController
      * @throws HttpException
      * @return array list
      */
-    public function clientsListAction($serverId)
+    public function getServerClientsListAction($serverId)
     {
         $this->initialize($serverId);
 
@@ -135,7 +116,7 @@ class ServerController extends AbstractRedisController
      * @throws HttpException
      * @return array result
      */
-    public function clientsKillAction($serverId, array $clients)
+    public function killServerClientsAction($serverId, array $clients)
     {
         $this->initialize($serverId);
 

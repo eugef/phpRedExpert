@@ -114,7 +114,7 @@ class RedisConnector
     /**
      * @return array
      */
-    public function getServerDbs()
+    public function getDatabases()
     {
         $info = $this->db->info();
         $databases = $this->getServerConfig('databases', true) | 1;
