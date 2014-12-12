@@ -229,6 +229,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                             
                             if (response.data.result) {
                                 $scope.key.name = newName;
+                                $scope.setViewTitle(newName);
                                 // update key name in url
                                 $location.path('server/' + $scope.current.serverId + '/db/' + $scope.current.dbId + '/key/view/' + $scope.key.name, false);
                             }
@@ -309,24 +310,30 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
         $scope.closeAlert = function(index) {
             $scope.alerts.splice(index, 1);
         };
+
+        $scope.setViewTitle = function(keyName, keyType) {
+            var subtitle = '';
+            if (angular.isDefined(keyName)) {
+                subtitle = 'View key "' + keyName + '"';
+            } else if(angular.isDefined(keyType)) {
+                subtitle = 'Create ' + keyType + ' key';
+            }
+
+            $scope.$parent.view = {
+                title: $scope.getCurrentDB().name,
+                subtitle: subtitle
+            };
+        };
         
         $scope.init($routeParams.serverId, $routeParams.dbId).then(function() {
             $log.debug('KeyController.init');
             
             if (angular.isDefined($routeParams.key)) {
-                $scope.$parent.view = {
-                    title: $scope.getCurrentDB().name,
-                    subtitle: 'View key "' + $routeParams.key + '"'
-                };
-            
+                $scope.setViewTitle($routeParams.key);
                 $scope.initUpdateKey($routeParams.key);
             }
             else {
-                $scope.$parent.view = {
-                    title: $scope.getCurrentDB().name,
-                    subtitle: 'Create ' + $routeParams.type + ' key'
-                };
-                
+                $scope.setViewTitle(null, $routeParams.type);
                 $scope.initCreateKey($routeParams.type);
             }
         });        
