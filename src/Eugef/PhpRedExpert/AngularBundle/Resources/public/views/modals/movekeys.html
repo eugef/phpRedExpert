@@ -10,7 +10,7 @@
     <form name="moveKeyForm" novalidate>
         <div class="form-group" ng-class="{'has-error': moveKeyForm.$invalid}">
             <label>Database</label>
-            <select class="form-control" ng-model="data.value" ng-options="db.id as db.name for db in data.databases | filter:{current:false}" required></select>
+            <select class="form-control" ng-model="data.value" ng-options="db.id as db.name for db in data.databases | filter:{isCurrent:false}" required></select>
             <p class="help-block">Select destination database.</p>
         </div>
     </form>  

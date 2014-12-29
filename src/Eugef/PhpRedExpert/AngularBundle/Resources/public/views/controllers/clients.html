@@ -26,12 +26,12 @@
                     <th>Last command</th>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="client in clients.result.items | orderBy:clients.sort.field:clients.sort.reverse" ng-class="{selected: client.selected}"">
+                    <tr ng-repeat="client in clients.result.items | orderBy:clients.sort.field:clients.sort.reverse" ng-class="{selected: client.selected}">
                         <td class="checkbox-td"><label><input type="checkbox" ng-model="client.selected" /></label></td> 
                         <td ng-click="selectItemExclusive(client.addr)">{[client.addr]}</td>
                         <td ng-click="selectItemExclusive(client.addr)">{[client.flags | clientflag]}</td>
                         <td ng-click="selectItemExclusive(client.addr)">
-                            <a href="#!/server/{[current.serverId]}/db/{[client.db]}"><span class="badge">{[client.db]}</span></a>
+                            <a href="#!/server/{[servers.current().id]}/db/{[client.db]}"><span class="badge">{[client.db]}</span></a>
                         </td>
                         <td ng-click="selectItemExclusive(client.addr)">{[client.age | sec2time]}</td>
                         <td ng-click="selectItemExclusive(client.addr)">{[client.idle | sec2time]}</td>
