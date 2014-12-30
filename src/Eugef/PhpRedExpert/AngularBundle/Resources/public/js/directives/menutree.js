@@ -1,22 +1,32 @@
-App.directive('menutree', ['$timeout', 
-    function($timeout) {
+App.directive('menutree', ['$timeout',
+    function ($timeout) {
+        "use strict";
+
         return {
             restrict: 'A',
-            link: function(scope, elem, attrs) {
-                var btn = angular.element(elem.children()[0]);
 
-                //open or close the menu on link click
-                btn.bind('click', function(e) {
-                    e.preventDefault();
-                    if (elem.hasClass('active')) {
-                        elem.removeClass('active').removeClass('animate');
+            /**
+             * @param {Scope} scope
+             * @param {jQuery} element
+             */
+            link: function (scope, element) {
+                /**
+                 * @type {jQuery}
+                 */
+                var link = angular.element(element.children()[0]);
+
+                // Open or close the menu on link click
+                link.bind('click', function (event) {
+                    event.preventDefault();
+                    if (element.hasClass('active')) {
+                        element.removeClass('active').removeClass('animate');
                     } else {
-                        elem.addClass('active').addClass('animate');
+                        element.addClass('active').addClass('animate');
                         //animate on open
                         $timeout(
-                            function() {
-                                elem.removeClass('animate');
-                            }, 
+                            function () {
+                                element.removeClass('animate');
+                            },
                             700
                         );
                     }
