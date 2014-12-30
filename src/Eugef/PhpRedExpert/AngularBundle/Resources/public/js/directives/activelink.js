@@ -4,6 +4,16 @@ App.directive('activeLink', ['$location',
 
         return {
             restrict: 'A',
+
+            /**
+             * @param {Scope} scope
+             * @param {jQuery} element
+             * @param {Attributes} attributes
+             * @param {String} attributes.activeLink
+             * @param {*} attributes.activeLinkDisabled
+             * @param {*} attributes.activeLinkNested
+             * @param {*} attributes.activeLinkParent
+             */
             link: function (scope, element, attributes) {
                 /**
                  * @type {String}

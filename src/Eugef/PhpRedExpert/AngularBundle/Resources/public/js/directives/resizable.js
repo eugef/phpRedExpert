@@ -8,7 +8,7 @@ App.directive('resizable', ['$window',
             /**
              * @param {Scope} scope
              * @param {jQuery} element
-             * @param {Array} attributes
+             * @param {Attributes} attributes
              * @param {String} attributes.resizableStyle
              * @param {String} attributes.resizableWrapper
              */

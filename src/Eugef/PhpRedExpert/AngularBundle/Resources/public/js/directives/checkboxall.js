@@ -8,7 +8,7 @@ App.directive('checkboxAll',
             /**
              * @param {Scope} scope
              * @param {jQuery} element
-             * @param {Array} attributes
+             * @param {Attributes} attributes
              * @param {String} attributes.checkboxAll
              */
             link: function (scope, element, attributes) {
