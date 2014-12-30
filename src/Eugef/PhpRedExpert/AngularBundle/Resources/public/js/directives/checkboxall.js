@@ -1,24 +1,36 @@
-App.directive('checkboxAll', 
-    function() {
+App.directive('checkboxAll',
+    function () {
+        "use strict";
+
         return {
             restrict: 'A',
-            link: function(scope, elem, attrs) {
-                var parts = attrs.checkboxAll.split('|');
 
-                elem.attr('type', 'checkbox');
-                elem.bind('change', function() {
-                    scope.$apply(function() {
-                        var setValue = elem.prop('checked');
-                        angular.forEach(scope.$eval(parts[0]), function(v) {
+            /**
+             * @param {Scope} scope
+             * @param {jQuery} element
+             * @param {Array} attributes
+             * @param {String} attributes.checkboxAll
+             */
+            link: function (scope, element, attributes) {
+                /**
+                 * @type {Array}
+                 */
+                var parts = attributes.checkboxAll.split('|');
+
+                element.attr('type', 'checkbox');
+                element.bind('change', function () {
+                    scope.$apply(function () {
+                        var setValue = element.prop('checked');
+                        angular.forEach(scope.$eval(parts[0]), function (v) {
                             v[parts[1]] = setValue;
                         });
                     });
                 });
 
-                scope.$watch(parts[0], function(newVal) {
+                scope.$watch(parts[0], function (newVal) {
                     var hasTrue = false, hasFalse = false;
 
-                    angular.forEach(newVal, function(v) {
+                    angular.forEach(newVal, function (v) {
                         if (v[parts[1]]) {
                             hasTrue = true;
                         } else {
@@ -27,13 +39,13 @@ App.directive('checkboxAll',
                     });
 
                     if (hasTrue && hasFalse) {
-                        elem.attr('checked', false);
-                        elem.prop('indeterminate', true);
-                        elem.addClass('greyed');
+                        element.attr('checked', false);
+                        element.prop('indeterminate', true);
+                        element.addClass('greyed');
                     } else {
-                        elem.attr('checked', hasTrue);
-                        elem.prop('indeterminate', false);
-                        elem.removeClass('greyed');
+                        element.attr('checked', hasTrue);
+                        element.prop('indeterminate', false);
+                        element.removeClass('greyed');
                     }
                 }, true);
             }
