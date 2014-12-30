@@ -15,15 +15,17 @@
         <div class="box-body table-responsive no-padding">
             <table class="table table-hover table-condensed table-data">
                 <thead>
-                    <th class="checkbox-td"><label><input checkbox-all="clients.result.items|selected"/></label></th>  
-                    <th sort-order="clients.sort" sort-order-by="addr">Address / port</th>
-                    <th sort-order="clients.sort" sort-order-by="flags">Flags</th>
-                    <th sort-order="clients.sort" sort-order-by="db">Database</th>
-                    <th sort-order="clients.sort" sort-order-by="age">Duration</th>
-                    <th sort-order="clients.sort" sort-order-by="idle">Idle</th>
-                    <th>Query buffer</th>
-                    <th>File descriptor</th>
-                    <th>Last command</th>
+                    <tr>
+                        <th class="checkbox-td"><label><input checkbox-all="clients.result.items|selected"/></label></th>
+                        <th sort-order="clients.sort" sort-order-by="addr">Address / port</th>
+                        <th sort-order="clients.sort" sort-order-by="flags">Flags</th>
+                        <th sort-order="clients.sort" sort-order-by="db">Database</th>
+                        <th sort-order="clients.sort" sort-order-by="age">Duration</th>
+                        <th sort-order="clients.sort" sort-order-by="idle">Idle</th>
+                        <th>Query buffer</th>
+                        <th>File descriptor</th>
+                        <th>Last command</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="client in clients.result.items | orderBy:clients.sort.field:clients.sort.reverse" ng-class="{selected: client.selected}">
