@@ -1,27 +1,53 @@
 App.directive('activeLink', ['$location',
-    function($location) {
+    function ($location) {
+        "use strict";
+
         return {
             restrict: 'A',
-            link: function(scope, elem, attrs) {
-                var path = attrs.activeLink ? 'activeLink' : 'href';
-                var target = angular.isDefined(attrs.activeLinkParent) ? elem.parent() : elem;
-                var disabled = angular.isDefined(attrs.activeLinkDisabled) ? true : false;
-                var nested = angular.isDefined(attrs.activeLinkNested) ? true : false;
-                
+            link: function (scope, element, attributes) {
+                /**
+                 * @type {String}
+                 */
+                var path = attributes.activeLink ? 'activeLink' : 'href';
+
+                /**
+                 * @type {jQuery}
+                 */
+                var target = angular.isDefined(attributes.activeLinkParent) ? element.parent() : element;
+
+                /**
+                 * @type {Boolean}
+                 */
+                var disabled = angular.isDefined(attributes.activeLinkDisabled) ? true : false;
+
+                /**
+                 * @type {Boolean}
+                 */
+                var nested = angular.isDefined(attributes.activeLinkNested) ? true : false;
+
+                /**
+                 * @param {String} needle
+                 * @param {String} haystack
+                 * @returns {Boolean}
+                 */
                 function inPath(needle, haystack) {
                     var current = (haystack == needle);
                     if (nested) {
                         current |= (haystack.indexOf(needle + '/') == 0);
                     }
-                    
+
                     return current;
                 }
-                
+
+                /**
+                 * @param {String} linkPath
+                 * @param {String} locationPath
+                 */
                 function toggleClass(linkPath, locationPath) {
                     // remove hash prefix and trailing slashes
                     linkPath = linkPath ? linkPath.replace(/^#!/, '').replace(/\/+$/, '') : '';
                     locationPath = locationPath.replace(/\/+$/, '');
-                    
+
                     if (linkPath && inPath(linkPath, locationPath)) {
                         target.addClass('active');
                         if (disabled) {
@@ -34,19 +60,19 @@ App.directive('activeLink', ['$location',
                         }
                     }
                 }
-                
+
                 // watch if attribute value changes / evaluated
-                attrs.$observe(path, function(linkPath) {
+                attributes.$observe(path, function (linkPath) {
                     toggleClass(linkPath, $location.path());
                 });
 
                 // watch if location changes
                 scope.$watch(
-                    function() {
-                        return $location.path(); 
-                    }, 
-                    function(newPath) {
-                        toggleClass(attrs[path], newPath);
+                    function () {
+                        return $location.path();
+                    },
+                    function (newPath) {
+                        toggleClass(attributes[path], newPath);
                     }
                 );
             }
