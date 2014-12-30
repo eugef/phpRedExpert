@@ -34,22 +34,22 @@
             <table class="table table-hover table-condensed table-data">
                 <thead>
                     <tr>
-                        <th class="checkbox-td"><label><input checkbox-all="search.result.keys|selected"/></label></th>    
+                        <th class="checkbox-td"><label><input checkbox-all="search.result.keys|selected"/></label></th>
                         <th sort-order="search.sort" sort-order-by="name">Key</th>
                         <th class="fixed-td-md" sort-order="search.sort" sort-order-by="type">Type</th>
                         <th class="fixed-td-mdb" sort-order="search.sort" sort-order-by="ttl">TTL</th>
                         <th class="fixed-td-md" sort-order="search.sort" sort-order-by="encoding">Encoding</th>
                         <th class="fixed-td-sm" sort-order="search.sort" sort-order-by="size">Size</th>
-                    </tr>    
+                    </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="key in search.result.keys | orderBy:search.sort.field:search.sort.reverse" ng-class="{selected: key.selected}">
                         <td class="checkbox-td"><label><input type="checkbox" ng-model="key.selected" /></label></td>
                         <td ng-click="selectKeyExclusive(key.name)"><a href="#!/{[(getKeyUri(key.name, true))]}">{[key.name]}</a></td>
-                        <td ng-click="selecKeyExclusive(key.name)">{[key.type]}</td>
-                        <td ng-click="selecKeyExclusive(key.name)">{[key.ttl | sec2time]}</td>
-                        <td ng-click="selecKeyExclusive(key.name)">{[key.encoding]}</td>
-                        <td ng-click="selecKeyExclusive(key.name)">{[key.size]}</td>
+                        <td ng-click="selectKeyExclusive(key.name)">{[key.type]}</td>
+                        <td ng-click="selectKeyExclusive(key.name)">{[key.ttl | sec2time]}</td>
+                        <td ng-click="selectKeyExclusive(key.name)">{[key.encoding]}</td>
+                        <td ng-click="selectKeyExclusive(key.name)">{[key.size]}</td>
                     </tr>
                 </tbody>    
             </table>
