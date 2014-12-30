@@ -57,7 +57,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                         value: '',
                         action: 'append',
                         pivot: '',
-                        index: 0
+                        index: null
                     };
                 case 'set':
                     return {

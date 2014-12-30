@@ -20,8 +20,10 @@
                     <div class="form-group no-margin ng-hide" ng-show="isKeyListValueAction(['after' ,'before'])" ng-class="{'has-error': keyForm.pivot.$invalid}">
                         <input type="text" name="pivot" class="form-control" placeholder="Pivot value" ng-model="keyValue.pivot" typeahead="value for value in key.value | filter:$viewValue | unique:true | limitTo:10" typeahead-editable="false" ng-required="isKeyListValueAction(['after' ,'before'])">
                     </div>
-                    <div class="form-group no-margin ng-hide" ng-show="isKeyListValueAction(['set'])">
-                        <select class="form-control" ng-model="keyValue.index" ng-options="value for value in [] | range:0:key.value.length" ng-required="isKeyListValueAction(['set'])"></select>
+                    <div class="form-group no-margin ng-hide" ng-show="isKeyListValueAction(['set'])" ng-class="{'has-error': keyForm.index.$invalid}">
+                        <select name="index" class="form-control" ng-model="keyValue.index" ng-options="value for value in [] | range:0:key.value.length" ng-required="isKeyListValueAction(['set'])">
+                            <option value="" disabled>Choose index</option>
+                        </select>
                     </div>    
                 </th>
                 <th><textarea class="form-control" placeholder="Value" ng-model="keyValue.value" rows="3" required ></textarea></th>
