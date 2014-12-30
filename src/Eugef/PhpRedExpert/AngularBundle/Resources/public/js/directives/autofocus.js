@@ -4,6 +4,11 @@ App.directive('autoFocus', ['$timeout',
 
         return {
             restrict: 'AC',
+
+            /**
+             * @param {Scope} scope
+             * @param {jQuery} element
+             */
             link: function (scope, element) {
                 $timeout(
                     function () {

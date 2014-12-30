@@ -4,7 +4,12 @@ App.directive('togglesidebar', ['$window',
 
         return {
             restrict: 'A',
-            link: function (scope, element, attributes) {
+
+            /**
+             * @param {Scope} scope
+             * @param {jQuery} element
+             */
+            link: function (scope, element) {
                 element.bind('click', function (event) {
                     event.preventDefault();
 
