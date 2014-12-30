@@ -1,36 +1,57 @@
-App.directive('sortOrder', 
-    function() {
+App.directive('sortOrder',
+    function () {
+        "use strict";
+
         return {
             restrict: 'A',
-            link: function(scope, elem, attrs) {
-                var sort =  scope.$eval(attrs.sortOrder);
-                var field = attrs.sortOrderBy;
 
-                elem.addClass('sorting');
+            /**
+             * @param {Scope} scope
+             * @param {jQuery} element
+             * @param {Attributes} attributes
+             * @param {String} attributes.sortOrder
+             * @param {String} attributes.sortOrderBy
+             */
+            link: function (scope, element, attributes) {
+                /**
+                 * @typedef {Object} Sorting
+                 * @property {String} field
+                 * @property {Boolean} reverse
+                 *
+                 * @type {Sorting}
+                 */
+                var sort = scope.$eval(attributes.sortOrder);
 
-                elem.bind('click', function() {
-                    scope.$apply(function() {
+                /**
+                 * @type {String}
+                 */
+                var field = attributes.sortOrderBy;
+
+                element.addClass('sorting');
+
+                element.bind('click', function () {
+                    scope.$apply(function () {
                         if (sort.field == field) {
                             sort.reverse = !sort.reverse;
-                        } 
+                        }
                         else {
                             sort.field = field;
                             sort.reverse = false;
                         }
                     });
                 });
-                
-                scope.$watch(attrs.sortOrder, function(sortNew) {
+
+                scope.$watch(attributes.sortOrder, function (sortNew) {
                     if (sortNew.field == field) {
                         if (sortNew.reverse) {
-                            elem.removeClass('sorting-desc').addClass('sorting-asc');
+                            element.removeClass('sorting-desc').addClass('sorting-asc');
                         }
                         else {
-                            elem.removeClass('sorting-asc').addClass('sorting-desc');
-                        } 
+                            element.removeClass('sorting-asc').addClass('sorting-desc');
+                        }
                     }
                     else {
-                        elem.removeClass('sorting-asc').removeClass('sorting-desc');
+                        element.removeClass('sorting-asc').removeClass('sorting-desc');
                     }
                 }, true);
             }
