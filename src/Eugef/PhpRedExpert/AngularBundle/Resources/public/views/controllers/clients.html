@@ -31,7 +31,7 @@
                         <td ng-click="selectItemExclusive(client.addr)">{[client.addr]}</td>
                         <td ng-click="selectItemExclusive(client.addr)">{[client.flags | clientflag]}</td>
                         <td ng-click="selectItemExclusive(client.addr)">
-                            <a href="#!/server/{[servers.current().id]}/db/{[client.db]}"><span class="badge">{[client.db]}</span></a>
+                            <a href="#!/server/{[server().id]}/db/{[client.db]}"><span class="badge">{[client.db]}</span></a>
                         </td>
                         <td ng-click="selectItemExclusive(client.addr)">{[client.age | sec2time]}</td>
                         <td ng-click="selectItemExclusive(client.addr)">{[client.idle | sec2time]}</td>

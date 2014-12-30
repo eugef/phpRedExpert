@@ -24,11 +24,15 @@ App.controller('AppController', [
             var deferred = $q.defer();
 
             if ($scope.servers.isEmpty) {
-                $scope.loadServersList(serverId).then(function () {
-                    $scope.loadServerData(serverId, dbId).then(function () {
-                        deferred.resolve();
-                    });
-                });
+                $scope.loadServersList(serverId).then(
+                    function () {
+                        $scope.loadServerData(serverId, dbId).then(
+                            function () {
+                                deferred.resolve();
+                            }
+                        );
+                    }
+                );
             }
             else {
                 if ($scope.servers.current().id != serverId || angular.isUndefined(dbId)) {
@@ -96,11 +100,13 @@ App.controller('AppController', [
                 {
                     databases: $scope.servers.current().databases
                 }
-            ).result.then(function (newDB) {
+            ).result.then(
+                function (newDB) {
                     $log.debug('addDb / end', newDB);
 
                     $location.path('server/' + $scope.servers.current().id + '/db/' + newDB + '/search');
-                });
+                }
+            );
         };
 
         $scope.flushDB = function () {
@@ -109,7 +115,8 @@ App.controller('AppController', [
                 message: 'All keys are about to be permanently deleted',
                 warning: 'You can\'t undo this action!',
                 action: 'Flush'
-            }).result.then(function () {
+            }).result.then(
+                function () {
                     RedisService.flushDB($scope.servers.current().id, $scope.servers.current().databaseCurrent().id).then(
                         function (response) {
                             $location.path('server/' + $scope.servers.current().id + '/db/' + $scope.servers.current().databaseCurrent().id + '/search');
@@ -118,7 +125,8 @@ App.controller('AppController', [
                             $scope.servers.current().databaseCurrent().keys = 0;
                         }
                     );
-                });
+                }
+            );
         };
 
         $scope.showModalConfirm = function (settings) {
@@ -144,6 +152,19 @@ App.controller('AppController', [
 
         $scope.partialsUri = function (template) {
             return config.assetsUri + 'views/partials/' + template;
+        };
+
+        $scope.server = function () {
+            return $scope.servers.current() || {};
+        };
+
+        $scope.db = function () {
+            var server = $scope.servers.current();
+            if (server) {
+                return server.databaseCurrent();
+            } else {
+                return {};
+            }
         };
     }
 ]);

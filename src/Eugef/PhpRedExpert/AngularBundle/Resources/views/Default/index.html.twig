@@ -84,25 +84,25 @@
                     <img src="{{ asset('bundles/eugefphpredexpertangular/images/redis.png') }}" class="img-circle" alt="Redis server" />
                 </div>
                 <div class="pull-left info">
-                    {[servers.current().name]}
+                    {[server().name]}
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
                 <li>
-                    <a href="#!/server/{[servers.current().id]}" active-link active-link-parent>
+                    <a href="#!/server/{[server().id]}" active-link active-link-parent>
                         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                     </a>
                 </li>
-                <li menutree class="treeview" active-link="#!/server/{[servers.current().id]}/db" active-link-nested>
+                <li menutree class="treeview" active-link="#!/server/{[server().id]}/db" active-link-nested>
                     <a href="#">
                         <i class="fa fa-table"></i>
                         <span>Databases</span>
                         <i class="fa fa-angle-dynamic pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li ng-repeat="db in servers.current().databases | filter:{isVisible:true}">
-                            <a href="#!/server/{[servers.current().id]}/db/{[db.id]}/search" active-link="#!/server/{[servers.current().id]}/db/{[db.id]}" active-link-parent active-link-nested>
+                        <li ng-repeat="db in server().databases | filter:{isVisible:true}">
+                            <a href="#!/server/{[server().id]}/db/{[db.id]}/search" active-link="#!/server/{[server().id]}/db/{[db.id]}" active-link-parent active-link-nested>
                                 <i class="fa fa-angle-double-right"></i> {[db.name]}
                                 <small class="badge pull-right" ng-class="{'bg-blue': !db.isEmpty}">{[db.keys]}</small>
                             </a>
@@ -115,17 +115,17 @@
                     </ul>
                 </li>
                 <!--li>
-                    <a href="#!/server/{[servers.current().id]}/slowlog" active-link active-link-parent>
+                    <a href="#!/server/{[server().id]}/slowlog" active-link active-link-parent>
                         <i class="fa fa-warning"></i> <span>Slow log</span>
                     </a>
                 </li-->
                 <li>
-                    <a href="#!/server/{[servers.current().id]}/clients" active-link active-link-parent>
+                    <a href="#!/server/{[server().id]}/clients" active-link active-link-parent>
                         <i class="fa fa-group"></i> <span>Clients</span>
                     </a>
                 </li>
                 <!--li>
-                    <a href="#!/server/{[servers.current().id]}/terminal" active-link active-link-parent>
+                    <a href="#!/server/{[server().id]}/terminal" active-link active-link-parent>
                         <i class="fa fa-terminal"></i> <span>Terminal</span>
                     </a>
                 </li-->

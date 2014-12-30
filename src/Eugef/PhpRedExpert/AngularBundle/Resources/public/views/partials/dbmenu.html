@@ -1,21 +1,21 @@
 <li> 
-    <a href="#!/server/{[servers.current().id]}/db/{[servers.current().databaseCurrent().id]}/search" active-link active-link-parent active-link-nested>
+    <a href="#!/server/{[server().id]}/db/{[db().id]}/search" active-link active-link-parent active-link-nested>
         <i class="fa fa-list-ul"></i> Browse
     </a>
 </li>
-<li class="dropdown" active-link="#!/server/{[servers.current().id]}/db/{[servers.current().databaseCurrent().id]}/key/add" dropdown active-link-nested>
+<li class="dropdown" active-link="#!/server/{[server().id]}/db/{[db().id]}/key/add" dropdown active-link-nested>
     <a href class="dropdown-toggle" dropdown-toggle>
         <i class="fa fa-plus-circle"></i> Create key <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-        <li><a href="#!/server/{[servers.current().id]}/db/{[servers.current().databaseCurrent().id]}/key/create/string">String</a></li>
-        <li><a href="#!/server/{[servers.current().id]}/db/{[servers.current().databaseCurrent().id]}/key/create/hash">Hash</a></li>
-        <li><a href="#!/server/{[servers.current().id]}/db/{[servers.current().databaseCurrent().id]}/key/create/list">List</a></li>
-        <li><a href="#!/server/{[servers.current().id]}/db/{[servers.current().databaseCurrent().id]}/key/create/set">Set</a></li>
-        <li><a href="#!/server/{[servers.current().id]}/db/{[servers.current().databaseCurrent().id]}/key/create/zset">Sorted set</a></li>
+        <li><a href="#!/server/{[server().id]}/db/{[db().id]}/key/create/string">String</a></li>
+        <li><a href="#!/server/{[server().id]}/db/{[db().id]}/key/create/hash">Hash</a></li>
+        <li><a href="#!/server/{[server().id]}/db/{[db().id]}/key/create/list">List</a></li>
+        <li><a href="#!/server/{[server().id]}/db/{[db().id]}/key/create/set">Set</a></li>
+        <li><a href="#!/server/{[server().id]}/db/{[db().id]}/key/create/zset">Sorted set</a></li>
     </ul>
 </li>
-<li active-link="#!/server/{[servers.current().id]}/db/{[servers.current().databaseCurrent().id]}/key/view" active-link-disabled active-link-nested>
+<li active-link="#!/server/{[server().id]}/db/{[db().id]}/key/view" active-link-disabled active-link-nested>
     <a href>
         <i class="fa fa-key"></i> View key
     </a>
