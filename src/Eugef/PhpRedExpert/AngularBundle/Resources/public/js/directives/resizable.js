@@ -1,26 +1,39 @@
-App.directive('resizable', ['$window', 
-    function($window) {
+App.directive('resizable', ['$window',
+    function ($window) {
+        "use strict";
+
         return {
             restrict: 'A',
-            link: function(scope, elem, attrs) {
-                resizeElement = function(wrapperHeight) {
-                    wrapperHeight = angular.isDefined(wrapperHeight) ? wrapperHeight : document.querySelector(attrs.resizableWrapper).clientHeight;
 
-                    elem.css(attrs.resizableStyle, Math.max(wrapperHeight, $window.innerHeight - elem.prop(('offsetTop'))) + 'px');
-                };
+            /**
+             * @param {Scope} scope
+             * @param {jQuery} element
+             * @param {Array} attributes
+             * @param {String} attributes.resizableStyle
+             * @param {String} attributes.resizableWrapper
+             */
+            link: function (scope, element, attributes) {
+                /**
+                 * @param {Number} [wrapperHeight]
+                 */
+                function resizeElement(wrapperHeight) {
+                    wrapperHeight = angular.isDefined(wrapperHeight) ? wrapperHeight : document.querySelector(attributes.resizableWrapper).clientHeight;
+
+                    element.css(attributes.resizableStyle, Math.max(wrapperHeight, $window.innerHeight - element.prop(('offsetTop'))) + 'px');
+                }
 
                 // resize on window
-                angular.element($window).bind('resize', function() {
+                angular.element($window).bind('resize', function () {
                     resizeElement();
                     scope.$apply();
                 });
 
                 // resize when wrapper height is changed
                 scope.$watch(
-                    function() {
-                        return document.querySelector(attrs.resizableWrapper).clientHeight;
-                    }, 
-                    function(wrapperHeight) {
+                    function () {
+                        return document.querySelector(attributes.resizableWrapper).clientHeight;
+                    },
+                    function (wrapperHeight) {
                         resizeElement(wrapperHeight);
                     }
                 );
