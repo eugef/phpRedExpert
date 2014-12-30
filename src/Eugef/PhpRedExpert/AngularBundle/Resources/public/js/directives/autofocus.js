@@ -1,11 +1,16 @@
 App.directive('autoFocus', ['$timeout',
-    function($timeout) {
+    function ($timeout) {
+        "use strict";
+
         return {
             restrict: 'AC',
-            link: function(scope, elem) {
-                $timeout(function() {
-                    elem[0].focus();
-                }, 50);
+            link: function (scope, element) {
+                $timeout(
+                    function () {
+                        element[0].focus();
+                    },
+                    50
+                );
             }
         };
     }
