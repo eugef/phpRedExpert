@@ -96,7 +96,7 @@ App.controller('AppController', [
         $scope.addDb = function () {
             $log.debug('addDb');
 
-            $scope.showModal('ModalEditKeyAttributeController', 'adddb.html',
+            $scope.showModal('ModalEditKeyAttributeController', 'confirm.adddb',
                 {
                     databases: $scope.servers.current().databases
                 }
@@ -130,16 +130,16 @@ App.controller('AppController', [
         };
 
         $scope.showModalConfirm = function (settings) {
-            return $scope.showModal('ModalConfirmController', 'confirm.html', settings);
+            return $scope.showModal('ModalConfirmController', 'confirm', settings);
         };
 
         $scope.showModalAlert = function (settings) {
-            return $scope.showModal('ModalAlertController', 'alert.html', settings, true);
+            return $scope.showModal('ModalAlertController', 'alert', settings, true);
         };
 
         $scope.showModal = function (controller, template, settings, backdrop) {
             return $modal.open({
-                templateUrl: config.assetsUri + 'views/modals/' + template,
+                templateUrl: $scope.partialsUri('modal/' + template),
                 controller: controller,
                 backdrop: angular.isDefined(backdrop) ? backdrop : 'static',
                 resolve: {
@@ -151,7 +151,7 @@ App.controller('AppController', [
         };
 
         $scope.partialsUri = function (template) {
-            return config.assetsUri + 'views/partials/' + template;
+            return config.assetsUri + 'src/app/' + template + '.tpl.html';
         };
 
         $scope.server = function () {

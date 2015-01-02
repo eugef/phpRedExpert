@@ -26,7 +26,7 @@
                                 <li ng-repeat="server in servers.list">
                                     <a href="#!/server/{[server.id]}" active-link active-link-parent active-link-nested>
                                         <div class="pull-left">
-                                            <img src="{{ asset('bundles/eugefphpredexpertangular/images/redis.png') }}" class="img-circle" alt="Redis server"/>
+                                            <img src="{{ asset('bundles/eugefphpredexpertangular/src/assets/images/redis.png') }}" class="img-circle" alt="Redis server"/>
                                         </div>
                                         <h4>
                                             {[server.name]}
@@ -54,7 +54,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li class="user-header bg-light-blue">
-                            <img src="{{ asset('bundles/eugefphpredexpertangular/images/logo.png') }}" alt="phpRedExpert" />
+                            <img src="{{ asset('bundles/eugefphpredexpertangular/src/assets/images/logo.png') }}" alt="phpRedExpert" />
                             <p class="logo-text">
                                 phpRedExpert {{ (app_version == '$Format:%d$') ? 'dev' : app_version }}
                                 <small>{{ (app_release_date == '$Format:%ct$') ? 'no release date' : app_release_date | date('d M Y') }}</small>
@@ -81,7 +81,7 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="{{ asset('bundles/eugefphpredexpertangular/images/redis.png') }}" class="img-circle" alt="Redis server" />
+                    <img src="{{ asset('bundles/eugefphpredexpertangular/src/assets/images/redis.png') }}" class="img-circle" alt="Redis server" />
                 </div>
                 <div class="pull-left info">
                     {[server().name]}

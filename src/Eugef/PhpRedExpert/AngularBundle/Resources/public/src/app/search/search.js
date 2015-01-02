@@ -115,7 +115,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     }
                 }
 
-                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyttl.html',
+                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyattribute.ttl',
                     {
                         value: ttl < 0 ? 0 : ttl,
                         key: key
@@ -144,7 +144,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
             var key = $scope.search.result.selected[0];
 
             if (key) {
-                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyname.html',
+                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyattribute.ttl',
                     {
                         value: key,
                         key: key
@@ -183,7 +183,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
             var moveKeys = $scope.search.result.selected;
 
             if (moveKeys) {
-                $scope.$parent.showModal('ModalEditKeyAttributeController', 'movekeys.html',
+                $scope.$parent.showModal('ModalEditKeyAttributeController', 'confirm.movekeys',
                     {
                         title: 'Move the key(s)?',
                         message: (moveKeys.length == 1 ? '1 key is' : moveKeys.length + ' keys are') + ' about to be moved:',

@@ -1,7 +1,7 @@
 <div class="col-md-12">
     
     <div class="nav-tabs-custom">
-        <ul class="nav nav-tabs" ng-include="partialsUri('dbmenu.html')"></ul>
+        <ul class="nav nav-tabs" ng-include="partialsUri('search/dbmenu')"></ul>
         <div class="tab-content" ng-if="key.type">
             <div class="btn-toolbar" role="toolbar">
                 <div class="btn-group">   
@@ -38,7 +38,7 @@
                                 <span class="input-group-addon" style="min-width: 150px">{[key.ttl|sec2time]}</span>
                             </div>
                         </div>
-                        <div ng-include="partialsUri('key' + key.type + '.html')"></div>
+                        <div ng-include="partialsUri('key/edit' + key.type)"></div>
                     </form>   
                 </div>
                 <div class="col-md-4 ng-hide" ng-show="!key.new">

@@ -143,14 +143,14 @@ input[type='checkbox'].greyed {
 }
 
 .table-data>thead>tr>th.sorting { 
-    background: url('../images/sort_both.png') no-repeat center right; 
+    background: url('../assets/images/sort_both.png') no-repeat center right;
 }
 .table-data>thead>tr>th.sorting-asc { 
-    background: url('../images/sort_asc.png') no-repeat center right; 
+    background: url('../assets/images/sort_asc.png') no-repeat center right;
     color: #5a60bd;
 }
 .table-data>thead>tr>th.sorting-desc { 
-    background: url('../images/sort_desc.png') no-repeat center right; 
+    background: url('../assets/images/sort_desc.png') no-repeat center right;
     color: #5a60bd;
 }
 

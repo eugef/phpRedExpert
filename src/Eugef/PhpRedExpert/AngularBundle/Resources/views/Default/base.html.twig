@@ -10,8 +10,8 @@
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Comfortaa:700|Source+Sans+Pro:300,400,600,300italic,400italic,600italic">
         {% stylesheets
             'bundles/eugefphpredexpertangular/vendor/bootstrap-css/bootstrap.css' 
-            'bundles/eugefphpredexpertangular/adminlte/css/*' 
-            'bundles/eugefphpredexpertangular/css/application.css'
+            'bundles/eugefphpredexpertangular/src/css/adminlte/*.css'
+            'bundles/eugefphpredexpertangular/src/css/application.css'
             filter='cssrewrite'
             output='css/main.css'
         %}
@@ -34,9 +34,16 @@
             'bundles/eugefphpredexpertangular/vendor/angular-cache/src/angular-cache.js'
             'bundles/eugefphpredexpertangular/vendor/angular-bootstrap/ui-bootstrap-tpls.js'
             'bundles/eugefphpredexpertangular/vendor/angular-ui-utils-unique/unique.js'
-            'bundles/eugefphpredexpertangular/js/*'
-            'bundles/eugefphpredexpertangular/js/*/*'
-            output='js/main.js'
+            output='js/vendor.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        {% javascripts
+            'bundles/eugefphpredexpertangular/src/app/application.js'
+            'bundles/eugefphpredexpertangular/src/common/*/*.js'
+            'bundles/eugefphpredexpertangular/src/app/components/*/*.js'
+            'bundles/eugefphpredexpertangular/src/app/*/*.js'
+            output='js/app.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}

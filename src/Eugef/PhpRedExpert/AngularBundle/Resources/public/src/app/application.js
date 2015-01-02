@@ -40,31 +40,31 @@ App.config(['$routeProvider', '$locationProvider', 'config',
         $locationProvider.hashPrefix('!');
         $routeProvider.
             when('/', {
-                templateUrl: config.assetsUri + 'views/controllers/dashboard.html',
+                templateUrl: config.assetsUri + 'src/app/dashboard/dashboard.tpl.html',
                 controller: 'DashboardController'
             }).
             when('/server/:serverId', {
-                templateUrl: config.assetsUri + 'views/controllers/dashboard.html',
+                templateUrl: config.assetsUri + 'src/app/dashboard/dashboard.tpl.html',
                 controller: 'DashboardController'
             }).
             when('/server/:serverId/db/:dbId', {
-                templateUrl: config.assetsUri + 'views/controllers/search.html',
+                templateUrl: config.assetsUri + 'src/app/search/search.tpl.html',
                 controller: 'SearchController'
             }).
             when('/server/:serverId/db/:dbId/search/:pattern?/:page?', {
-                templateUrl: config.assetsUri + 'views/controllers/search.html',
+                templateUrl: config.assetsUri + 'src/app/search/search.tpl.html',
                 controller: 'SearchController'
             }). 
             when('/server/:serverId/db/:dbId/key/view/:key', {
-                templateUrl: config.assetsUri + 'views/controllers/key.html',
+                templateUrl: config.assetsUri + 'src/app/key/key.tpl.html',
                 controller: 'KeyController'
             }).        
             when('/server/:serverId/db/:dbId/key/create/:type', {
-                templateUrl: config.assetsUri + 'views/controllers/key.html',
+                templateUrl: config.assetsUri + 'src/app/key/key.tpl.html',
                 controller: 'KeyController'
             }).        
             when('/server/:serverId/clients', {
-                templateUrl: config.assetsUri + 'views/controllers/clients.html',
+                templateUrl: config.assetsUri + 'src/app/clients/clients.tpl.html',
                 controller: 'ClientsController'
             }).
             otherwise({

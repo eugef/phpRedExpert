@@ -199,7 +199,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
         $scope.editKeyTtl = function () {
             $log.debug('editKeyTtl');
 
-            $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyttl.html',
+            $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyattribute.ttl',
                 {
                     value: $scope.key.ttl,
                     key: $scope.key.name
@@ -218,7 +218,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
         $scope.editKeyName = function () {
             $log.debug('editKeyName');
 
-            $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyname.html',
+            $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyattribute.name',
                 {
                     value: $scope.key.name,
                     key: $scope.key.name
@@ -278,7 +278,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
         $scope.moveKey = function () {
             $log.debug('moveKey');
 
-            $scope.$parent.showModal('ModalEditKeyAttributeController', 'movekeys.html',
+            $scope.$parent.showModal('ModalEditKeyAttributeController', 'confirm.movekeys',
                 {
                     title: 'Move the key?',
                     message: 'Key is about to be moved:',
