@@ -144,7 +144,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
             var key = $scope.search.result.selected[0];
 
             if (key) {
-                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyattribute.ttl',
+                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyattribute.name',
                     {
                         value: key,
                         key: key
