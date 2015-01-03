@@ -2,6 +2,14 @@ angular.module('eugef.activeLink', []).directive('activeLink', ['$location',
     function ($location) {
         "use strict";
 
+        /**
+         * @param {String} attribute
+         * @returns {Boolean}
+         */
+        var isAttributeEnabled = function (attribute) {
+            return attribute || (attribute === '');
+        };
+
         return {
             restrict: 'A',
 
@@ -10,6 +18,7 @@ angular.module('eugef.activeLink', []).directive('activeLink', ['$location',
              * @param {jQuery} element
              * @param {Attributes} attributes
              * @param {String} attributes.activeLink
+             * @param {*} attributes.activeLinkFront
              * @param {*} attributes.activeLinkDisabled
              * @param {*} attributes.activeLinkNested
              * @param {*} attributes.activeLinkParent
@@ -23,17 +32,22 @@ angular.module('eugef.activeLink', []).directive('activeLink', ['$location',
                 /**
                  * @type {jQuery}
                  */
-                var target = angular.isDefined(attributes.activeLinkParent) ? element.parent() : element;
+                var target = isAttributeEnabled(attributes.activeLinkParent) ? element.parent() : element;
 
                 /**
                  * @type {Boolean}
                  */
-                var disabled = angular.isDefined(attributes.activeLinkDisabled) ? true : false;
+                var front = isAttributeEnabled(attributes.activeLinkFront);
 
                 /**
                  * @type {Boolean}
                  */
-                var nested = angular.isDefined(attributes.activeLinkNested) ? true : false;
+                var disabled = isAttributeEnabled(attributes.activeLinkDisabled);
+
+                /**
+                 * @type {Boolean}
+                 */
+                var nested = isAttributeEnabled(attributes.activeLinkNested);
 
                 /**
                  * @param {String} needle
@@ -58,7 +72,7 @@ angular.module('eugef.activeLink', []).directive('activeLink', ['$location',
                     linkPath = linkPath ? linkPath.replace(/^#!/, '').replace(/\/+$/, '') : '';
                     locationPath = locationPath.replace(/\/+$/, '');
 
-                    if (linkPath && inPath(linkPath, locationPath)) {
+                    if ((linkPath && inPath(linkPath, locationPath)) || (locationPath === '' && front)) {
                         target.addClass('active');
                         if (disabled) {
                             target.removeClass('disabled');
