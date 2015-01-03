@@ -1,4 +1,4 @@
-App.directive('togglesidebar', ['$window',
+angular.module('eugef.togglesidebar', []).directive('togglesidebar', ['$window',
     function ($window) {
         "use strict";
 

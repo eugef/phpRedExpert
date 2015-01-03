@@ -1,4 +1,4 @@
-App.directive('activeLink', ['$location',
+angular.module('eugef.activeLink', []).directive('activeLink', ['$location',
     function ($location) {
         "use strict";
 

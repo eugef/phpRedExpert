@@ -1,4 +1,4 @@
-App.directive('autoFocus', ['$timeout',
+angular.module('eugef.autoFocus', []).directive('autoFocus', ['$timeout',
     function ($timeout) {
         "use strict";
 

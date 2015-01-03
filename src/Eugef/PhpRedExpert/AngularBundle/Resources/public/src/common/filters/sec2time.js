@@ -1,4 +1,4 @@
-App.filter('sec2time',
+angular.module('eugef.sec2time', []).filter('sec2time',
     function () {
         "use strict";
 

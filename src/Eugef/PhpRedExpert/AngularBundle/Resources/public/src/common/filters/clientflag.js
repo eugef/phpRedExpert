@@ -1,4 +1,4 @@
-App.filter('clientflag',
+angular.module('eugef.clientflag', []).filter('clientflag',
     function () {
         "use strict";
 

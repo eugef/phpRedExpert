@@ -1,4 +1,4 @@
-App.directive('checkboxAll',
+angular.module('eugef.checkboxAll', []).directive('checkboxAll',
     function () {
         "use strict";
 

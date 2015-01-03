@@ -1,4 +1,4 @@
-App.directive('resizable', ['$window',
+angular.module('eugef.resizable', []).directive('resizable', ['$window',
     function ($window) {
         "use strict";
 

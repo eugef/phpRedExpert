@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="myApp" ng-controller="AppController" lang="en">
+<html ng-app="phpRedExpert" ng-controller="AppController" lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
@@ -39,8 +39,8 @@
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
         {% javascripts
-            'bundles/eugefphpredexpertangular/src/app/application.js'
             'bundles/eugefphpredexpertangular/src/common/*/*.js'
+            'bundles/eugefphpredexpertangular/src/app/application.js'
             'bundles/eugefphpredexpertangular/src/app/components/*/*.js'
             'bundles/eugefphpredexpertangular/src/app/*/*.js'
             output='js/app.js'

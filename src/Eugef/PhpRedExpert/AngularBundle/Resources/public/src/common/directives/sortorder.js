@@ -1,4 +1,4 @@
-App.directive('sortOrder',
+angular.module('eugef.sortOrder', []).directive('sortOrder',
     function () {
         "use strict";
 

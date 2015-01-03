@@ -1,4 +1,4 @@
-App.directive('menutree', ['$timeout',
+angular.module('eugef.menutree', []).directive('menutree', ['$timeout',
     function ($timeout) {
         "use strict";
 

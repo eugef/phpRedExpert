@@ -1,4 +1,4 @@
-App.filter('range',
+angular.module('eugef.range', []).filter('range',
     function () {
         "use strict";
 
