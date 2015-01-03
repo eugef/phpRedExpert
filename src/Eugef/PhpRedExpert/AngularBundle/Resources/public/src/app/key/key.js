@@ -93,6 +93,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
 
                         // change location for new key
                         $location.path('server/' + $scope.servers.current().id + '/db/' + $scope.servers.current().databaseCurrent().id + '/key/view/' + $scope.key.name, false);
+                        $scope.setViewTitle($scope.key.name);
 
                         $log.debug('submitKey: add / done', $scope.key);
                     },
@@ -231,7 +232,7 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
 
                                 if (response.data.result) {
                                     $scope.key.name = newName;
-                                    $scope.setViewTitle(newName);
+                                    $scope.setViewTitle($scope.key.name);
                                     // update key name in url
                                     $location.path('server/' + $scope.servers.current().id + '/db/' + $scope.servers.current().databaseCurrent().id + '/key/view/' + $scope.key.name, false);
                                 }
@@ -313,9 +314,9 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
 
         $scope.setViewTitle = function (keyName, keyType) {
             var subtitle = '';
-            if (angular.isDefined(keyName)) {
+            if (keyName) {
                 subtitle = 'View key "' + keyName + '"';
-            } else if (angular.isDefined(keyType)) {
+            } else if (keyType) {
                 subtitle = 'Create ' + keyType + ' key';
             }
 
