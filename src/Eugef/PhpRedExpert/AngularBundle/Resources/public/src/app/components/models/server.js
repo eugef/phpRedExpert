@@ -43,6 +43,16 @@ App.factory('ServerModel', ['DatabaseModel',
             var databases = [];
 
             /**
+             * @type {Object}
+             */
+            var info = {};
+
+            /**
+             * @type {Object}
+             */
+            var config = {};
+
+            /**
              * @returns {Number}
              */
             var databaseIndexDefault = function () {
@@ -146,6 +156,32 @@ App.factory('ServerModel', ['DatabaseModel',
                             new Database(data)
                         );
                     });
+                }
+            });
+
+            /**
+             * @type {Object}
+             */
+            Object.defineProperty(this, 'info', {
+                enumerable: true,
+                get: function () {
+                    return info;
+                },
+                set: function (value) {
+                    info = value;
+                }
+            });
+
+            /**
+             * @type {Object}
+             */
+            Object.defineProperty(this, 'config', {
+                enumerable: true,
+                get: function () {
+                    return config;
+                },
+                set: function (value) {
+                    config = value;
                 }
             });
 

@@ -67,32 +67,8 @@ App.factory('RedisService', ['$http', '$angularCacheFactory', 'config',
              * @param {Number} serverId
              * @returns {HttpPromise}
              */
-            this.getServerDBs = function (serverId) {
-                return $http.get(apiUri + 'server/' + serverId + '/databases',
-                    {
-                        cache: cacheServer
-                    }
-                );
-            };
-
-            /**
-             * @param {Number} serverId
-             * @returns {HttpPromise}
-             */
-            this.getServerInfo = function (serverId) {
-                return $http.get(apiUri + 'server/' + serverId + '/info',
-                    {
-                        cache: cacheServer
-                    }
-                );
-            };
-
-            /**
-             * @param {Number} serverId
-             * @returns {HttpPromise}
-             */
-            this.getServerConfig = function (serverId) {
-                return $http.get(apiUri + 'server/' + serverId + '/config',
+            this.getServerData = function (serverId) {
+                return $http.get(apiUri + 'server/' + serverId + '/data',
                     {
                         cache: cacheServer
                     }

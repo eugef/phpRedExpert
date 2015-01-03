@@ -74,12 +74,14 @@ App.controller('AppController', [
                 serverId = $scope.servers.default().id;
             }
 
-            return RedisService.getServerDBs(serverId).then(
+            return RedisService.getServerData(serverId).then(
                 function (response) {
                     $log.debug('loadServerData / done', response.data);
 
-                    $scope.servers.current(serverId).databases = response.data;
+                    $scope.servers.current(serverId).databases = response.data.databases;
                     $scope.servers.current().databaseCurrent(selectDbId);
+                    $scope.servers.current().config = response.data.config;
+                    $scope.servers.current().info = response.data.info;
                 },
                 function (error) {
                     $log.error(error.data.error.message);

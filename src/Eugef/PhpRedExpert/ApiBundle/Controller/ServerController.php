@@ -36,9 +36,9 @@ class ServerController extends AbstractRedisController
     }
 
     /**
-     * Result of INFO command for the server.
+     * All data about server: databases, info and config.
      *
-     * @Get("/server/{serverId}/info",
+     * @Get("/server/{serverId}/data",
      *      requirements = {"serverId": "\d+"}
      * )
      * @View()
@@ -47,30 +47,15 @@ class ServerController extends AbstractRedisController
      * @throws HttpException
      * @return array list
      */
-    public function getServerInfoAction($serverId)
+    public function getServerDataAction($serverId)
     {
         $this->initialize($serverId);
 
-        return $this->redis->getServerInfo();
-    }
-
-    /**
-     * Result of CONFIG command for the server.
-     *
-     * @Get("/server/{serverId}/config",
-     *      requirements = {"serverId": "\d+"}
-     * )
-     * @View()
-     *
-     * @param integer $serverId
-     * @throws HttpException
-     * @return array list
-     */
-    public function getServerConfigAction($serverId)
-    {
-        $this->initialize($serverId);
-
-        return $this->redis->getServerConfig();
+        return array(
+            'databases' => $this->redis->getDatabases(),
+            'info'      => $this->redis->getServerInfo(),
+            'config'    => $this->redis->getServerConfig(),
+        );
     }
 
     /**
