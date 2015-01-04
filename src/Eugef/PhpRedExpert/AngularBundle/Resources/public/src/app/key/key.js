@@ -191,9 +191,11 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     items: [key.name],
                     warning: 'You can\'t undo this action!',
                     action: 'Delete'
-                }).result.then(function () {
+                }).result.then(
+                    function () {
                         execute();
-                    });
+                    }
+                );
             }
         };
 
@@ -205,7 +207,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     value: $scope.key.ttl,
                     key: $scope.key.name
                 }
-            ).result.then(function (newTtl) {
+            ).result.then(
+                function (newTtl) {
                     RedisService.expireKey($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, $scope.key.name, newTtl).then(
                         function (response) {
                             $log.debug('editKeyTtl / done', response.data);
@@ -213,7 +216,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                             $scope.key.ttl = newTtl;
                         }
                     );
-                });
+                }
+            );
         };
 
         $scope.editKeyName = function () {
@@ -224,7 +228,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     value: $scope.key.name,
                     key: $scope.key.name
                 }
-            ).result.then(function (newName) {
+            ).result.then(
+                function (newName) {
                     if (newName != $scope.key.name) {
                         RedisService.renameKey($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, $scope.key.name, newName).then(
                             function (response) {
@@ -245,7 +250,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                             }
                         );
                     }
-                });
+                }
+            );
         };
 
         $scope.deleteKey = function () {
@@ -257,7 +263,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                 items: [$scope.key.name],
                 warning: 'You can\'t undo this action!',
                 action: 'Delete'
-            }).result.then(function () {
+            }).result.then(
+                function () {
                     RedisService.deleteKeys($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, [$scope.key.name]).then(
                         function (response) {
                             $log.debug('deleteKey / done', response.data);
@@ -273,7 +280,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                             $scope.alerts.push({type: 'success', message: 'Key is successfully deleted'});
                         }
                     );
-                });
+                }
+            );
         };
 
         $scope.moveKey = function () {
@@ -286,7 +294,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                     items: [$scope.key.name],
                     databases: $scope.$parent.servers.current().databases
                 }
-            ).result.then(function (newDB) {
+            ).result.then(
+                function (newDB) {
                     RedisService.moveKeys($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, [$scope.key.name], newDB).then(
                         function (response) {
                             $log.debug('moveKey / done', response.data);
@@ -305,7 +314,8 @@ App.controller('KeyController', ['$scope', '$routeParams', '$location', '$log', 
                             $scope.alerts.push({type: 'success', message: 'Key is successfully moved'});
                         }
                     );
-                });
+                }
+            );
         };
 
         $scope.closeAlert = function (index) {

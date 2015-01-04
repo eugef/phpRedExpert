@@ -81,7 +81,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     items: deleteKeys,
                     warning: 'You can\'t undo this action!',
                     action: 'Delete'
-                }).result.then(function () {
+                }).result.then(
+                    function () {
                         RedisService.deleteKeys($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, deleteKeys).then(
                             function (response) {
                                 $log.debug('deleteKeys / done', response.data);
@@ -97,7 +98,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                                 $scope.$parent.servers.current().databaseCurrent().keys -= response.data.result;
                             }
                         );
-                    });
+                    }
+                );
             }
         };
 
@@ -120,7 +122,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                         value: ttl < 0 ? 0 : ttl,
                         key: key
                     }
-                ).result.then(function (newTtl) {
+                ).result.then(
+                    function (newTtl) {
                         RedisService.expireKey($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, key, newTtl).then(
                             function (response) {
                                 $log.debug('editKeyTtl / done', response.data);
@@ -134,7 +137,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                                 }
                             }
                         );
-                    });
+                    }
+                );
             }
         };
 
@@ -149,7 +153,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                         value: key,
                         key: key
                     }
-                ).result.then(function (newName) {
+                ).result.then(
+                    function (newName) {
                         if (newName != key) {
                             RedisService.renameKey($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, key, newName).then(
                                 function (response) {
@@ -173,7 +178,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                                 }
                             );
                         }
-                    });
+                    }
+                );
             }
         };
 
@@ -190,7 +196,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                         items: moveKeys,
                         databases: $scope.$parent.servers.current().databases
                     }
-                ).result.then(function (newDB) {
+                ).result.then(
+                    function (newDB) {
                         RedisService.moveKeys($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, moveKeys, newDB).then(
                             function (response) {
                                 $log.debug('moveKeys / done', response.data);
@@ -209,7 +216,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                                 $scope.$parent.servers.current().databaseById(newDB).keys += response.data.result;
                             }
                         );
-                    });
+                    }
+                );
             }
         };
 

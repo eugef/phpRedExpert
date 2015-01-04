@@ -41,7 +41,8 @@ App.controller('ClientsController', ['$scope', '$routeParams', '$log', 'RedisSer
                     items: killClients,
                     warning: 'You can\'t undo this action!',
                     action: 'Kill'
-                }).result.then(function () {
+                }).result.then(
+                    function () {
                         RedisService.killServerClients($scope.servers.current().id, killClients).then(
                             function (response) {
                                 $log.debug('killServerClients / done', response.data);
@@ -50,7 +51,8 @@ App.controller('ClientsController', ['$scope', '$routeParams', '$log', 'RedisSer
                                 $scope.getServerClients(true);
                             }
                         );
-                    });
+                    }
+                );
             }
         };
 
