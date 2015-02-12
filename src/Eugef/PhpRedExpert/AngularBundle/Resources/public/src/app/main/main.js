@@ -95,18 +95,31 @@ App.controller('AppController', [
             $scope.servers.current().databaseCurrent(dbId);
         };
 
+        $scope.server = function () {
+            return $scope.servers.current() || {};
+        };
+
+        $scope.db = function () {
+            var server = $scope.servers.current();
+            if (server) {
+                return server.databaseCurrent();
+            } else {
+                return {};
+            }
+        };
+
         $scope.addDb = function () {
             $log.debug('addDb');
 
             $scope.showModal('ModalEditKeyAttributeController', 'confirm.adddb',
                 {
-                    databases: $scope.servers.current().databases
+                    databases: $scope.server().databases
                 }
             ).result.then(
                 function (newDB) {
                     $log.debug('addDb / end', newDB);
 
-                    $location.path('server/' + $scope.servers.current().id + '/db/' + newDB + '/search');
+                    $location.path('server/' + $scope.server().id + '/db/' + newDB + '/search');
                 }
             );
         };
@@ -119,12 +132,17 @@ App.controller('AppController', [
                 action: 'Flush'
             }).result.then(
                 function () {
-                    RedisService.flushDB($scope.servers.current().id, $scope.servers.current().databaseCurrent().id).then(
-                        function (response) {
-                            $location.path('server/' + $scope.servers.current().id + '/db/' + $scope.servers.current().databaseCurrent().id + '/search');
-
+                    RedisService.flushDB($scope.server().id, $scope.db().id).then(
+                        function () {
                             // reduce amount of keys in whole db
-                            $scope.servers.current().databaseCurrent().keys = 0;
+                            $scope.db().keys = 0;
+                            // open browse page
+                            var searchUrl = 'server/' + $scope.server().id + '/db/' + $scope.db().id + '/search';
+                            if ($location.path() == '/' + searchUrl) {
+                                $route.reload();
+                            } else {
+                                $location.path(searchUrl);
+                            }
                         }
                     );
                 }
@@ -154,19 +172,6 @@ App.controller('AppController', [
 
         $scope.partialsUri = function (template) {
             return config.assetsUri + 'src/app/' + template + '.tpl.html';
-        };
-
-        $scope.server = function () {
-            return $scope.servers.current() || {};
-        };
-
-        $scope.db = function () {
-            var server = $scope.servers.current();
-            if (server) {
-                return server.databaseCurrent();
-            } else {
-                return {};
-            }
         };
     }
 ]);
