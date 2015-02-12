@@ -19,9 +19,12 @@
         {% endstylesheets %}
         <script>
             var CONFIG = {
-                apiUri : '{{ app.request.baseUrl ~ '/api/' }}',
-                assetsUri : '{{ asset('bundles/eugefphpredexpertangular/') }}',
+                apiUri: '{{ app.request.baseUrl ~ '/api/' }}',
+                assetsUri: '{{ asset('bundles/eugefphpredexpertangular/') }}',
                 cache: true,
+                search: {
+                    auto_max_keys: '{{ search_auto_max_keys }}'
+                },
                 debug: {{ app.debug ? 'true' : 'false' }}
             };
         </script>

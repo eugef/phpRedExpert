@@ -7,6 +7,7 @@ parameters:
         password:
 
     search_per_page: 20
+    search_auto_max_keys: 10000
 
     locale: en
     secret: CwraFfMpOh4e9z1z8yj6

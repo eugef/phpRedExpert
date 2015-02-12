@@ -1,10 +1,11 @@
-App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log', 'RedisService',
-    function ($scope, $routeParams, $location, $log, RedisService) {
+App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log', 'config', 'RedisService',
+    function ($scope, $routeParams, $location, $log, config, RedisService) {
         "use strict";
 
         $log.debug('SearchController', $routeParams);
 
         $scope.search = {
+            completed: false,
             pattern: '',
             page: 1,
             pageCount: 0,
@@ -23,7 +24,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
 
         $scope.submitSearch = function () {
             if ($scope.searchForm.$valid) {
-                $location.path('server/' + $scope.servers.current().id + '/db/' + $scope.servers.current().databaseCurrent().id + '/search/' + $scope.search.pattern, false);
+                $location.path('server/' + $scope.server().id + '/db/' + $scope.db().id + '/search/' + $scope.search.pattern, false);
                 $scope.searchKey($scope.search.pattern, 1);
             }
         };
@@ -32,8 +33,9 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
             $log.debug('searchKey', arguments);
 
             $scope.search.pattern = pattern;
+            $scope.search.completed = false;
 
-            return RedisService.searchKeys($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, pattern, page).then(
+            return RedisService.searchKeys($scope.server().id, $scope.db().id, pattern, page).then(
                 function (response) {
                     $log.debug('searchKey / done');
 
@@ -50,6 +52,8 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     angular.forEach(response.data.items, function (value) {
                         $scope.search.result.keys.push(value);
                     });
+
+                    $scope.search.completed = true;
                 }
             );
         };
@@ -75,7 +79,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
 
             var deleteKeys = $scope.search.result.selected;
             if (deleteKeys) {
-                $scope.$parent.showModalConfirm({
+                $scope.showModalConfirm({
                     title: 'Delete key(s) forever?',
                     message: (deleteKeys.length == 1 ? '1 key is' : deleteKeys.length + ' keys are') + ' about to be permanently deleted:',
                     items: deleteKeys,
@@ -83,7 +87,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     action: 'Delete'
                 }).result.then(
                     function () {
-                        RedisService.deleteKeys($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, deleteKeys).then(
+                        RedisService.deleteKeys($scope.server().id, $scope.db().id, deleteKeys).then(
                             function (response) {
                                 $log.debug('deleteKeys / done', response.data);
 
@@ -95,7 +99,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                                 }
                                 // reduce amount of keys in search result and whole db
                                 $scope.search.result.total -= response.data.result;
-                                $scope.$parent.servers.current().databaseCurrent().keys -= response.data.result;
+                                $scope.db().keys -= response.data.result;
                             }
                         );
                     }
@@ -117,14 +121,14 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                     }
                 }
 
-                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyattribute.ttl',
+                $scope.showModal('ModalEditKeyAttributeController', 'editkeyattribute.ttl',
                     {
                         value: ttl < 0 ? 0 : ttl,
                         key: key
                     }
                 ).result.then(
                     function (newTtl) {
-                        RedisService.expireKey($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, key, newTtl).then(
+                        RedisService.expireKey($scope.server().id, $scope.db().id, key, newTtl).then(
                             function (response) {
                                 $log.debug('editKeyTtl / done', response.data);
 
@@ -148,7 +152,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
             var key = $scope.search.result.selected[0];
 
             if (key) {
-                $scope.$parent.showModal('ModalEditKeyAttributeController', 'editkeyattribute.name',
+                $scope.showModal('ModalEditKeyAttributeController', 'editkeyattribute.name',
                     {
                         value: key,
                         key: key
@@ -156,7 +160,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                 ).result.then(
                     function (newName) {
                         if (newName != key) {
-                            RedisService.renameKey($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, key, newName).then(
+                            RedisService.renameKey($scope.server().id, $scope.db().id, key, newName).then(
                                 function (response) {
                                     $log.debug('editKeyName / done', response.data);
 
@@ -170,7 +174,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                                         }
                                     }
                                     else {
-                                        $scope.$parent.showModalAlert({
+                                        $scope.showModalAlert({
                                             title: 'Rename error!',
                                             message: 'Could not rename key "' + key + '" to "' + newName + '"'
                                         });
@@ -189,16 +193,16 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
             var moveKeys = $scope.search.result.selected;
 
             if (moveKeys) {
-                $scope.$parent.showModal('ModalEditKeyAttributeController', 'confirm.movekeys',
+                $scope.showModal('ModalEditKeyAttributeController', 'confirm.movekeys',
                     {
                         title: 'Move the key(s)?',
                         message: (moveKeys.length == 1 ? '1 key is' : moveKeys.length + ' keys are') + ' about to be moved:',
                         items: moveKeys,
-                        databases: $scope.$parent.servers.current().databases
+                        databases: $scope.server().databases
                     }
                 ).result.then(
                     function (newDB) {
-                        RedisService.moveKeys($scope.servers.current().id, $scope.servers.current().databaseCurrent().id, moveKeys, newDB).then(
+                        RedisService.moveKeys($scope.server().id, $scope.db().id, moveKeys, newDB).then(
                             function (response) {
                                 $log.debug('moveKeys / done', response.data);
 
@@ -210,10 +214,10 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
                                 }
                                 // reduce amount of keys in search result and current db
                                 $scope.search.result.total -= response.data.result;
-                                $scope.$parent.servers.current().databaseCurrent().keys -= response.data.result;
+                                $scope.db().keys -= response.data.result;
 
                                 // increase amount of keys in a new db
-                                $scope.$parent.servers.current().databaseById(newDB).keys += response.data.result;
+                                $scope.server().databaseById(newDB).keys += response.data.result;
                             }
                         );
                     }
@@ -223,7 +227,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
 
         $scope.getKeyUri = function (key, encode) {
             encode = angular.isDefined(encode) ? encode : false;
-            return 'server/' + $scope.servers.current().id + '/db/' + $scope.servers.current().databaseCurrent().id + '/key/view/' + (encode ? encodeURIComponent(key) : key);
+            return 'server/' + $scope.server().id + '/db/' + $scope.db().id + '/key/view/' + (encode ? encodeURIComponent(key) : key);
         };
 
         $scope.openKey = function () {
@@ -236,7 +240,7 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
         $scope.setPage = function () {
             $log.debug('setPage', $scope.search.page);
 
-            $location.path('server/' + $scope.servers.current().id + '/db/' + $scope.servers.current().databaseCurrent().id + '/search/' + $scope.search.pattern + '/' + $scope.search.page, false);
+            $location.path('server/' + $scope.server().id + '/db/' + $scope.db().id + '/search/' + $scope.search.pattern + '/' + $scope.search.page, false);
             $scope.searchKey($scope.search.pattern, $scope.search.page);
         };
 
@@ -253,13 +257,17 @@ App.controller('SearchController', ['$scope', '$routeParams', '$location', '$log
             $log.debug('SearchController.init');
 
             $scope.$parent.view = {
-                title: $scope.$parent.servers.current().databaseCurrent().name,
+                title: $scope.db().name,
                 subtitle: 'Browse'
             };
 
             if ($routeParams.pattern) {
                 var page = parseInt($routeParams.page, 10) | 1;
                 $scope.searchKey($routeParams.pattern, page);
+            } else if (!$scope.db().isEmpty && $scope.db().keys <= config.search.auto_max_keys) {
+                $scope.searchKey('*', 1);
+            } else {
+                $scope.search.completed = true;
             }
         });
     }

@@ -68,7 +68,7 @@
         <b>No results</b> for specified search pattern.
     </div>
     
-    <div class="alert alert-info alert-dismissable ng-hide" ng-show="!search.result.keys.length && !$parent.db().isEmpty">
+    <div class="alert alert-info alert-dismissable ng-hide" ng-show="search.completed && !search.result.keys.length && !$parent.db().isEmpty">
         <i class="fa fa-info"></i>
         <b>Supported search patterns:</b> 
         <ul>
