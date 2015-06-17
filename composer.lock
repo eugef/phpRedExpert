@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a5994187392418a1d337f834c8e708ca",
+    "hash": "e192bba9859290d5d1d924e7107d679e",
     "packages": [
         {
             "name": "components/angular-bootstrap",
-            "version": "0.12",
+            "version": "0.13",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/angular-ui/bootstrap-bower/archive/0.12.0.zip",
+                "url": "https://github.com/angular-ui/bootstrap-bower/archive/0.13.0.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -73,16 +73,16 @@
         },
         {
             "name": "components/angular.js",
-            "version": "1.3.0",
+            "version": "1.3.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/angular.js.git",
-                "reference": "b364cf307dcf6986bdc42fcf6276265c1b4e1c8e"
+                "reference": "84d0420402cf02b559d210b7286bd9a30655ca33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/angular.js/zipball/b364cf307dcf6986bdc42fcf6276265c1b4e1c8e",
-                "reference": "b364cf307dcf6986bdc42fcf6276265c1b4e1c8e",
+                "url": "https://api.github.com/repos/components/angular.js/zipball/84d0420402cf02b559d210b7286bd9a30655ca33",
+                "reference": "84d0420402cf02b559d210b7286bd9a30655ca33",
                 "shasum": ""
             },
             "type": "component",
@@ -373,7 +373,7 @@
             ],
             "description": "Shim repository for Angular.js",
             "homepage": "http://angularjs.org",
-            "time": "2014-10-16 13:35:16"
+            "time": "2015-06-07 20:10:38"
         },
         {
             "name": "components/bootstrap-css",

@@ -84,9 +84,9 @@
             "package": {
                 "name": "components/angular-bootstrap",
                 "type": "component",
-                "version": "0.12",
+                "version": "0.13",
                 "dist": {
-                    "url": "https://github.com/angular-ui/bootstrap-bower/archive/0.12.0.zip",
+                    "url": "https://github.com/angular-ui/bootstrap-bower/archive/0.13.0.zip",
                     "type": "zip"
                 },
                 "extra": {
