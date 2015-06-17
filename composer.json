@@ -31,7 +31,7 @@
         "components/bootstrap-css" : "*"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.4"
+        "sensio/generator-bundle": "~2.5"
     },
     "scripts": {
         "post-install-cmd": [

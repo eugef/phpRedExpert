@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e192bba9859290d5d1d924e7107d679e",
+    "hash": "1235ba69471449f467eb29ac319dad69",
     "packages": [
         {
             "name": "components/angular-bootstrap",
