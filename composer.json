@@ -19,7 +19,7 @@
         "twig/extensions": "~1.2",
         "symfony/assetic-bundle": "~2.5",
         "symfony/monolog-bundle": "~2.6",
-        "sensio/distribution-bundle": "~3.0",
+        "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "~3.0",
         "friendsofsymfony/rest-bundle" : "~1.7",
         "jms/serializer-bundle": "*",
